@@ -1493,12 +1493,8 @@
       Object.keys(cloudComp).forEach((k) => { if (cloudComp[k]) mergedComp[k] = true; });
       state.completed = mergedComp;
 
-      // 計算已過關題目的最低應得 XP，並與本地及雲端 XP 取最大值
-      let minEarnedXp = 0;
-      if (typeof LEVELS !== 'undefined') {
-        LEVELS.forEach((lv) => { if (state.completed[lv.id]) minEarnedXp += (Number(lv.xp) || 0); });
-      }
-      state.xp = Math.max(Number(state.xp || 0), Number(cloud.xp || 0), minEarnedXp);
+      // 以 Google Sheet UserProgress 為準，直接反映真實分數與扣分（不額外重算抬高）
+      state.xp = Math.max(Number(state.xp || 0), Number(cloud.xp || 0));
       state.penalty = Math.max(Number(state.penalty || 0), Number(cloud.penalty || 0));
 
       if (state.student) {
