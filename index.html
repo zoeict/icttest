@@ -871,53 +871,72 @@
       <!-- ===================================================================== -->
       <!-- MODE 4: MING TAK TEXTBOOK CODE BANK (D1 + D2 + ELECTIVE C)            -->
       <!-- ===================================================================== -->
-      <section id="textbookContainer" class="hidden p-2.5 sm:p-5 bg-[#0e1726]/90 space-y-3 sm:space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1e2d44] pb-3">
-          <div class="flex items-center gap-2">
-            <h2 class="font-display text-lg sm:text-xl font-bold text-white">課本例題</h2>
-          </div>
-          <div id="tbDoneBadgeWrap" class="flex items-center gap-3 px-3 py-1.5 rounded-sm bg-[#080d16] border border-[#10b981]/40">
-            <div class="font-mono-code text-xs text-[#34d399] font-bold whitespace-nowrap">
-              完成進度：<span id="tbDoneCount">0 / 95</span>
-              <span id="tbDonePct" class="ml-1 text-white">(0%)</span>
-            </div>
-            <div class="w-24 sm:w-32 h-2 rounded-full bg-[#0f1a2b] overflow-hidden border border-[#1e2d44]">
-              <div id="tbDoneProgressBar" class="h-full bg-[#10b981] transition-all duration-300" style="width:0%"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Split Workbench: Left Example Selector + Right Interactive Practice & Live Dry-Run Trace -->
-        <div id="tbExamplesPane" class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-start">
-          <!-- Left Menu: Collapsible on Desktop + Slide-over Drawer on Narrow Screens -->
-          <div id="tbSidebarBackdrop" class="hidden lg:block lg:col-span-4">
-            <div id="tbSidebarPanel" class="space-y-2.5 chassis-surface rounded-sm p-3 border-[#1e2d44]">
-              <div class="flex items-center justify-between pb-1.5 border-b border-[#182438]">
-                <span class="font-mono-code text-[11px] font-bold text-[#38bdf8]">例題目錄</span>
-                <div class="flex items-center gap-1.5">
-                  <button id="tbDrawerCloseBtn" class="lg:hidden p-1 rounded-sm bg-[#141b25] text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+      <section id="textbookContainer" class="hidden">
+        <!-- Unified 12-Col Frame: Exact lg:col-span-3 Left Rail + lg:col-span-9 Main Workbench (Matches 計分練習 1:1) -->
+        <div id="tbExamplesPane" class="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100dvh-3.5rem)]">
+          <!-- Left Telemetry & Directory Rail (Exact same width & gauge style as 計分練習) -->
+          <div id="tbSidebarBackdrop" class="hidden lg:flex lg:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
+            <div id="tbSidebarPanel" class="flex flex-col flex-1 min-h-0">
+              <!-- Unified Learning Progress Gauge Header -->
+              <div class="p-4 border-b border-[#1e2d44] space-y-3">
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="text-[11px] font-bold text-[#9aa7b8]">學習進度</div>
+                    <div class="mt-1 flex items-baseline gap-1.5">
+                      <span id="tbDoneBig" class="font-mono-code text-2xl font-bold text-[#34d399] leading-none">0</span>
+                      <span class="font-mono-code text-[10px] text-[#64748b]">/ 95</span>
+                      <span class="font-mono-code text-[10px] px-1.5 py-0.5 rounded-sm bg-[#10d981]/15 text-[#10d981] border border-[#10d981]/30 font-bold">課本例題</span>
+                    </div>
+                    <div class="mt-1.5 font-mono-code text-[10px] text-[#9aa7b8]">互動實作＋追蹤</div>
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <svg viewBox="0 0 100 54" class="w-24 h-12 overflow-visible">
+                      <path d="M 10 48 A 40 40 0 0 1 90 48" fill="none" stroke="#1a2740" stroke-width="7" />
+                      <path id="tbGaugeArc" d="M 10 48 A 40 40 0 0 1 90 48" fill="none" stroke="#10b981" stroke-width="7" stroke-dasharray="126" stroke-dashoffset="126" />
+                      <g id="tbGaugeNeedle" transform="rotate(-90 50 48)">
+                        <line x1="50" y1="48" x2="50" y2="14" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" />
+                        <circle cx="50" cy="48" r="3.5" fill="#f5a623" />
+                      </g>
+                    </svg>
+                    <span id="tbMasteryPct" class="font-mono-code text-[10px] font-bold text-[#34d399] mt-0.5">0%</span>
+                  </div>
+                </div>
+                <div class="flex justify-between font-mono-code text-[10px] text-[#9aa7b8]">
+                  <span>完成題數</span>
+                  <span id="tbDoneCount" class="text-white font-bold">0 / 95 題</span>
                 </div>
               </div>
-              <div id="tbBookFilters" class="grid grid-cols-3 sm:grid-cols-6 gap-1 text-[11px] font-bold">
-              <button data-book="ALL" class="py-1.5 rounded-sm bg-[#10b981] text-[#04140e]">全部</button>
-              <button data-book="D1" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">D1</button>
-              <button data-book="D2" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">D2</button>
-              <button data-book="CP" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">測試站</button>
-              <button data-book="XC" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">選修C</button>
-              <button data-book="WB" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">作業</button>
-            </div>
-            <div id="tbOriginFilters" class="grid grid-cols-3 gap-1 text-[11px] font-bold">
-              <button data-origin="ALL" class="py-1 rounded-sm bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/50">全部來源</button>
-              <button data-origin="textbook" class="py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]">課本原題</button>
-              <button data-origin="concept" class="py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]">概念示範</button>
-            </div>
-            <input id="tbSearchInput" type="text" placeholder="搜尋課題或關鍵字..." class="w-full rounded-sm bg-[#070b13] border border-[#243754] px-3 py-1.5 text-xs text-white outline-none focus:border-[#38bdf8]" />
-            <div id="tbExampleList" class="space-y-1.5 max-h-[70vh] lg:max-h-[720px] overflow-y-auto pr-1"></div>
+
+              <!-- Directory & Filters -->
+              <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
+                <div class="flex items-center justify-between px-1 pb-2 border-b border-[#182438]">
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-xs font-bold text-[#cbd5e1]">例題目錄</h2>
+                    <span class="text-[10px] text-[#34d399] font-bold">95 題</span>
+                  </div>
+                  <button id="tbDrawerCloseBtn" class="lg:hidden p-1 rounded-sm bg-[#141b25] text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+                <div id="tbBookFilters" class="grid grid-cols-3 gap-1 text-[11px] font-bold">
+                  <button data-book="ALL" class="py-1.5 rounded-sm bg-[#10b981] text-[#04140e]">全部</button>
+                  <button data-book="D1" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">D1</button>
+                  <button data-book="D2" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">D2</button>
+                  <button data-book="CP" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">測試站</button>
+                  <button data-book="XC" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">選修C</button>
+                  <button data-book="WB" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">作業</button>
+                </div>
+                <div id="tbOriginFilters" class="grid grid-cols-3 gap-1 text-[11px] font-bold">
+                  <button data-origin="ALL" class="py-1 rounded-sm bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/50">全部來源</button>
+                  <button data-origin="textbook" class="py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]">課本原題</button>
+                  <button data-origin="concept" class="py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]">概念示範</button>
+                </div>
+                <input id="tbSearchInput" type="text" placeholder="搜尋課題或關鍵字..." class="w-full rounded-sm bg-[#070b13] border border-[#243754] px-3 py-1.5 text-xs text-white outline-none focus:border-[#38bdf8]" />
+                <div id="tbExampleList" class="space-y-1.5 max-h-[65vh] lg:max-h-[640px] overflow-y-auto pr-1"></div>
+              </div>
             </div>
           </div>
 
-          <!-- Right Frame: Practice Editor + Output + Live Dry-Run Trace -->
-          <div id="tbRightFrame" class="lg:col-span-8 space-y-3 sm:space-y-4">
+          <!-- Right Frame: Practice Editor + Output + Live Dry-Run Trace (Matches 計分練習 lg:col-span-9 p-4 sm:p-6) -->
+          <div id="tbRightFrame" class="lg:col-span-9 min-w-0 p-4 sm:p-6 bg-[#0e1726]/85 space-y-4">
             <div class="chassis-surface rounded-sm p-3 sm:p-4 space-y-3 border-[#1e2d44]">
               <div class="flex flex-wrap items-start justify-between gap-2 border-b border-[#1b283d] pb-3">
                 <div class="space-y-1">
@@ -1032,49 +1051,66 @@
       <!-- ===================================================================== -->
       <!-- MODE 4: EXTRA PRACTICE BANK (額外操練 — 521 題雲端批改與即時同步)       -->
       <!-- ===================================================================== -->
-      <section id="extraPracticeContainer" class="hidden p-2.5 sm:p-5 bg-[#0e1726]/90 space-y-3 sm:space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#1e2d44] pb-3">
-          <div class="flex items-center gap-2.5">
-            <h2 class="font-display text-lg sm:text-xl font-bold text-white">額外操練</h2>
-            <span class="font-mono-code text-[11px] px-2 py-0.5 rounded-sm bg-[#0c1d33] text-[#38bdf8] border border-[#38bdf8]/35 font-bold">521 題</span>
-          </div>
-          <div class="flex items-center gap-3 px-3 py-1.5 rounded-sm bg-[#080d16] border border-[#38bdf8]/40">
-            <div class="font-mono-code text-xs text-[#38bdf8] font-bold whitespace-nowrap">
-              練習進度：<span id="prDoneCount">0 / 521</span>
-              <span id="prDonePct" class="ml-1 text-white">(0%)</span>
-            </div>
-            <div class="w-24 sm:w-36 h-2 rounded-full bg-[#0f1a2b] overflow-hidden border border-[#1e2d44]">
-              <div id="prDoneProgressBar" class="h-full bg-gradient-to-r from-[#38bdf8] to-[#10b981] transition-all duration-300" style="width:0%"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Sub-Tab 2: Interactive Practice Question Bank (2-Level Accordion + In-Page Section Navigator) -->
-        <div id="tbPracticePane" class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 items-start">
-          <!-- Left Sidebar: Compact 2-Level Accordion (5 Major Categories -> Sub-Units, Auto-Collapse Others) -->
-          <aside class="lg:col-span-4 xl:col-span-3 space-y-2.5 chassis-surface rounded-sm p-3 border-[#1e2d44] lg:sticky lg:top-3">
-            <div class="flex items-center justify-between pb-2 border-b border-[#182438]">
-              <div class="flex items-center gap-1.5">
-                <span class="w-1.5 h-4 rounded-xs bg-[#38bdf8]"></span>
-                <span class="font-mono-code text-xs font-bold text-white tracking-wide">題庫單元導航</span>
+      <section id="extraPracticeContainer" class="hidden">
+        <!-- Unified 12-Col Frame: Exact lg:col-span-3 Left Rail + lg:col-span-9 Main Workbench (Matches 計分練習 1:1) -->
+        <div id="tbPracticePane" class="grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100dvh-3.5rem)]">
+          <!-- Left Telemetry & 2-Level Accordion Rail (Exact same width & gauge style as 計分練習) -->
+          <aside class="lg:col-span-3 flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
+            <!-- Unified Learning Progress Gauge Header -->
+            <div class="p-4 border-b border-[#1e2d44] space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="text-[11px] font-bold text-[#9aa7b8]">學習進度</div>
+                  <div class="mt-1 flex items-baseline gap-1.5">
+                    <span id="prDoneBig" class="font-mono-code text-2xl font-bold text-[#38bdf8] leading-none">0</span>
+                    <span class="font-mono-code text-[10px] text-[#64748b]">/ 521</span>
+                    <span class="font-mono-code text-[10px] px-1.5 py-0.5 rounded-sm bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 font-bold">額外操練</span>
+                  </div>
+                  <div class="mt-1.5 font-mono-code text-[10px] text-[#9aa7b8]">7 大類 · 即時雲端批改</div>
+                </div>
+                <div class="flex flex-col items-center">
+                  <svg viewBox="0 0 100 54" class="w-24 h-12 overflow-visible">
+                    <path d="M 10 48 A 40 40 0 0 1 90 48" fill="none" stroke="#1a2740" stroke-width="7" />
+                    <path id="prGaugeArc" d="M 10 48 A 40 40 0 0 1 90 48" fill="none" stroke="#38bdf8" stroke-width="7" stroke-dasharray="126" stroke-dashoffset="126" />
+                    <g id="prGaugeNeedle" transform="rotate(-90 50 48)">
+                      <line x1="50" y1="48" x2="50" y2="14" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" />
+                      <circle cx="50" cy="48" r="3.5" fill="#f5a623" />
+                    </g>
+                  </svg>
+                  <span id="prMasteryPct" class="font-mono-code text-[10px] font-bold text-[#38bdf8] mt-0.5">0%</span>
+                </div>
               </div>
-              <span id="prSidebarSummary" class="font-mono-code text-[10px] text-[#94a3b8]">7 大類 · 521 題</span>
+              <div class="flex justify-between font-mono-code text-[10px] text-[#9aa7b8]">
+                <span>完成題數</span>
+                <span id="prDoneCount" class="text-white font-bold">0 / 521 題</span>
+              </div>
             </div>
 
-            <!-- Quick Search (Jump directly to any code like 1.2.05 or keyword) -->
-            <div class="relative">
-              <input id="prSearchInput" type="text" placeholder="搜尋編號（如 2.1）或關鍵字..." class="w-full bg-[#070b13] border border-[#1e2d44] focus:border-[#38bdf8] text-white text-xs rounded-sm pl-3 pr-7 py-2 focus:outline-none transition placeholder:text-[#475569]" />
-              <button id="prSearchClearBtn" type="button" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-[#64748b] hover:text-white text-xs font-bold px-1">✕</button>
+            <!-- Directory & 2-Level Accordion -->
+            <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
+              <div class="flex items-center justify-between px-1 pb-2 border-b border-[#182438]">
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xs font-bold text-[#cbd5e1]">題庫單元導航</h2>
+                  <span id="prSidebarSummary" class="text-[10px] text-[#38bdf8] font-bold">7 大類</span>
+                </div>
+              </div>
+
+              <!-- Quick Search -->
+              <div class="relative">
+                <input id="prSearchInput" type="text" placeholder="搜尋編號（如 2.1）或關鍵字..." class="w-full bg-[#070b13] border border-[#1e2d44] focus:border-[#38bdf8] text-white text-xs rounded-sm pl-3 pr-7 py-2 focus:outline-none transition placeholder:text-[#475569]" />
+                <button id="prSearchClearBtn" type="button" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-[#64748b] hover:text-white text-xs font-bold px-1">✕</button>
+              </div>
+
+              <!-- Live Search Results Dropdown (Shown ONLY while searching) -->
+              <div id="prSearchResultsWrap" class="hidden space-y-1.5 max-h-[58vh] overflow-y-auto pr-0.5"></div>
+
+              <!-- 2-Level Accordion Tree (Default: ONLY active Major Category expanded) -->
+              <div id="prAccordionNav" class="space-y-1.5"></div>
             </div>
-
-            <!-- Live Search Results Dropdown (Shown ONLY while searching) -->
-            <div id="prSearchResultsWrap" class="hidden space-y-1.5 max-h-[58vh] overflow-y-auto pr-0.5"></div>
-
-            <!-- 2-Level Accordion Tree (Default: ONLY active Major Category expanded) -->
-            <div id="prAccordionNav" class="space-y-1.5"></div>
           </aside>
 
-          <!-- Right Main Workspace: Breadcrumb + In-Page Question Number Section + Elevated Question Card -->
-          <div class="lg:col-span-8 xl:col-span-9 min-w-0 space-y-3">
+          <!-- Right Main Workspace (Matches 計分練習 lg:col-span-9 p-4 sm:p-6) -->
+          <div class="lg:col-span-9 min-w-0 p-4 sm:p-6 bg-[#0e1726]/85 space-y-4">
             <!-- Top Sub-Unit Section Header & In-Page Question Navigator -->
             <div class="chassis-surface rounded-sm p-3.5 sm:p-4 border-[#1e2d44] space-y-3">
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3700,13 +3736,13 @@ if _check_file and not _err:
         syncTopLeftToggleBtn();
         return;
       }
-      panel.className = 'space-y-2.5 chassis-surface rounded-md p-3 border-[#1e2d44]';
+      panel.className = 'flex flex-col flex-1 min-h-0';
       if (!state.tbSidebarCollapsed) {
-        bd.className = 'hidden lg:block lg:col-span-4';
-        rf.className = 'lg:col-span-8 space-y-3 sm:space-y-4';
+        bd.className = 'hidden lg:flex lg:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        rf.className = 'lg:col-span-9 min-w-0 p-4 sm:p-6 bg-[#0e1726]/85 space-y-4';
       } else {
         bd.className = 'hidden';
-        rf.className = 'lg:col-span-12 space-y-3 sm:space-y-4';
+        rf.className = 'lg:col-span-12 min-w-0 p-4 sm:p-6 bg-[#0e1726]/85 space-y-4';
       }
       syncTopLeftToggleBtn();
     }
@@ -3934,12 +3970,43 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
     function renderTextbookList() {
       const listEl = document.getElementById('tbExampleList');
       const doneCnt = Object.keys(tbState.done).length;
-      document.getElementById('tbDoneCount').textContent = `${doneCnt} / ${TEXTBOOK_EXAMPLES.length}`;
       const tbPctNow = TEXTBOOK_EXAMPLES.length ? Math.round((doneCnt / TEXTBOOK_EXAMPLES.length) * 100) : 0;
-      const tbPctEl = document.getElementById('tbDonePct');
-      if (tbPctEl) tbPctEl.textContent = `(${tbPctNow}%)`;
-      const tbBarEl = document.getElementById('tbDoneProgressBar');
-      if (tbBarEl) tbBarEl.style.width = `${tbPctNow}%`;
+      const tbDoneCntEl = document.getElementById('tbDoneCount');
+      if (tbDoneCntEl) tbDoneCntEl.textContent = `${doneCnt} / ${TEXTBOOK_EXAMPLES.length} 題`;
+      const tbDoneBigEl = document.getElementById('tbDoneBig');
+      if (tbDoneBigEl) tbDoneBigEl.textContent = String(doneCnt);
+      const tbMasteryEl = document.getElementById('tbMasteryPct');
+      if (tbMasteryEl) tbMasteryEl.textContent = `${tbPctNow}%`;
+      const tbArc = document.getElementById('tbGaugeArc');
+      if (tbArc) tbArc.setAttribute('stroke-dashoffset', String(126 - (126 * tbPctNow) / 100));
+      const tbNeedle = document.getElementById('tbGaugeNeedle');
+      if (tbNeedle) tbNeedle.setAttribute('transform', `rotate(${-90 + (180 * tbPctNow) / 100} 50 48)`);
+
+      // Smart dynamic origin filter: hide when current book only has 1 sourceKind (e.g. D1/D2 have no textbook; CP/WB have no concept)
+      const bookPool = TEXTBOOK_EXAMPLES.filter((ex) => tbState.book === 'ALL' || ex.book === tbState.book);
+      const tbOrigCnt = bookPool.filter((ex) => ex.sourceKind === 'textbook').length;
+      const cpOrigCnt = bookPool.filter((ex) => ex.sourceKind === 'concept').length;
+      const origWrap = document.getElementById('tbOriginFilters');
+      if (origWrap) {
+        if (tbOrigCnt === 0 || cpOrigCnt === 0) {
+          origWrap.classList.add('hidden');
+          tbState.origin = 'ALL';
+        } else {
+          origWrap.classList.remove('hidden');
+          const bAll = origWrap.querySelector('[data-origin="ALL"]');
+          const bTb = origWrap.querySelector('[data-origin="textbook"]');
+          const bCp = origWrap.querySelector('[data-origin="concept"]');
+          if (bAll) bAll.textContent = `全部 (${bookPool.length})`;
+          if (bTb) bTb.textContent = `課本原題 (${tbOrigCnt})`;
+          if (bCp) bCp.textContent = `概念示範 (${cpOrigCnt})`;
+          origWrap.querySelectorAll('[data-origin]').forEach((b) => {
+            const act = b.getAttribute('data-origin') === tbState.origin;
+            b.className = act
+              ? 'py-1 rounded-sm bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/50'
+              : 'py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]';
+          });
+        }
+      }
       const q = tbState.query.trim().toLowerCase();
       const filtered = TEXTBOOK_EXAMPLES.filter((ex) => {
         if (tbState.book !== 'ALL' && ex.book !== tbState.book) return false;
@@ -4913,11 +4980,15 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const totN = PRACTICE_BANK.length;
       const pctN = totN ? Math.round((doneN / totN) * 100) : 0;
       const el = document.getElementById('prDoneCount');
-      if (el) el.textContent = `${doneN} / ${totN}`;
-      const pEl = document.getElementById('prDonePct');
-      if (pEl) pEl.textContent = `(${pctN}%)`;
-      const bEl = document.getElementById('prDoneProgressBar');
-      if (bEl) bEl.style.width = `${pctN}%`;
+      if (el) el.textContent = `${doneN} / ${totN} 題`;
+      const bigEl = document.getElementById('prDoneBig');
+      if (bigEl) bigEl.textContent = String(doneN);
+      const mEl = document.getElementById('prMasteryPct');
+      if (mEl) mEl.textContent = `${pctN}%`;
+      const arc = document.getElementById('prGaugeArc');
+      if (arc) arc.setAttribute('stroke-dashoffset', String(126 - (126 * pctN) / 100));
+      const ndl = document.getElementById('prGaugeNeedle');
+      if (ndl) ndl.setAttribute('transform', `rotate(${-90 + (180 * pctN) / 100} 50 48)`);
       const hStat = document.getElementById('homeExtraStat');
       if (hStat) hStat.textContent = `${doneN} / ${totN} (${pctN}%)`;
       const hBar = document.getElementById('homeExtraBar');
