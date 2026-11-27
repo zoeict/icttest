@@ -529,6 +529,35 @@
           </div>
         </section>
 
+
+        <!-- Honor Roll / Leaderboard Card (4 Tabs · Top 5 · Privacy-Safe Chinese Names Only) -->
+        <section id="homeLeaderboardSection" class="p-5 sm:p-7 bg-[#080f1c]/95 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <h2 class="font-display text-base sm:text-lg font-bold text-white tracking-tight">榮譽排行榜</h2>
+              <span class="font-mono-code text-[10px] px-2 py-0.5 rounded bg-[#fbbf24]/15 text-[#fbbf24] border border-[#fbbf24]/35 font-bold">TOP 5</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <div id="lbTabsWrap" class="flex flex-wrap items-center gap-1 rounded border border-[#1d2b40] bg-[#070b12] p-1 text-[11px] font-bold">
+                <button type="button" data-lb-tab="overall" class="px-2.5 py-1 rounded-[3px] bg-[#38bdf8] text-[#04131e] transition whitespace-nowrap">🏆 總排名</button>
+                <button type="button" data-lb-tab="quest" class="px-2.5 py-1 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">⚡ 堂上練習 即時計分</button>
+                <button type="button" data-lb-tab="textbook" class="px-2.5 py-1 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">📖 自學達人</button>
+                <button type="button" data-lb-tab="practice" class="px-2.5 py-1 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">🔥 額外操練強者</button>
+              </div>
+              <button id="lbRefreshBtn" type="button" class="h-[30px] px-2.5 rounded bg-[#0f1d30] hover:bg-[#162943] border border-[#243754] hover:border-[#38bdf8]/60 text-[#9aa7b8] hover:text-white font-mono-code text-[11px] font-bold transition" title="重新整理排行榜">↻ 更新</button>
+            </div>
+          </div>
+
+          <div id="lbListGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+            <div class="sm:col-span-2 lg:col-span-5 py-6 text-center font-mono-code text-xs text-[#64748b]">正在載入榮譽排行榜...</div>
+          </div>
+
+          <div id="lbMyRankBar" class="hidden rounded-sm bg-[#0b1526] border border-[#1e3250] px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span class="font-mono-code text-[#9aa7b8]">你的目前排名</span>
+            <span id="lbMyRankText" class="font-mono-code font-bold text-[#38bdf8]"></span>
+          </div>
+        </section>
+
         <!-- Full-Year 23-Lesson Progress Roadmap with Term Filter -->
         <section class="p-5 sm:p-7 bg-[#09101b]/95 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
@@ -3832,7 +3861,7 @@ if _check_file and not _err:
       setBtn('modeQuestBtn', mode === 'quest');
       setBtn('modeTextbookBtn', mode === 'textbook');
       if (document.getElementById('modeExtraBtn')) setBtn('modeExtraBtn', mode === 'extra');
-      if (mode === 'home') { renderHomeRoadmap(); }
+      if (mode === 'home') { renderHomeRoadmap(); if (window.HomeLeaderboard) window.HomeLeaderboard.refresh(false); }
       if (mode === 'textbook') { renderTextbookList(); loadTextbookExample(tbState.activeId); applyTbSidebarLayout(false); }
       if (mode === 'extra' && typeof renderPracticeList === 'function') { renderPracticeList(); if (practiceState.activeId) loadPracticeQuestion(practiceState.activeId); applyExtraSidebarLayout(false); }
       renderSidebars();
@@ -6629,6 +6658,168 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       syncBadge,
       TOPIC_PASS_RATIO: SL_TOPIC_PASS_RATIO
     };
+  })();
+  </script>
+
+
+  <script>
+  (function () {
+    'use strict';
+
+    const LB_STATE = {
+      activeTab: 'overall',
+      data: null,
+      loading: false,
+      lastFetchTs: 0
+    };
+
+    const RANK_STYLES = {
+      1: { border: 'border-[#fbbf24]/55', bg: 'bg-gradient-to-b from-[#241b09]/90 to-[#0a111f]', badge: 'bg-[#fbbf24] text-[#0b0f19]', medal: '🥇' },
+      2: { border: 'border-[#cbd5e1]/45', bg: 'bg-gradient-to-b from-[#172030]/90 to-[#0a111f]', badge: 'bg-[#cbd5e1] text-[#0b0f19]', medal: '🥈' },
+      3: { border: 'border-[#f59e0b]/45', bg: 'bg-gradient-to-b from-[#21150b]/90 to-[#0a111f]', badge: 'bg-[#d97706] text-white', medal: '🥉' },
+      4: { border: 'border-[#1e2d44]', bg: 'bg-[#0a111f]', badge: 'bg-[#17253b] text-[#94a3b8]', medal: '#4' },
+      5: { border: 'border-[#1e2d44]', bg: 'bg-[#0a111f]', badge: 'bg-[#17253b] text-[#94a3b8]', medal: '#5' }
+    };
+
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function updateTabButtons() {
+      document.querySelectorAll('#lbTabsWrap [data-lb-tab]').forEach((btn) => {
+        const isActive = btn.getAttribute('data-lb-tab') === LB_STATE.activeTab;
+        btn.className = isActive
+          ? 'px-2.5 py-1 rounded-[3px] bg-[#38bdf8] text-[#04131e] transition whitespace-nowrap'
+          : 'px-2.5 py-1 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap';
+      });
+    }
+
+    function renderLeaderboard() {
+      updateTabButtons();
+      const grid = document.getElementById('lbListGrid');
+      const myBar = document.getElementById('lbMyRankBar');
+      const myText = document.getElementById('lbMyRankText');
+      if (!grid) return;
+
+      if (!LB_STATE.data || !LB_STATE.data.leaderboards) {
+        if (LB_STATE.loading) {
+          grid.innerHTML = '<div class="sm:col-span-2 lg:col-span-5 py-6 text-center font-mono-code text-xs text-[#64748b]">正在載入榮譽排行榜...</div>';
+        }
+        if (myBar) myBar.classList.add('hidden');
+        return;
+      }
+
+      const list = LB_STATE.data.leaderboards[LB_STATE.activeTab] || [];
+      if (list.length === 0) {
+        grid.innerHTML = '<div class="sm:col-span-2 lg:col-span-5 py-6 text-center font-mono-code text-xs text-[#64748b]">暫時未有上榜紀錄</div>';
+      } else {
+        grid.innerHTML = list.slice(0, 5).map((item, idx) => {
+          const rank = Number(item.rank || idx + 1);
+          const st = RANK_STYLES[rank] || RANK_STYLES[5];
+          const perfectTag = (LB_STATE.activeTab === 'quest' && item.perfect)
+            ? '<span class="ml-1.5 px-1.5 py-0.5 rounded bg-[#10b981]/20 border border-[#10b981]/40 text-[#34d399] font-mono-code text-[10px] font-bold">滿分無錯</span>'
+            : '';
+          return `
+            <div class="rounded-sm border ${st.border} ${st.bg} p-3 flex flex-col justify-between gap-2 transition hover:border-[#38bdf8]/60">
+              <div class="flex items-center justify-between gap-2">
+                <span class="inline-flex items-center justify-center min-w-[26px] h-[22px] px-1.5 rounded-sm font-mono-code text-[11px] font-bold ${st.badge}">${st.medal}</span>
+                <span class="font-mono-code text-xs font-bold text-[#38bdf8]">${esc(item.score)}</span>
+              </div>
+              <div class="flex items-center flex-wrap gap-y-1">
+                <span class="font-display text-sm sm:text-[15px] font-bold text-white tracking-wide">${esc(item.name)}</span>
+                ${perfectTag}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      const myInfo = LB_STATE.data.myRank && LB_STATE.data.myRank[LB_STATE.activeTab];
+      if (myBar && myText) {
+        if (myInfo && myInfo.rank) {
+          const pf = (LB_STATE.activeTab === 'quest' && myInfo.perfect) ? ' · 滿分無錯' : '';
+          myText.textContent = `第 ${myInfo.rank} 名（${myInfo.score}${pf}）`;
+          myBar.classList.remove('hidden');
+        } else {
+          myBar.classList.add('hidden');
+        }
+      }
+    }
+
+    async function fetchLeaderboard(force = false) {
+      if (LB_STATE.loading) return;
+      const now = Date.now();
+      if (!force && LB_STATE.data && (now - LB_STATE.lastFetchTs) < 20000) {
+        renderLeaderboard();
+        return;
+      }
+
+      const url = (typeof getGasUrl === 'function' ? getGasUrl() : '') || (typeof GAS_WEBAPP_URL !== 'undefined' ? GAS_WEBAPP_URL : '');
+      if (!url) return;
+
+      const email = (typeof state !== 'undefined' && state && state.student && state.student.email) ? state.student.email : '';
+      const idToken = (typeof state !== 'undefined' && state && state.student && state.student.idToken) ? state.student.idToken : '';
+
+      LB_STATE.loading = true;
+      const btn = document.getElementById('lbRefreshBtn');
+      if (btn) { btn.disabled = true; btn.textContent = '更新中...'; }
+
+      try {
+        let res = null;
+        if (typeof callCloudGrader === 'function') {
+          res = await callCloudGrader({ action: 'getLeaderboard', email, idToken });
+        }
+        if (!res || !res.ok) {
+          const sep = url.includes('?') ? '&' : '?';
+          const qs = `action=getLeaderboard${email ? '&email=' + encodeURIComponent(email) : ''}&t=${Date.now()}`;
+          const r = await fetch(url + sep + qs, { cache: 'no-store' });
+          if (r.ok) res = await r.json();
+        }
+        if (res && res.ok && res.leaderboards) {
+          LB_STATE.data = res;
+          LB_STATE.lastFetchTs = Date.now();
+        } else {
+          const grid = document.getElementById('lbListGrid');
+          if (grid && !LB_STATE.data) {
+            grid.innerHTML = '<div class="sm:col-span-2 lg:col-span-5 py-6 text-center font-mono-code text-xs text-[#94a3b8]">未能載入排行榜，請確認已部署最新版 Google Apps Script</div>';
+          }
+        }
+      } catch (e) {
+        const grid = document.getElementById('lbListGrid');
+        if (grid && !LB_STATE.data) {
+          grid.innerHTML = '<div class="sm:col-span-2 lg:col-span-5 py-6 text-center font-mono-code text-xs text-[#94a3b8]">暫時未能連線至排行榜伺服器，請稍後按「更新」重試</div>';
+        }
+      } finally {
+        LB_STATE.loading = false;
+        if (btn) { btn.disabled = false; btn.textContent = '↻ 更新'; }
+        renderLeaderboard();
+      }
+    }
+
+    function initLeaderboardUI() {
+      document.querySelectorAll('#lbTabsWrap [data-lb-tab]').forEach((btn) => {
+        if (btn.dataset.lbBound) return;
+        btn.dataset.lbBound = '1';
+        btn.addEventListener('click', () => {
+          LB_STATE.activeTab = btn.getAttribute('data-lb-tab') || 'overall';
+          renderLeaderboard();
+        });
+      });
+      const refBtn = document.getElementById('lbRefreshBtn');
+      if (refBtn && !refBtn.dataset.lbBound) {
+        refBtn.dataset.lbBound = '1';
+        refBtn.addEventListener('click', () => fetchLeaderboard(true));
+      }
+      fetchLeaderboard(true);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLeaderboardUI);
+    } else {
+      initLeaderboardUI();
+    }
+
+    window.HomeLeaderboard = { refresh: fetchLeaderboard, render: renderLeaderboard };
   })();
   </script>
 
