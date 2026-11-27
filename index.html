@@ -406,10 +406,9 @@
         <div class="touch-scroll-x flex items-center gap-1 rounded-lg border border-[#1d2b40] bg-[#070d1a]/90 p-1 text-[11px] sm:text-xs font-bold max-w-full">
           <button id="modeHomeBtn" type="button" class="px-2.5 py-1 rounded-md bg-[#22d3ee] text-[#040914] transition whitespace-nowrap">首頁</button>
           <button id="modeProfileBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">個人檔案</button>
-          <button id="modeQuestBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">闖關練習</button>
-          <button id="modeDseBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">DSE試題</button>
-          <button id="modeBlockBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">遊戲快打</button>
+          <button id="modeQuestBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">計分練習</button>
           <button id="modeNormBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">正規化</button>
+          <button id="modeBlockBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">遊戲快打</button>
           <button id="modeSandboxBtn" type="button" class="px-2.5 py-1 rounded-md text-[#9aa7b8] hover:text-white transition whitespace-nowrap">自由實驗室</button>
         </div>
       </nav>
@@ -475,9 +474,9 @@
         <div>
           <div class="flex justify-between font-mono-code text-[10px] text-[#64748b] mb-1">
             <span>各課進度</span>
-            <span id="completedCountText" class="text-[#cbd5e1]">0 / 82 題</span>
+            <span id="completedCountText" class="text-[#cbd5e1]">0 / 96 題</span>
           </div>
-          <div id="paletteBar" class="grid gap-[2px] h-2 bg-[#06080c] p-[2px] border border-[#212a36]" style="grid-template-columns: repeat(8, minmax(0, 1fr));"></div>
+          <div id="paletteBar" class="grid gap-[2px] h-2 bg-[#06080c] p-[2px] border border-[#212a36]" style="grid-template-columns: repeat(7, minmax(0, 1fr));"></div>
         </div>
 
         <div class="flex items-center justify-between pt-1 border-t border-[#18202b]">
@@ -492,7 +491,7 @@
       <div class="p-3 flex-1 overflow-y-auto">
         <div class="flex items-center justify-between px-1.5 pb-2 mb-2 border-b border-[#18202b]">
           <h2 class="font-mono-code text-[10px] font-bold tracking-widest text-[#9aa7b8] uppercase">課程課題</h2>
-          <span class="text-[10px] text-[#ff2e88] font-bold">8 課・82 題</span>
+          <span class="text-[10px] text-[#ff2e88] font-bold">7 課・96 題</span>
         </div>
         <div id="chapterList" class="space-y-3"></div>
       </div>
@@ -524,19 +523,15 @@
                   完全對齊明德課本順序必修 A + 選修 A + 課本例題 / 練習題庫，符合教育局官方辭彙。瀏覽器內直接運行 SQL 語句。
                 </p>
 
-                <!-- Recessed 3-Module Progress Bar -->
-                <div class="grid grid-cols-3 gap-2.5 pt-1 max-w-xl font-mono-code text-[11px]">
+                <!-- Recessed Graded Progress Bar (遊戲快打不計分) -->
+                <div class="grid grid-cols-2 gap-2.5 pt-1 max-w-md font-mono-code text-[11px]">
                   <div class="prof-glass-inset px-3 py-2 space-y-1">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>闖關練習</span><span id="homeQuestGaugeTxt" class="text-[#22d3ee] font-bold tabular-nums">0 / 82</span></div>
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>計分練習（含 DSE）</span><span id="homeQuestGaugeTxt" class="text-[#22d3ee] font-bold tabular-nums">0 / 96</span></div>
                     <div class="h-1.5 rounded-full bg-[#050914] overflow-hidden"><div id="homeQuestGaugeBar" class="h-full bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] transition-all duration-500" style="width:0%"></div></div>
                   </div>
                   <div class="prof-glass-inset px-3 py-2 space-y-1">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>DSE試題</span><span id="homeDseGaugeTxt" class="text-[#c084fc] font-bold tabular-nums">0 / 24</span></div>
-                    <div class="h-1.5 rounded-full bg-[#050914] overflow-hidden"><div id="homeDseGaugeBar" class="h-full bg-gradient-to-r from-[#9333ea] to-[#c084fc] transition-all duration-500" style="width:0%"></div></div>
-                  </div>
-                  <div class="prof-glass-inset px-3 py-2 space-y-1">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>遊戲快打</span><span id="homeBlockGaugeTxt" class="text-[#34d399] font-bold tabular-nums">0 分</span></div>
-                    <div class="h-1.5 rounded-full bg-[#050914] overflow-hidden"><div id="homeBlockGaugeBar" class="h-full bg-gradient-to-r from-[#059669] to-[#34d399] transition-all duration-500" style="width:0%"></div></div>
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>正規化 1NF–3NF</span><span id="homeNormGaugeTxt" class="text-[#fb923c] font-bold tabular-nums">0 / 10</span></div>
+                    <div class="h-1.5 rounded-full bg-[#050914] overflow-hidden"><div id="homeNormGaugeBar" class="h-full bg-gradient-to-r from-[#ea580c] to-[#fb923c] transition-all duration-500" style="width:0%"></div></div>
                   </div>
                 </div>
               </div>
@@ -552,11 +547,11 @@
                   <button id="homeContinueQuestBtn" type="button" class="hw-btn hw-btn-primary px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2">
                     <i data-lucide="play" class="w-4 h-4"></i> <span id="homeContinueLabel">開始第 1 課練習</span>
                   </button>
-                  <button id="homeLaunchDseBtn" type="button" class="hw-btn px-3.5 py-2.5 rounded-lg bg-[#1c1330] hover:bg-[#291b47] border border-[#c084fc]/55 text-[#e9d5ff] text-xs sm:text-sm font-bold flex items-center gap-1.5">
-                    <i data-lucide="award" class="w-4 h-4"></i> DSE試題
+                  <button id="homeLaunchNormBtn" type="button" class="hw-btn px-3.5 py-2.5 rounded-lg bg-[#24160b] hover:bg-[#362110] border border-[#fb923c]/55 text-[#fed7aa] text-xs sm:text-sm font-bold flex items-center gap-1.5">
+                    <i data-lucide="layers" class="w-4 h-4"></i> 正規化
                   </button>
                   <button id="homeLaunchBlockBtn" type="button" class="hw-btn hw-btn-cyan px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5">
-                    <i data-lucide="gamepad-2" class="w-4 h-4"></i> 遊戲快打
+                    <i data-lucide="gamepad-2" class="w-4 h-4"></i> 遊戲快打 <span class="text-[10px] opacity-75">不計分</span>
                   </button>
                 </div>
               </div>
@@ -683,9 +678,9 @@
                   <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
                   <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#e879f9] shadow-[0_0_8px_#e879f9]"></span>
                 </span>
-                <h2 class="font-display text-sm sm:text-base font-bold italic tracking-wider text-white">COURSE MAP <span class="not-italic text-xs font-medium text-[#94a3b8] ml-1.5">8 大 HKDSE ICT SQL 課題進度地圖</span></h2>
+                <h2 class="font-display text-sm sm:text-base font-bold italic tracking-wider text-white">COURSE MAP <span class="not-italic text-xs font-medium text-[#94a3b8] ml-1.5">7 大 SQL 課題進度地圖（含分類 DSE 試題）</span></h2>
               </div>
-              <span class="font-mono-code text-[11px] text-[#38bdf8] font-bold">8 TOPICS · 82 QUESTS</span>
+              <span class="font-mono-code text-[11px] text-[#38bdf8] font-bold">7 TOPICS · 96 QUESTS</span>
             </div>
             <div id="homeRoadmapGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3"></div>
           </div>
@@ -736,24 +731,23 @@
               <!-- Left: 4-Axis SVG Ability Radar Chart -->
               <div class="md:col-span-5 flex flex-col items-center justify-center">
                 <svg id="profRadarSvg" viewBox="0 0 280 236" class="w-full max-w-[300px] h-[220px] sm:h-[236px]">
-                  <polygon points="140,44 214,118 140,192 66,118" fill="rgba(14,28,52,0.35)" stroke="rgba(56,189,248,0.30)" stroke-width="1.2"/>
-                  <polygon points="140,68.7 189.3,118 140,167.3 90.7,118" fill="none" stroke="rgba(56,189,248,0.20)" stroke-width="1"/>
-                  <polygon points="140,93.3 164.7,118 140,142.7 115.3,118" fill="none" stroke="rgba(56,189,248,0.14)" stroke-width="1"/>
-                  <line x1="140" y1="44" x2="140" y2="192" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
-                  <line x1="66" y1="118" x2="214" y2="118" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
-                  <polygon id="profRadarPoly" points="140,118 140,118 140,118 140,118" fill="rgba(34,211,238,0.28)" stroke="#22d3ee" stroke-width="2.2" style="filter:drop-shadow(0 0 10px rgba(34,211,238,0.5));"/>
-                  <circle id="profDotTop" cx="140" cy="118" r="4.2" fill="#22d3ee" stroke="#060b16" stroke-width="1.2"/>
-                  <circle id="profDotRight" cx="140" cy="118" r="4.2" fill="#34d399" stroke="#060b16" stroke-width="1.2"/>
-                  <circle id="profDotBottom" cx="140" cy="118" r="4.2" fill="#c084fc" stroke="#060b16" stroke-width="1.2"/>
+                  <!-- 3-Axis Triangle Radar Grid: Top=SQL實作, BottomRight=功課, BottomLeft=測驗 -->
+                  <polygon points="140,44 204.1,155 75.9,155" fill="rgba(14,28,52,0.35)" stroke="rgba(56,189,248,0.30)" stroke-width="1.2"/>
+                  <polygon points="140,68.7 182.7,142.7 97.3,142.7" fill="none" stroke="rgba(56,189,248,0.20)" stroke-width="1"/>
+                  <polygon points="140,93.3 161.4,130.3 118.6,130.3" fill="none" stroke="rgba(56,189,248,0.14)" stroke-width="1"/>
+                  <line x1="140" y1="118" x2="140" y2="44" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
+                  <line x1="140" y1="118" x2="204.1" y2="155" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
+                  <line x1="140" y1="118" x2="75.9" y2="155" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
+                  <polygon id="profRadarPoly" points="140,118 140,118 140,118" fill="rgba(52,211,153,0.28)" stroke="#34d399" stroke-width="2.2" style="filter:drop-shadow(0 0 10px rgba(52,211,153,0.48));"/>
+                  <circle id="profDotTop" cx="140" cy="118" r="4.2" fill="#34d399" stroke="#060b16" stroke-width="1.2"/>
+                  <circle id="profDotRight" cx="140" cy="118" r="4.2" fill="#c084fc" stroke="#060b16" stroke-width="1.2"/>
                   <circle id="profDotLeft" cx="140" cy="118" r="4.2" fill="#fb923c" stroke="#060b16" stroke-width="1.2"/>
-                  <text x="140" y="18" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="bold">文字題</text>
-                  <text id="profRadarPctTop" x="140" y="33" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="bold" font-family="monospace">--%</text>
-                  <text x="224" y="114" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">SQL實作</text>
-                  <text id="profRadarPctRight" x="224" y="129" text-anchor="start" fill="#34d399" font-size="12" font-weight="bold" font-family="monospace">--%</text>
-                  <text x="140" y="211" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="bold">功課</text>
-                  <text id="profRadarPctBottom" x="140" y="226" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="bold" font-family="monospace">--%</text>
-                  <text x="56" y="114" text-anchor="end" fill="#e2e8f0" font-size="12" font-weight="bold">測驗</text>
-                  <text id="profRadarPctLeft" x="56" y="129" text-anchor="end" fill="#fb923c" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                  <text x="140" y="18" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="bold">SQL實作</text>
+                  <text id="profRadarPctTop" x="140" y="33" text-anchor="middle" fill="#34d399" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                  <text x="218" y="168" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">功課</text>
+                  <text id="profRadarPctRight" x="218" y="183" text-anchor="start" fill="#c084fc" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                  <text x="62" y="168" text-anchor="end" fill="#e2e8f0" font-size="12" font-weight="bold">測驗</text>
+                  <text id="profRadarPctLeft" x="62" y="183" text-anchor="end" fill="#fb923c" font-size="12" font-weight="bold" font-family="monospace">--%</text>
                 </svg>
               </div>
 
@@ -800,31 +794,13 @@
               </div>
             </div>
 
-            <!-- Lower Band: 4 Compact Score Tiles -->
-            <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-4 border-t border-[#22d3ee]/15 bg-[#060c1a]/30 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- 文字題總分 -->
-              <div class="prof-score-tile px-3.5 py-3 flex flex-col justify-between gap-2">
-                <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent opacity-80"></div>
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2.5">
-                    <span class="w-8 h-8 rounded-lg bg-[#22d3ee]/12 border border-[#22d3ee]/35 text-[#22d3ee] flex items-center justify-center shrink-0">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
-                    </span>
-                    <span class="text-xs font-bold text-[#e2e8f0]">文字題總分</span>
-                  </div>
-                  <div class="flex items-baseline gap-1">
-                    <span id="profTextScore" class="font-mono-code text-2xl font-bold italic text-white tabular-nums leading-none">--</span>
-                    <span class="font-mono-code text-xs text-[#64748b]">/ 100</span>
-                  </div>
-                </div>
-                <div class="h-1.5 w-full rounded-full bg-[#081224]/80 overflow-hidden"><div id="profTextBar" class="h-full rounded-full bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] transition-all duration-500" style="width:0%"></div></div>
-              </div>
-
-              <!-- SQL實作總分 (4 Inline Sub-Items, Zero Weight Percentages Exposed) -->
+            <!-- Lower Band: 3 Equal Score Tiles (無文字題總分，遊戲快打不計分) -->
+            <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-4 border-t border-[#22d3ee]/15 bg-[#060c1a]/25 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- 1. SQL實作總分 -->
               <div class="prof-score-tile px-3.5 py-3 space-y-2">
                 <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#34d399] to-transparent opacity-80"></div>
                 <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2.5">
+                  <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-lg bg-[#10b981]/12 border border-[#10b981]/35 text-[#34d399] flex items-center justify-center shrink-0">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
                     </span>
@@ -836,31 +812,27 @@
                   </div>
                 </div>
                 <div class="h-1.5 w-full rounded-full bg-[#071a15]/80 overflow-hidden"><div id="profSqlBar" class="h-full rounded-full bg-gradient-to-r from-[#059669] to-[#34d399] transition-all duration-500" style="width:0%"></div></div>
-                <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 pt-1.5 border-t border-[#10b981]/15 font-mono-code text-[10px]">
+                <div class="grid grid-cols-3 gap-2 pt-1.5 border-t border-[#10b981]/15 font-mono-code text-[10px]">
                   <div class="space-y-0.5">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>闖關練習</span><span id="profQuestStat" class="font-bold text-[#38bdf8] tabular-nums">0 / 82</span></div>
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>計分練習</span><span id="profQuestStat" class="font-bold text-[#38bdf8] tabular-nums">0/96</span></div>
                     <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profQuestBar" class="h-full bg-[#38bdf8] transition-all duration-300" style="width:0%"></div></div>
                   </div>
                   <div class="space-y-0.5">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>紙本功課</span><span id="profPaperHwStat" class="font-bold text-[#fbbf24] tabular-nums">-- / 100</span></div>
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>正規化</span><span id="profNormStat" class="font-bold text-[#fb923c] tabular-nums">0/10</span></div>
+                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profNormBar" class="h-full bg-[#fb923c] transition-all duration-300" style="width:0%"></div></div>
+                  </div>
+                  <div class="space-y-0.5">
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>紙本功課</span><span id="profPaperHwStat" class="font-bold text-[#fbbf24] tabular-nums">--</span></div>
                     <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profPaperHwBar" class="h-full bg-[#fbbf24] transition-all duration-300" style="width:0%"></div></div>
-                  </div>
-                  <div class="space-y-0.5">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>DSE試題</span><span id="profDseStat" class="font-bold text-[#c084fc] tabular-nums">0 / 24</span></div>
-                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profDseBar" class="h-full bg-[#c084fc] transition-all duration-300" style="width:0%"></div></div>
-                  </div>
-                  <div class="space-y-0.5">
-                    <div class="flex items-center justify-between text-[#94a3b8]"><span>遊戲快打</span><span id="profBlockStat" class="font-bold text-[#34d399] tabular-nums">0 分</span></div>
-                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profBlockBar" class="h-full bg-[#10b981] transition-all duration-300" style="width:0%"></div></div>
                   </div>
                 </div>
               </div>
 
-              <!-- 功課總分 -->
+              <!-- 2. 功課總分 -->
               <div class="prof-score-tile px-3.5 py-3 flex flex-col justify-between gap-2">
                 <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#c084fc] to-transparent opacity-80"></div>
                 <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2.5">
+                  <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-lg bg-[#c084fc]/12 border border-[#c084fc]/35 text-[#c084fc] flex items-center justify-center shrink-0">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
                     </span>
@@ -874,11 +846,11 @@
                 <div class="h-1.5 w-full rounded-full bg-[#150b24]/80 overflow-hidden"><div id="profHwBar" class="h-full rounded-full bg-gradient-to-r from-[#9333ea] to-[#c084fc] transition-all duration-500" style="width:0%"></div></div>
               </div>
 
-              <!-- 測驗總分 -->
+              <!-- 3. 測驗總分 -->
               <div class="prof-score-tile px-3.5 py-3 flex flex-col justify-between gap-2">
                 <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#fb923c] to-transparent opacity-80"></div>
                 <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2.5">
+                  <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-lg bg-[#fb923c]/12 border border-[#fb923c]/35 text-[#fb923c] flex items-center justify-center shrink-0">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><polyline points="9 12 11 14 15 10"/></svg>
                     </span>
@@ -979,57 +951,51 @@
           </div>
         </div>
 
-        <!-- Mission Brief -->
-        <section class="p-4 sm:p-6 bg-[#0d1219]/85">
-          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
-            <div class="space-y-1.5">
-              <div class="flex flex-wrap items-center gap-2 font-mono-code text-[11px]">
-                <span id="lvlChapterTag" class="text-[#00e5ff] font-semibold"></span>
+        <!-- Compact Mission Brief (Slim Header + Collapsible 概念重點) -->
+        <section class="px-4 py-2.5 sm:px-5 sm:py-3 bg-[#0b1220]/85 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="min-w-0 space-y-0.5">
+              <div class="flex flex-wrap items-center gap-1.5 font-mono-code text-[10px]">
+                <span id="lvlChapterTag" class="text-[#22d3ee] font-bold"></span>
                 <span class="text-[#324052]">/</span>
-                <span id="lvlTypeTag" class="px-1.5 py-0.5 rounded-[2px] bg-[#ff2e88]/15 text-[#ff66a8] font-bold"></span>
-                <span id="lvlDiffTag" class="px-1.5 py-0.5 rounded-[2px] font-bold"></span>
-                <span id="lvlXpTag" class="text-[#f5a623] font-bold"></span>
-                <span id="lvlTopicProgressTag" class="text-[#9aa7b8]"></span>
+                <span id="lvlTypeTag" class="px-1.5 py-0.5 rounded bg-[#c084fc]/15 text-[#e9d5ff] font-bold"></span>
+                <span id="lvlDiffTag" class="px-1.5 py-0.5 rounded font-bold"></span>
+                <span id="lvlXpTag" class="text-[#facc15] font-bold"></span>
+                <span id="lvlTopicProgressTag" class="text-[#94a3b8]"></span>
               </div>
-              <h1 id="lvlTitle" class="font-display text-xl sm:text-2xl font-bold text-white leading-tight"></h1>
+              <h1 id="lvlTitle" class="font-display text-base sm:text-lg font-bold text-white leading-snug truncate"></h1>
             </div>
-
             <div class="flex items-center gap-1.5 shrink-0">
-              <button id="prevLevelBtn" class="hw-btn px-3 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-slate-200 disabled:opacity-35">
-                ← 上一關
-              </button>
-              <button id="nextLevelBtn" class="hw-btn px-3 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-slate-200 disabled:opacity-35">
-                下一關 →
-              </button>
+              <button id="toggleConceptBtn" type="button" class="hw-btn px-2.5 py-1 rounded-md bg-[#0e1b30] hover:bg-[#162947] border border-[#22d3ee]/35 text-[11px] font-bold text-[#7dd3fc]">💡 概念重點</button>
+              <button id="prevLevelBtn" type="button" class="hw-btn px-2.5 py-1 rounded-md bg-[#111b2b] hover:bg-[#1a2840] border border-[#2a3647] text-[11px] font-bold text-slate-200 disabled:opacity-35">← 上一題</button>
+              <button id="nextLevelBtn" type="button" class="hw-btn px-2.5 py-1 rounded-md bg-[#111b2b] hover:bg-[#1a2840] border border-[#2a3647] text-[11px] font-bold text-slate-200 disabled:opacity-35">下一題 →</button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-3 border-t border-[#1b2430]">
-            <div class="md:col-span-6">
-              <div class="font-mono-code text-[10px] tracking-widest text-[#64748b] uppercase mb-1.5">概念重點</div>
-              <div id="lvlConcept" class="concept-prose text-sm text-[#cbd5e1] leading-relaxed"></div>
-            </div>
-            <div class="md:col-span-6 md:pl-4 md:border-l md:border-[#1b2430]">
-              <div class="font-mono-code text-[10px] tracking-widest text-[#ff2e88] uppercase font-bold mb-1.5 flex items-center gap-1.5">
-                <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> 題目要求
-              </div>
-              <div id="lvlTask" class="task-prose text-sm sm:text-[15px] font-bold text-white leading-relaxed"></div>
-            </div>
+          <div id="lvlConceptWrap" class="hidden rounded-md border border-[#22d3ee]/25 bg-[#081426]/80 px-3 py-2 text-xs text-[#cbd5e1] leading-relaxed">
+            <span class="font-mono-code text-[10px] text-[#22d3ee] font-bold mr-1.5">概念重點：</span>
+            <span id="lvlConcept" class="concept-prose"></span>
+          </div>
+
+          <div class="rounded-md border-l-2 border-[#22d3ee] bg-[#0e1a2e]/75 px-3 py-2 flex items-start gap-2">
+            <span class="font-mono-code text-[10px] font-bold text-[#22d3ee] shrink-0 mt-0.5">題目</span>
+            <div id="lvlTask" class="task-prose text-xs sm:text-sm font-bold text-white leading-snug"></div>
           </div>
         </section>
 
-        <!-- English Table Schema & Data Viewer -->
-        <section id="schemaPanel" class="p-4 sm:p-6 bg-[#0a0e14]/70">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <!-- Compact Collapsible English Table Schema & Data Viewer -->
+        <section id="schemaPanel" class="px-4 py-2 sm:px-5 sm:py-2.5 bg-[#070d18]/80">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
-              <i data-lucide="database" class="w-4 h-4 text-[#00e5ff]"></i>
-              <h2 class="text-xs sm:text-sm font-bold text-white tracking-wide">
-                資料表結構與數據
-              </h2>
+              <button id="toggleSchemaBtn" type="button" class="flex items-center gap-1.5 text-xs font-bold text-[#e2e8f0] hover:text-[#22d3ee] transition">
+                <i data-lucide="database" class="w-3.5 h-3.5 text-[#22d3ee]"></i>
+                <span>資料表結構與數據</span>
+                <span id="schemaCollapseLabel" class="font-mono-code text-[10px] text-[#94a3b8]">（收合 ▴）</span>
+              </button>
             </div>
-            <div id="tableTabs" class="flex flex-wrap gap-1.5"></div>
+            <div id="tableTabs" class="flex flex-wrap gap-1"></div>
           </div>
-          <div id="tableViewer" class="overflow-x-auto"></div>
+          <div id="tableViewer" class="mt-2 overflow-x-auto max-h-[210px] overflow-y-auto"></div>
         </section>
 
         <!-- WORKSPACE 1: SQL / DDL EDITOR -->
@@ -1543,7 +1509,37 @@
               ← 上一個階段
             </button>
             <div class="flex items-center gap-2">
-              <button id="goToNormLevelsBtn" class="neo-box px-3.5 py-1.5 bg-[#ff2e88] hover:bg-[#e11d74] text-xs font-black text-white">
+              <!-- Dedicated Normalization Practice Bank (C8-01 ~ C8-10) -->
+        <div id="normPagePracticePanel" class="cyber-glass-frame p-4 sm:p-5 space-y-3.5 mt-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#22d3ee]/15 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="inline-flex items-center gap-[3px]" aria-hidden="true">
+                <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#fb923c]"></span>
+                <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#facc15]"></span>
+                <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#22d3ee]"></span>
+              </span>
+              <h3 class="font-display text-sm sm:text-base font-bold text-white">正規化實戰練習（1NF–3NF · 10 題）</h3>
+            </div>
+            <span id="normPageProgressBadge" class="font-mono-code text-xs font-bold text-[#fb923c]">已完成 0 / 10 題</span>
+          </div>
+          <div id="normPagePills" class="flex flex-wrap gap-1.5"></div>
+          <div id="normPageQuestionBox" class="prof-glass-inset p-4 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div id="normPageQTitle" class="font-display text-sm sm:text-base font-bold text-white"></div>
+              <span id="normPageQDiff" class="font-mono-code text-[10px] px-2 py-0.5 rounded font-bold"></span>
+            </div>
+            <div id="normPageQTask" class="text-xs sm:text-sm text-[#e2e8f0] leading-relaxed"></div>
+            <div id="normPageQBody" class="space-y-2.5"></div>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <button id="normPageSubmitBtn" type="button" class="hw-btn hw-btn-primary px-4 py-2 rounded-lg text-xs font-bold">提交核對答案</button>
+              <button id="normPageHintBtn" type="button" class="hw-btn px-3 py-2 rounded-lg bg-[#111b2b] border border-[#facc15]/40 text-[#fde047] text-xs font-bold">睇引導提示</button>
+              <button id="normPageNextBtn" type="button" class="hw-btn px-3 py-2 rounded-lg bg-[#0d1c30] border border-[#22d3ee]/40 text-[#22d3ee] text-xs font-bold">下一題 →</button>
+            </div>
+            <div id="normPageHintBox" class="hidden rounded-md border-l-2 border-[#facc15] bg-[#facc15]/10 px-3 py-2 text-xs text-[#fde68a]"></div>
+            <div id="normPageFeedback" class="hidden rounded-md px-3.5 py-2.5 text-xs font-bold"></div>
+          </div>
+        </div>
+        <button id="goToNormLevelsBtn" class="neo-box px-3.5 py-1.5 bg-[#ff2e88] hover:bg-[#e11d74] text-xs font-black text-white">
                 去挑戰 L19–L20 正規化實戰關卡 →
               </button>
               <button id="normNextStageBtn" class="neo-box px-3.5 py-1.5 bg-[#111827] hover:bg-[#1f2937] text-xs font-black text-[#facc15]">
@@ -4439,9 +4435,7 @@ ORDER BY s.SID ASC;</textarea>
       document.getElementById('homeContinueQuestBtn').addEventListener('click', () => { switchMode('quest'); loadLevel(state.currentLevelIdx); });
       document.getElementById('homeLaunchBlockBtn').addEventListener('click', () => switchMode('block'));
       document.getElementById('modeQuestBtn').addEventListener('click', () => switchMode('quest'));
-      document.getElementById('modeDseBtn').addEventListener('click', () => switchMode('dse'));
-      document.getElementById('homeLaunchDseBtn').addEventListener('click', () => switchMode('dse'));
-      document.getElementById('dseRunBtn').addEventListener('click', () => runDseSql(false));
+                  document.getElementById('dseRunBtn').addEventListener('click', () => runDseSql(false));
       document.getElementById('dseCheckBtn').addEventListener('click', () => runDseSql(true));
       document.getElementById('dseNextBtn').addEventListener('click', () => {
         if (dseState.activeIdx < DSE_CHALLENGES.length - 1) {
@@ -4915,7 +4909,7 @@ ORDER BY s.SID ASC;</textarea>
         styleNav('modeSandboxBtn', mode === 'sandbox', 'bg-[#e879f9] text-[#14051a] font-black');
 
         if (mode === 'home') {
-          renderUpgradedHomeRoadmap();
+          window.renderHomeRoadmap();
           syncAllHudWidgets();
           if (window.HomeLeaderboard) window.HomeLeaderboard.refresh(false);
         }
@@ -4952,6 +4946,7 @@ ORDER BY s.SID ASC;</textarea>
 
         for (let ch = 1; ch <= 8; ch++) {
           const firstIdx = LEVELS.findIndex((l) => l.ch === ch);
+          if (firstIdx === -1) continue;
           const chName = LEVELS[firstIdx].chName;
           const st = getChapterStats(ch);
           const unlocked = isActiveTeacherMode() || isChapterUnlocked(ch);
@@ -5380,7 +5375,7 @@ ORDER BY s.SID ASC;</textarea>
           viewBtn.addEventListener('click', () => {
             studentViewOverride = !studentViewOverride;
             syncTeacherHeaderUI();
-            renderUpgradedHomeRoadmap();
+            window.renderHomeRoadmap();
             if (state.mode === 'profile') loadProfileDashboard(true);
             showCyberToast(studentViewOverride ? '已切換為學生視角' : '已返回老師模式', 'info');
           });
@@ -5425,9 +5420,611 @@ ORDER BY s.SID ASC;</textarea>
 
         // Initial render refresh
         syncTeacherHeaderUI();
-        renderUpgradedHomeRoadmap();
+        window.renderHomeRoadmap();
         syncAllHudWidgets();
         fetchLeaderboard(true);
+      });
+    })();
+
+  
+    // =========================================================================
+    // 14. v11 REFINEMENTS:
+    //     - Classify 24 DSE Questions into Ch.1-Ch.7 inside 計分練習 (96 SQL Qs)
+    //     - Extract Ch.8 Normalization (10 Qs) to dedicated 正規化 page
+    //     - Compact Mission Brief + Collapsible Concept & Schema Panel
+    //     - 3-Axis Radar Chart + 3 Score Tiles (No 文字題總分) + Immediate Post-Login Profile Load
+    //     - 遊戲快打 不計分 (No XP / No Grade Impact)
+    // =========================================================================
+    (function () {
+      'use strict';
+
+      // 1. Extract Ch.8 (Normalization) into NORM_LEVELS & merge 24 DSE_CHALLENGES into Ch.1-Ch.7
+      const DSE_TOPIC_MAP = {
+        'DSE-02': 1, 'DSE-07': 1, 'DSE-08': 1,
+        'DSE-01': 2, 'DSE-03': 2,
+        'DSE-13': 3, 'DSE-22': 3,
+        'DSE-04': 4, 'DSE-10': 4, 'DSE-11': 4, 'DSE-16': 4, 'DSE-17': 4,
+        'DSE-09': 5, 'DSE-14': 5, 'DSE-23': 5,
+        'DSE-05': 6, 'DSE-12': 6, 'DSE-15': 6, 'DSE-19': 6, 'DSE-20': 6,
+        'DSE-06': 7, 'DSE-18': 7, 'DSE-21': 7, 'DSE-24': 7
+      };
+      const CH_NAMES = {
+        1: 'Ch.1 單表查詢與排序',
+        2: 'Ch.2 運算符與條件邏輯',
+        3: 'Ch.3 萬用字元、空值與函數',
+        4: 'Ch.4 聚合函數與 GROUP BY',
+        5: 'Ch.5 多表聯結 JOIN',
+        6: 'Ch.6 子查詢與集合運算',
+        7: 'Ch.7 資料定義、操控與 VIEW'
+      };
+
+      const NORM_LEVELS = LEVELS.filter((l) => l.ch === 8);
+      window.NORM_LEVELS = NORM_LEVELS;
+
+      // Rebuild LEVELS in-place: Ch.1-Ch.7 core + classified DSE challenges right inside each chapter
+      const sqlCore = LEVELS.filter((l) => l.ch >= 1 && l.ch <= 7);
+      const rebuilt = [];
+      for (let ch = 1; ch <= 7; ch++) {
+        sqlCore.filter((l) => l.ch === ch).forEach((l) => rebuilt.push(l));
+        DSE_CHALLENGES.filter((d) => (DSE_TOPIC_MAP[d.id] || 6) === ch).forEach((d) => {
+          rebuilt.push({
+            id: d.id,
+            ch,
+            chName: CH_NAMES[ch],
+            diff: 'hard',
+            type: d.type === 'dse_ddl' ? 'dse_ddl' : 'sql',
+            typeLabel: 'DSE試題',
+            isDse: true,
+            dseSet: d.set,
+            verifyQuery: d.verifyQuery || '',
+            orderMatters: Boolean(d.orderMatters),
+            xp: 40,
+            title: `[DSE] ${d.title}`,
+            concept: `HKDSE 實戰題（資料庫：<code>${d.set}</code>）。請細心閱讀資料表結構並寫出符合 SQL-92 標準的指令。`,
+            task: d.task || d.prompt || d.title,
+            defaultStep: 0,
+            tables: Object.keys((STATIC_DSE_TABLES[d.set] || {})),
+            keywords: [],
+            starter: '',
+            hint: ''
+          });
+        });
+      }
+      LEVELS.length = 0;
+      rebuilt.forEach((x) => LEVELS.push(x));
+
+      // 2. Override getChapterStats (core questions unlock next chapter; total includes classified DSE)
+      window.getChapterStats = function (chNum) {
+        const items = LEVELS.filter((l) => l.ch === chNum);
+        const coreItems = items.filter((l) => !l.isDse);
+        const done = items.filter((l) => state.completed[l.id]).length;
+        const coreDone = coreItems.filter((l) => state.completed[l.id]).length;
+        return {
+          total: items.length,
+          done,
+          coreTotal: coreItems.length,
+          coreDone,
+          cleared: coreItems.length > 0 && coreDone >= coreItems.length
+        };
+      };
+      getChapterStats = window.getChapterStats;
+
+      // 3. Override renderSchemaViewer to support both STUDENT/COURSE/ENROL and DSE_SETS tables!
+      window.renderSchemaViewer = function () {
+        const lvl = LEVELS[state.currentLevelIdx] || LEVELS[0];
+        const tableMap = lvl.dseSet ? (STATIC_DSE_TABLES[lvl.dseSet] || STATIC_TABLES) : STATIC_TABLES;
+        const tblNames = Object.keys(tableMap);
+        if (!tblNames.includes(state.activeSchemaTable)) {
+          state.activeSchemaTable = (lvl.tables && tblNames.includes(lvl.tables[0])) ? lvl.tables[0] : tblNames[0];
+        }
+        const tabsEl = document.getElementById('tableTabs');
+        const viewerEl = document.getElementById('tableViewer');
+        if (!tabsEl || !viewerEl) return;
+        tabsEl.innerHTML = '';
+        tblNames.forEach((tName) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          const act = tName === state.activeSchemaTable;
+          b.className = act
+            ? 'px-2 py-0.5 rounded bg-[#22d3ee]/20 border border-[#22d3ee] text-[#22d3ee] font-mono-code text-[11px] font-bold'
+            : 'px-2 py-0.5 rounded bg-[#101827] border border-[#263242] text-[#94a3b8] hover:text-white font-mono-code text-[11px]';
+          b.textContent = tName;
+          b.addEventListener('click', () => { state.activeSchemaTable = tName; window.renderSchemaViewer(); });
+          tabsEl.appendChild(b);
+        });
+        const tObj = tableMap[state.activeSchemaTable];
+        if (!tObj) { viewerEl.innerHTML = ''; return; }
+        const cols = tObj.columns || [];
+        const vals = tObj.values || [];
+        viewerEl.innerHTML = renderTableHtml(cols, vals);
+      };
+      renderSchemaViewer = window.renderSchemaViewer;
+
+      // 4. Override loadLevel so dse_ddl opens sqlWorkspace cleanly & concept resets collapsed
+      const origLoadLevel = loadLevel;
+      window.loadLevel = function (idx) {
+        const lvl = LEVELS[idx];
+        if (!lvl) return;
+        const conceptWrap = document.getElementById('lvlConceptWrap');
+        if (conceptWrap) conceptWrap.classList.add('hidden');
+        if (lvl.type === 'dse_ddl') {
+          const savedType = lvl.type;
+          lvl.type = 'ddl';
+          origLoadLevel(idx);
+          lvl.type = savedType;
+        } else {
+          origLoadLevel(idx);
+        }
+      };
+      loadLevel = window.loadLevel;
+
+      // 5. Override runUserSql to support DSE_SETS db & dse_ddl seamlessly
+      const origRunUserSql = runUserSql;
+      window.runUserSql = async function (doGrade) {
+        const lvl = LEVELS[state.currentLevelIdx];
+        if (!lvl || !lvl.dseSet) return origRunUserSql(doGrade);
+
+        const userSql = document.getElementById('sqlInput').value.trim();
+        const outEl = document.getElementById('sqlOutputArea');
+        const fbEl = document.getElementById('sqlFeedback');
+        fbEl.classList.add('hidden');
+        if (!state.SQL) { showLevelError(fbEl, 'SQLite WASM 引擎尚未載入完成。', false); return; }
+        if (!userSql) { showLevelError(fbEl, '請勿交白卷！請先輸入 SQL 指令。', true, '__EMPTY__'); return; }
+
+        const db = createDseDb(lvl.dseSet);
+        let gradePayload = null;
+        try {
+          const results = db.exec(userSql);
+          const lastRes = results.length > 0 ? results[results.length - 1] : null;
+          if (lvl.type === 'dse_ddl') {
+            let verifyRow = [];
+            let previewHtml = '<div class="text-xs text-[#10b981] font-bold mb-2">✓ DDL / DML 指令執行成功！</div>';
+            if (lvl.verifyQuery) {
+              const vRes = db.exec(lvl.verifyQuery)[0];
+              if (vRes) {
+                previewHtml += renderTableHtml(vRes.columns, vRes.values);
+                if (vRes.values.length > 0) verifyRow = vRes.values[0];
+              }
+            }
+            outEl.innerHTML = previewHtml;
+            if (doGrade) gradePayload = { action: 'grade', levelId: lvl.id, userSql, verifyRow };
+          } else {
+            outEl.innerHTML = lastRes ? renderTableHtml(lastRes.columns, lastRes.values) : '<div class="text-xs text-[#facc15] font-mono-code">（回傳 0 行）</div>';
+            if (doGrade) {
+              gradePayload = {
+                action: 'grade',
+                levelId: lvl.id,
+                userSql,
+                colCount: lastRes ? lastRes.columns.length : 0,
+                canonical: lastRes ? canonicalizeResultRows(lastRes.values, Boolean(lvl.orderMatters)) : ''
+              };
+            }
+          }
+        } catch (err) {
+          outEl.innerHTML = `<div class="text-xs text-[#ff66a8] font-mono-code">SQL Error: ${escapeHtml(err.message)}</div>`;
+          if (doGrade) showLevelError(fbEl, `語法錯誤：${escapeHtml(err.message)}`, true, userSql);
+          return;
+        } finally { db.close(); }
+
+        if (doGrade && gradePayload) {
+          fbEl.className = 'border-l-2 border-[#22d3ee] bg-[#22d3ee]/10 px-3.5 py-2.5 text-xs font-mono-code text-[#bae6fd]';
+          fbEl.textContent = '🔒 正在連線後端驗證 DSE 實戰答案...';
+          fbEl.classList.remove('hidden');
+          const res = await callGradingBackend(gradePayload);
+          if (!res.ok) showLevelError(fbEl, res.message || '批改失敗', false);
+          else if (res.passed) markLevelPassed(lvl, fbEl, res.message);
+          else showLevelError(fbEl, res.message, true, userSql);
+        }
+      };
+      runUserSql = window.runUserSql;
+
+      // 6. Override renderSidebars & renderHomeRoadmap for 7 SQL Chapters (with DSE badges) + Norm shortcut
+      const origRenderSidebars = renderSidebars;
+      window.renderSidebars = function () {
+        const listEl = document.getElementById('chapterList');
+        const mobEl = document.getElementById('mobileChapterList');
+        const build7 = () => {
+          let out = '';
+          for (let ch = 1; ch <= 7; ch++) {
+            const items = LEVELS.filter((l) => l.ch === ch);
+            const st = getChapterStats(ch);
+            const unlocked = isChapterUnlocked(ch);
+            const isOpen = Boolean(state.openChapters[ch]);
+            out += `<div class="rounded-lg border ${unlocked ? 'border-[#1d2b40] bg-[#0b1322]/80' : 'border-[#141d2c] bg-[#070b14]/70 opacity-60'} overflow-hidden">
+              <button type="button" data-ch-toggle="${ch}" class="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-[#111e33] transition">
+                <span class="font-display text-xs font-bold ${unlocked ? 'text-white' : 'text-[#64748b]'} truncate">${escapeHtml(CH_NAMES[ch])}</span>
+                <span class="font-mono-code text-[10px] font-bold ${st.cleared ? 'text-[#34d399]' : 'text-[#38bdf8]'} shrink-0 ml-2">${st.done}/${st.total}</span>
+              </button>`;
+            if (isOpen && unlocked) {
+              out += '<div class="border-t border-[#162235] divide-y divide-[#131d2d]">';
+              items.forEach((lvl) => {
+                const idx = LEVELS.indexOf(lvl);
+                const active = idx === state.currentLevelIdx;
+                const done = Boolean(state.completed[lvl.id]);
+                const tag = lvl.isDse
+                  ? '<span class="px-1 py-0.5 rounded bg-[#c084fc]/20 text-[#e9d5ff] text-[9px] font-bold">DSE</span>'
+                  : (lvl.diff === 'hard' ? '<span class="px-1 py-0.5 rounded bg-[#fb7185]/20 text-[#fda4af] text-[9px] font-bold">難</span>' : '<span class="px-1 py-0.5 rounded bg-[#facc15]/15 text-[#fde047] text-[9px] font-bold">中</span>');
+                out += `<button type="button" data-lvl-idx="${idx}" class="w-full px-3 py-1.5 flex items-center justify-between gap-2 text-left text-[11px] transition ${active ? 'bg-[#22d3ee]/15 text-[#22d3ee] font-bold' : 'text-[#cbd5e1] hover:bg-[#101c30]'}">
+                  <span class="truncate">${done ? '✓ ' : ''}${escapeHtml(lvl.id)} ${escapeHtml(lvl.title.replace(/^\[DSE\]\s*/, ''))}</span>${tag}
+                </button>`;
+              });
+              out += '</div>';
+            }
+            out += '</div>';
+          }
+          return out;
+        };
+        const markup = build7();
+        [listEl, mobEl].forEach((container) => {
+          if (!container) return;
+          container.innerHTML = markup;
+          container.querySelectorAll('[data-ch-toggle]').forEach((b) => {
+            b.addEventListener('click', () => {
+              const c = Number(b.getAttribute('data-ch-toggle'));
+              state.openChapters[c] = !state.openChapters[c];
+              window.renderSidebars();
+            });
+          });
+          container.querySelectorAll('[data-lvl-idx]').forEach((b) => {
+            b.addEventListener('click', () => {
+              loadLevel(Number(b.getAttribute('data-lvl-idx')));
+              const dr = document.getElementById('mobileDrawer');
+              if (dr) dr.classList.add('hidden');
+            });
+          });
+        });
+      };
+      renderSidebars = window.renderSidebars;
+
+      // Override renderHomeRoadmap for 7 SQL Topics + 1 Normalization Dedicated Page Card
+      window.renderHomeRoadmap = function () {
+        const grid = document.getElementById('homeRoadmapGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        const curLvl = LEVELS[state.currentLevelIdx] || LEVELS[0];
+        const lbl = document.getElementById('homeContinueLabel');
+        if (lbl) lbl.textContent = `繼續計分練習：${curLvl.id} (Ch.${curLvl.ch})`;
+
+        const topicColors = ['#22d3ee', '#38bdf8', '#facc15', '#c084fc', '#e879f9', '#fb923c', '#34d399'];
+        const chDescs = [
+          'SELECT、DISTINCT、AS 別名、ORDER BY（含 DSE 實戰題）',
+          'WHERE、AND/OR/NOT、BETWEEN、IN 與 NOT IN（含 DSE 實戰題）',
+          'LIKE % 與 _、IS NULL、字串與日期函數（含 DSE 實戰題）',
+          'COUNT/SUM/AVG/MAX/MIN、GROUP BY 與 HAVING（含 DSE 實戰題）',
+          'INNER、LEFT、RIGHT、NATURAL JOIN 多表聯結（含 DSE 實戰題）',
+          '子查詢、UNION、INTERSECT 與 EXCEPT（含 DSE 實戰題）',
+          'CREATE/ALTER/DROP TABLE、DML、CREATE VIEW 與 ERD（含 DSE 實戰題）'
+        ];
+
+        for (let ch = 1; ch <= 7; ch++) {
+          const firstIdx = LEVELS.findIndex((l) => l.ch === ch);
+          const st = getChapterStats(ch);
+          const unlocked = isChapterUnlocked(ch);
+          const pct = st.total > 0 ? Math.round((st.done / st.total) * 100) : 0;
+          const isComplete = st.total > 0 && st.done >= st.total;
+          const hex = topicColors[ch - 1];
+
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = `prof-score-tile text-left p-3.5 flex flex-col justify-between gap-2.5 ${unlocked ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'}`;
+          card.innerHTML = `
+            <div class="absolute top-0 left-0 right-0 h-[2px] opacity-85" style="background:linear-gradient(90deg,transparent,${isComplete ? '#34d399' : hex},transparent);"></div>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between gap-2 font-mono-code text-[10px]">
+                <span class="px-2 py-0.5 rounded-sm font-bold text-[#040914]" style="background:${unlocked ? hex : '#334155'};">TOPIC 0${ch}</span>
+                <span class="text-[#94a3b8]">${st.total} 題</span>
+              </div>
+              <div class="font-display font-bold text-sm text-white leading-snug">${escapeHtml(CH_NAMES[ch].replace(/^Ch\.\d+\s*/, ''))}</div>
+              <p class="text-[11px] text-[#9aa7b8] leading-relaxed">${escapeHtml(chDescs[ch - 1])}</p>
+            </div>
+            <div class="space-y-1 pt-1">
+              <div class="h-1.5 w-full rounded-full bg-[#050914] border border-[#1d2b40] overflow-hidden"><div class="h-full rounded-full transition-all duration-300" style="width:${pct}%;background:${isComplete ? '#34d399' : hex};"></div></div>
+              <div class="flex items-center justify-between font-mono-code text-[10px] text-[#94a3b8] tabular-nums">
+                <span>${unlocked ? `${st.done} / ${st.total} 題` : '🔒 完成上課解鎖'}</span>
+                <span style="color:${unlocked ? (isComplete ? '#34d399' : hex) : '#64748b'}">${isComplete ? '✓ 100%' : pct + '%'}</span>
+              </div>
+            </div>`;
+          card.addEventListener('click', () => {
+            if (!unlocked) { playErrorBuzz(); showCyberToast(`請先完成第 ${ch - 1} 課基礎題以解鎖第 ${ch} 課`, 'warn'); return; }
+            const nextUndone = LEVELS.findIndex((l) => l.ch === ch && !state.completed[l.id]);
+            switchMode('quest');
+            loadLevel(nextUndone !== -1 ? nextUndone : firstIdx);
+          });
+          grid.appendChild(card);
+        }
+
+        // 8th Card: Dedicated 正規化 1NF–3NF Page Shortcut
+        const normDone = NORM_LEVELS.filter((n) => state.completed[n.id]).length;
+        const normPct = NORM_LEVELS.length ? Math.round((normDone / NORM_LEVELS.length) * 100) : 0;
+        const normCard = document.createElement('button');
+        normCard.type = 'button';
+        normCard.className = 'prof-score-tile text-left p-3.5 flex flex-col justify-between gap-2.5 cursor-pointer';
+        normCard.innerHTML = `
+          <div class="absolute top-0 left-0 right-0 h-[2px] opacity-85" style="background:linear-gradient(90deg,transparent,#fb923c,transparent);"></div>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between gap-2 font-mono-code text-[10px]">
+              <span class="px-2 py-0.5 rounded-sm font-bold text-[#040914] bg-[#fb923c]">獨立專頁</span>
+              <span class="text-[#94a3b8]">10 題</span>
+            </div>
+            <div class="font-display font-bold text-sm text-white leading-snug">正規化 1NF–3NF</div>
+            <p class="text-[11px] text-[#9aa7b8] leading-relaxed">UNF→1NF→2NF→3NF 互動拆表演示與 10 題異常診斷實戰</p>
+          </div>
+          <div class="space-y-1 pt-1">
+            <div class="h-1.5 w-full rounded-full bg-[#050914] border border-[#1d2b40] overflow-hidden"><div class="h-full rounded-full bg-[#fb923c]" style="width:${normPct}%"></div></div>
+            <div class="flex items-center justify-between font-mono-code text-[10px] text-[#94a3b8] tabular-nums"><span>${normDone} / ${NORM_LEVELS.length} 題</span><span class="text-[#fb923c]">${normPct}%</span></div>
+          </div>`;
+        normCard.addEventListener('click', () => switchMode('norm'));
+        grid.appendChild(normCard);
+
+        // Sync Hero 2-module gauges
+        const qDone = LEVELS.filter((l) => state.completed[l.id]).length;
+        const qPct = LEVELS.length ? Math.round((qDone / LEVELS.length) * 100) : 0;
+        const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+        const setW = (id, p) => { const e = document.getElementById(id); if (e) e.style.width = `${p}%`; };
+        setTxt('homeQuestGaugeTxt', `${qDone} / ${LEVELS.length}`);
+        setW('homeQuestGaugeBar', qPct);
+        setTxt('homeNormGaugeTxt', `${normDone} / ${NORM_LEVELS.length}`);
+        setW('homeNormGaugeBar', normPct);
+        setTxt('completedCountText', `${qDone} / ${LEVELS.length} 題`);
+        setTxt('compactDoneVal', `${qDone} / ${LEVELS.length}`);
+      };
+      renderHomeRoadmap = window.renderHomeRoadmap;
+
+      // 7. Dedicated 正規化 Page 10-Question Interactive Engine (C8-01..C8-10)
+      let activeNormIdx = 0;
+      function renderNormPageQuiz() {
+        const pills = document.getElementById('normPagePills');
+        const badge = document.getElementById('normPageProgressBadge');
+        if (!pills || !NORM_LEVELS.length) return;
+        const doneN = NORM_LEVELS.filter((n) => state.completed[n.id]).length;
+        if (badge) badge.textContent = `已完成 ${doneN} / ${NORM_LEVELS.length} 題`;
+
+        pills.innerHTML = NORM_LEVELS.map((n, i) => {
+          const done = Boolean(state.completed[n.id]);
+          const act = i === activeNormIdx;
+          return `<button type="button" data-np-idx="${i}" class="px-2.5 py-1 rounded-md font-mono-code text-[11px] font-bold border transition ${
+            act ? 'bg-[#fb923c] text-[#090d16] border-[#fb923c]' : done ? 'bg-[#10b981]/20 text-[#34d399] border-[#10b981]/50' : 'bg-[#0b1426] text-[#cbd5e1] border-[#1d2b40] hover:border-[#fb923c]/60'
+          }">${done ? '✓ ' : ''}${n.id}</button>`;
+        }).join('');
+        pills.querySelectorAll('[data-np-idx]').forEach((b) => {
+          b.addEventListener('click', () => { activeNormIdx = Number(b.getAttribute('data-np-idx')); renderNormPageQuiz(); });
+        });
+
+        const lvl = NORM_LEVELS[activeNormIdx];
+        const isHard = lvl.diff === 'hard';
+        document.getElementById('normPageQTitle').textContent = `${lvl.id}. ${lvl.title}`;
+        const dEl = document.getElementById('normPageQDiff');
+        dEl.textContent = isHard ? '困難 🔥' : '中等';
+        dEl.className = isHard ? 'font-mono-code text-[10px] px-2 py-0.5 rounded font-bold bg-[#fb7185]/20 text-[#fda4af]' : 'font-mono-code text-[10px] px-2 py-0.5 rounded font-bold bg-[#facc15]/15 text-[#fde047]';
+        document.getElementById('normPageQTask').innerHTML = lvl.task || '';
+        document.getElementById('normPageHintBox').classList.add('hidden');
+        document.getElementById('normPageHintBox').textContent = isHard ? '困難題不提供提示。' : `引導提示：${lvl.hint || ''}`;
+        const hBtn = document.getElementById('normPageHintBtn');
+        hBtn.disabled = isHard; hBtn.classList.toggle('opacity-40', isHard);
+        document.getElementById('normPageFeedback').classList.add('hidden');
+
+        const body = document.getElementById('normPageQBody');
+        body.innerHTML = '';
+        if (lvl.type === 'norm_diag') {
+          if (lvl.tableDesc) body.innerHTML += `<div class="rounded bg-[#060c18] border border-[#1d2b40] p-2.5 font-mono-code text-xs text-[#7dd3fc]">${lvl.tableDesc}</div>`;
+          const opts = (lvl.options || []).map((o) =>
+            `<label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-[#1d2b40] bg-[#081224]/70 hover:border-[#22d3ee]/50 cursor-pointer text-xs text-[#e2e8f0]">
+              <input type="radio" name="normPageChoice" value="${escapeHtml(o.id)}" class="mt-0.5 accent-[#22d3ee]" />
+              <span>${escapeHtml(o.text)}</span>
+            </label>`
+          ).join('');
+          body.innerHTML += `<div class="space-y-2">${opts}</div>`;
+        } else if (lvl.type === 'norm_split') {
+          const tables = lvl.targetTables || [];
+          const attrs = lvl.attributes || [];
+          body.innerHTML = attrs.map((attr) => `
+            <div class="flex flex-wrap items-center justify-between gap-2 p-2 rounded-lg border border-[#1d2b40] bg-[#081224]/70 text-xs">
+              <span class="font-mono-code font-bold text-[#7dd3fc]">${escapeHtml(attr)}</span>
+              <select data-np-split="${escapeHtml(attr)}" class="bg-[#050914] border border-[#2c405e] rounded px-2.5 py-1 text-xs text-white font-mono-code">
+                <option value="">-- 選擇所屬資料表 --</option>
+                ${tables.map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}
+              </select>
+            </div>`).join('');
+        }
+      }
+
+      async function gradeNormPageQuiz() {
+        const lvl = NORM_LEVELS[activeNormIdx];
+        const fb = document.getElementById('normPageFeedback');
+        let payload = { action: 'grade', levelId: lvl.id };
+        if (lvl.type === 'norm_diag') {
+          const checked = document.querySelector('input[name="normPageChoice"]:checked');
+          if (!checked) { showCyberToast('請先選擇一個診斷選項', 'warn'); return; }
+          payload.choice = checked.value;
+        } else {
+          const splitMap = {};
+          document.querySelectorAll('[data-np-split]').forEach((s) => { splitMap[s.getAttribute('data-np-split')] = s.value; });
+          payload.splitMap = splitMap;
+        }
+        fb.className = 'rounded-md px-3.5 py-2.5 text-xs font-mono-code bg-[#22d3ee]/10 text-[#bae6fd] border border-[#22d3ee]/35';
+        fb.textContent = '🔒 正在驗證答案...';
+        fb.classList.remove('hidden');
+        const res = await callGradingBackend(payload);
+        if (res && res.ok && res.passed) {
+          if (!state.completed[lvl.id]) { state.completed[lvl.id] = true; state.xp += (lvl.xp || 20); saveProgress(); }
+          fb.className = 'rounded-md px-3.5 py-2.5 text-xs font-bold bg-[#10b981]/15 text-[#34d399] border border-[#10b981]/45';
+          fb.textContent = `✓ ${res.message || '答對了！'}`;
+          playSuccessChime();
+          renderNormPageQuiz();
+          renderHomeRoadmap();
+        } else {
+          fb.className = 'rounded-md px-3.5 py-2.5 text-xs font-bold bg-[#fb7185]/15 text-[#fda4af] border border-[#fb7185]/45';
+          fb.textContent = `✕ ${(res && res.message) || '答案未完全正確，請再檢查。'}`;
+          playErrorBuzz();
+        }
+      }
+
+      // 8. Override 3-Axis Radar Chart & Post-Login Student Profile Auto-Fetch
+      function update3AxisRadar(pSql, pHw, pTest) {
+        const cx = 140, cy = 118, maxR = 74;
+        const rad = (deg) => (deg * Math.PI) / 180;
+        const pt = (pct, deg) => {
+          const r = (maxR * Math.max(0, Math.min(100, Number(pct) || 0))) / 100;
+          return [cx + r * Math.cos(rad(deg)), cy + r * Math.sin(rad(deg))];
+        };
+        const [tx, ty] = pt(pSql, -90);
+        const [rx, ry] = pt(pHw, 30);
+        const [lx, ly] = pt(pTest, 150);
+        const poly = document.getElementById('profRadarPoly');
+        if (poly) poly.setAttribute('points', `${tx.toFixed(1)},${ty.toFixed(1)} ${rx.toFixed(1)},${ry.toFixed(1)} ${lx.toFixed(1)},${ly.toFixed(1)}`);
+        const setP = (id, x, y) => { const e = document.getElementById(id); if (e) { e.setAttribute('cx', x.toFixed(1)); e.setAttribute('cy', y.toFixed(1)); } };
+        setP('profDotTop', tx, ty); setP('profDotRight', rx, ry); setP('profDotLeft', lx, ly);
+      }
+
+      // Override StudentProfileUI.load for 3-axis Radar + 3 score tiles + reliable login fetch
+      let v11ProfBusy = false;
+      async function loadProfileV11() {
+        if (v11ProfBusy) return;
+        const notice = document.getElementById('profAuthNotice');
+        const noticeTxt = document.getElementById('profAuthNoticeText');
+        const reloginBtn = document.getElementById('profReloginBtn');
+        const fbEl = document.getElementById('profFeedbackText');
+        const icon = document.getElementById('profRefreshIcon');
+
+        const qDone = LEVELS.filter((l) => state.completed[l.id]).length;
+        const nDone = NORM_LEVELS.filter((n) => state.completed[n.id]).length;
+        const setMini = (tId, bId, txt, pct) => {
+          const t = document.getElementById(tId), b = document.getElementById(bId);
+          if (t) t.textContent = txt;
+          if (b) b.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+        };
+        setMini('profQuestStat', 'profQuestBar', `${qDone}/${LEVELS.length}`, LEVELS.length ? Math.round((qDone / LEVELS.length) * 100) : 0);
+        setMini('profNormStat', 'profNormBar', `${nDone}/${NORM_LEVELS.length}`, NORM_LEVELS.length ? Math.round((nDone / NORM_LEVELS.length) * 100) : 0);
+
+        const hasUser = Boolean(state.student && state.student.email);
+        const idToken = (state.student && state.student.idToken) || '';
+        if (!idToken) {
+          if (reloginBtn) reloginBtn.textContent = hasUser ? '重新驗證登入' : '前往登入';
+          if (notice && noticeTxt) {
+            noticeTxt.textContent = hasUser
+              ? '偵測到尚未取得 Google 驗證憑證，請按右側「重新驗證登入」點選學校 Google 帳戶以載入個人能力與成績。'
+              : '請先按右上角以學校 Google 帳戶登入，即可安全檢視你的個人能力檔案。';
+            notice.classList.remove('hidden');
+          }
+          update3AxisRadar(LEVELS.length ? Math.round((qDone / LEVELS.length) * 100) : 0, 0, 0);
+          return;
+        }
+        if (notice) notice.classList.add('hidden');
+        v11ProfBusy = true;
+        if (icon) icon.classList.add('animate-spin');
+        try {
+          const sel = document.getElementById('profTeacherStudentSelect');
+          const payload = { action: 'getStudentProfile', idToken };
+          if (sel && sel.value) payload.targetEmail = sel.value;
+          const res = await callGradingBackend(payload);
+          if (!res || !res.ok) {
+            if (notice && noticeTxt) {
+              noticeTxt.textContent = (res && res.message) || '未能讀取個人成績，請按「重新驗證登入」或確認已部署最新 Apps Script。';
+              notice.classList.remove('hidden');
+            }
+            return;
+          }
+          const teacherBar = document.getElementById('profTeacherBar');
+          if (res.isTeacher && teacherBar && sel) {
+            teacherBar.classList.remove('hidden');
+            if (Array.isArray(res.studentList) && sel.options.length <= 1) {
+              res.studentList.forEach((st) => {
+                const opt = document.createElement('option');
+                opt.value = st.email; opt.textContent = st.label;
+                sel.appendChild(opt);
+              });
+            }
+          }
+          const p = res.profile || {};
+          const gr = p.grades || {};
+          const setTile = (vId, bId, pId, val) => {
+            const hasV = val !== null && val !== undefined && !isNaN(Number(val));
+            const pct = hasV ? Math.max(0, Math.min(100, Number(val))) : 0;
+            const vE = document.getElementById(vId), bE = document.getElementById(bId), pE = document.getElementById(pId);
+            if (vE) vE.textContent = hasV ? String(val) : '--';
+            if (bE) bE.style.width = `${pct}%`;
+            if (pE) pE.textContent = hasV ? `${Math.round(pct)}%` : '--%';
+            return pct;
+          };
+          const pSql = setTile('profSqlScore', 'profSqlBar', 'profRadarPctTop', gr.sqlScore);
+          const pHw = setTile('profHwScore', 'profHwBar', 'profRadarPctRight', gr.hwScore);
+          const pTest = setTile('profTestScore', 'profTestBar', 'profRadarPctLeft', gr.testScore);
+          update3AxisRadar(pSql, pHw, pTest);
+
+          const hasPaper = gr.paperHwScore !== null && gr.paperHwScore !== undefined && !isNaN(Number(gr.paperHwScore));
+          setMini('profPaperHwStat', 'profPaperHwBar', hasPaper ? `${gr.paperHwScore}` : '--', hasPaper ? Number(gr.paperHwScore) : 0);
+
+          const hasA2 = gr.a2Score !== null && gr.a2Score !== undefined && !isNaN(Number(gr.a2Score));
+          const a2El = document.getElementById('profA2Score'), a2Bar = document.getElementById('profA2Bar'), a2Badge = document.getElementById('profA2GradeBadge');
+          if (a2El) a2El.textContent = hasA2 ? String(gr.a2Score) : '--';
+          if (a2Bar) a2Bar.style.width = `${hasA2 ? Math.max(0, Math.min(100, Number(gr.a2Score))) : 0}%`;
+          if (a2Badge) a2Badge.textContent = hasA2 ? (gr.a2Score >= 90 ? '🏆 表現極佳' : gr.a2Score >= 80 ? '🚀 表現優良' : gr.a2Score >= 70 ? '📈 穩健進步' : gr.a2Score >= 60 ? '👍 表現不錯' : '💪 繼續加油') : '即時計算中';
+          if (fbEl) fbEl.textContent = gr.feedback || (hasA2 ? '表現穩健，繼續多做計分練習與 DSE 實戰題！' : '已成功載入你的線上練習能力數據，老師輸入功課及測驗分後會即時更新。');
+          const uEl = document.getElementById('profUpdatedAt');
+          if (uEl) uEl.textContent = gr.updatedAt || '即時同步';
+        } catch (e) {
+          if (notice && noticeTxt) { noticeTxt.textContent = '連線至成績伺服器時發生錯誤，請稍後重試。'; notice.classList.remove('hidden'); }
+        } finally {
+          v11ProfBusy = false;
+          if (icon) icon.classList.remove('animate-spin');
+        }
+      }
+      window.StudentProfileUI = { load: loadProfileV11 };
+
+      // Hook handleStudentLogin so student abilities load IMMEDIATELY upon login!
+      const origHandleLogin = handleStudentLogin;
+      window.handleStudentLogin = function () {
+        origHandleLogin.apply(this, arguments);
+        setTimeout(() => {
+          loadProfileV11();
+          if (window.HomeLeaderboard) window.HomeLeaderboard.refresh(true);
+        }, 350);
+      };
+      handleStudentLogin = window.handleStudentLogin;
+
+      // Wire new buttons after DOMContentLoaded
+      window.addEventListener('DOMContentLoaded', () => {
+        const cBtn = document.getElementById('toggleConceptBtn');
+        const cWrap = document.getElementById('lvlConceptWrap');
+        if (cBtn && cWrap) cBtn.addEventListener('click', () => cWrap.classList.toggle('hidden'));
+
+        const sBtn = document.getElementById('toggleSchemaBtn');
+        const sView = document.getElementById('tableViewer');
+        const sLbl = document.getElementById('schemaCollapseLabel');
+        if (sBtn && sView && sLbl) {
+          sBtn.addEventListener('click', () => {
+            const hidden = sView.classList.toggle('hidden');
+            sLbl.textContent = hidden ? '（展開 ▾）' : '（收合 ▴）';
+          });
+        }
+
+        const normLaunch = document.getElementById('homeLaunchNormBtn');
+        if (normLaunch) normLaunch.addEventListener('click', () => switchMode('norm'));
+
+        const npSubmit = document.getElementById('normPageSubmitBtn');
+        if (npSubmit) npSubmit.addEventListener('click', gradeNormPageQuiz);
+        const npHint = document.getElementById('normPageHintBtn');
+        if (npHint) npHint.addEventListener('click', () => document.getElementById('normPageHintBox').classList.toggle('hidden'));
+        const npNext = document.getElementById('normPageNextBtn');
+        if (npNext) npNext.addEventListener('click', () => { activeNormIdx = (activeNormIdx + 1) % NORM_LEVELS.length; renderNormPageQuiz(); });
+
+        const oldGoNorm = document.getElementById('goToNormLevelsBtn');
+        if (oldGoNorm) oldGoNorm.classList.add('hidden');
+
+        // Label 遊戲快打 clearly as 不計分練習
+        const bgContainer = document.getElementById('blockGameContainer');
+        if (bgContainer && !document.getElementById('bgUngradedNote')) {
+          const note = document.createElement('div');
+          note.id = 'bgUngradedNote';
+          note.className = 'mb-3 px-3.5 py-2 rounded-lg border border-[#22d3ee]/30 bg-[#0b182e]/70 text-xs text-[#bae6fd] font-mono-code';
+          note.textContent = '🎮 遊戲快打屬於純趣味打字熱身練習，不計入平時分及總分榜。';
+          bgContainer.prepend(note);
+        }
+
+        renderNormPageQuiz();
+        renderSidebars();
+        renderHomeRoadmap();
+        if (state.student && state.student.idToken) loadProfileV11();
       });
     })();
 
