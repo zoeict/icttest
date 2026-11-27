@@ -411,227 +411,194 @@
     .sync-eq span:nth-child(2) { animation-delay: 0.16s; }
     .sync-eq span:nth-child(3) { animation-delay: 0.32s; }
   
-    /* === Cyber HUD Chamfered Dual Leaderboard === */
-    .cyber-hud-card {
-      position: relative;
-      background: linear-gradient(180deg, rgba(8, 16, 32, 0.94) 0%, rgba(5, 10, 21, 0.97) 100%);
-      border: 1px solid rgba(34, 211, 238, 0.42);
-      clip-path: polygon(
-        18px 0, calc(100% - 118px) 0, calc(100% - 102px) 14px, calc(100% - 12px) 14px,
-        100% 26px, 100% calc(100% - 16px), calc(100% - 16px) 100%,
-        16px 100%, 0 calc(100% - 16px), 0 18px
-      );
-      box-shadow: inset 0 0 28px rgba(34, 211, 238, 0.08);
+    /* === Cyber HUD Chamfered Dual Leaderboard (Compact & Fluid Responsive) === */
+    #homeLeaderboardSection {
+      container-type: inline-size;
+      container-name: lb-section;
+    }
+    .lb-dual-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+    @media (min-width: 900px) {
+      .lb-dual-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+    }
+    @container lb-section (min-width: 680px) {
+      .lb-dual-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(10px, 1.6cqi, 16px);
+      }
+    }
+    @container lb-section (max-width: 679px) {
+      .lb-dual-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+      }
     }
     .cyber-hud-wrap {
       position: relative;
-      filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.16));
+      min-width: 0;
+      width: 100%;
+      container-type: inline-size;
+      container-name: lb-card;
+      filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.14));
+    }
+    .cyber-hud-card {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      background: linear-gradient(180deg, rgba(8, 16, 32, 0.95) 0%, rgba(5, 10, 21, 0.98) 100%);
+      border: 1px solid rgba(34, 211, 238, 0.42);
+      clip-path: polygon(
+        14px 0, calc(100% - clamp(68px, 26%, 114px)) 0,
+        calc(100% - clamp(56px, 22%, 100px)) 11px, calc(100% - 10px) 11px,
+        100% 21px, 100% calc(100% - 12px), calc(100% - 12px) 100%,
+        12px 100%, 0 calc(100% - 12px), 0 14px
+      );
+      box-shadow: inset 0 0 24px rgba(34, 211, 238, 0.08);
+    }
+    .lb-compact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
     .cyber-hud-row {
       position: relative;
       display: flex;
       align-items: center;
-      gap: 9px;
-      padding: 4px 12px 4px 14px;
-      border-top: 1px solid rgba(56, 189, 248, 0.13);
-      border-bottom: 1px solid rgba(56, 189, 248, 0.07);
-      background: linear-gradient(90deg, rgba(14, 26, 48, 0.55) 0%, rgba(7, 13, 25, 0.2) 70%, rgba(7, 13, 25, 0.0) 100%);
-      transition: background 0.18s ease, border-color 0.18s ease;
+      gap: clamp(6px, 2cqi, 10px);
+      min-height: 29px;
+      padding: 2px clamp(8px, 2.2cqi, 12px) 2px clamp(6px, 1.8cqi, 10px);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background: linear-gradient(90deg, rgba(13, 27, 50, 0.78) 0%, rgba(7, 15, 30, 0.62) 66%, rgba(8, 18, 36, 0.82) 100%);
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
     }
     .cyber-hud-row:hover {
-      background: linear-gradient(90deg, rgba(34, 211, 238, 0.12) 0%, rgba(12, 24, 44, 0.45) 75%, rgba(7, 13, 25, 0.15) 100%);
+      border-color: rgba(56, 189, 248, 0.52);
+      background: linear-gradient(90deg, rgba(20, 42, 74, 0.88) 0%, rgba(10, 22, 44, 0.76) 66%, rgba(12, 28, 52, 0.90) 100%);
     }
     .cyber-hud-row.is-rank-1 {
-      border-top: 1px solid rgba(250, 204, 21, 0.55);
-      border-bottom: 1px solid rgba(250, 204, 21, 0.45);
-      background: linear-gradient(90deg, rgba(250, 204, 21, 0.16) 0%, rgba(250, 204, 21, 0.05) 48%, rgba(7, 13, 25, 0.15) 100%);
-    }
-    .cyber-hud-bracket {
-      position: absolute;
-      left: 0;
-      top: 3px;
-      bottom: 3px;
-      width: 5px;
-      clip-path: polygon(0 0, 100% 6px, 100% calc(100% - 6px), 0 100%);
-    }
-    /* === Neon Futuristic 3-Step Podium + Rank 4-5 Chamfered Leaderboard === */
-    .lb-podium-stage {
-      position: relative;
-      padding: 8px 4px 10px;
-      margin-bottom: 8px;
-      isolation: isolate;
-    }
-    .lb-podium-rings {
-      position: absolute;
-      left: 50%;
-      top: 44%;
-      width: 220px;
-      height: 220px;
-      transform: translate(-50%, -50%);
-      border-radius: 999px;
-      border: 1px dashed rgba(56, 189, 248, 0.16);
-      box-shadow:
-        0 0 0 22px rgba(56, 189, 248, 0.03),
-        inset 0 0 28px rgba(250, 204, 21, 0.06);
-      pointer-events: none;
-      z-index: -1;
-    }
-    .lb-podium-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      align-items: end;
-      gap: 6px;
-      position: relative;
-      z-index: 2;
-    }
-    .lb-podium-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 0;
-      transition: transform 0.22s ease;
-    }
-    .lb-podium-col:hover {
-      transform: translateY(-2px);
-    }
-    .lb-trophy-wrap {
-      position: relative;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      margin-bottom: -3px;
-      z-index: 3;
-    }
-    .lb-trophy-1 {
-      width: 52px;
-      height: 52px;
-      filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.55));
-    }
-    .lb-trophy-2 {
-      width: 42px;
-      height: 42px;
-      filter: drop-shadow(0 0 11px rgba(148, 163, 184, 0.45));
-    }
-    .lb-trophy-3 {
-      width: 42px;
-      height: 42px;
-      filter: drop-shadow(0 0 11px rgba(217, 119, 6, 0.48));
-    }
-    .lb-pedestal {
-      position: relative;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 4px 12px;
-      border-radius: 4px 4px 2px 2px;
-      background: linear-gradient(180deg, rgba(24, 38, 60, 0.92) 0%, rgba(10, 18, 32, 0.96) 55%, rgba(6, 11, 22, 0.98) 100%);
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      box-shadow:
-        inset 0 2px 0 rgba(255, 255, 255, 0.14),
-        0 8px 18px rgba(0, 0, 0, 0.55);
-    }
-    .lb-pedestal-1 {
-      min-height: 76px;
-      border-color: rgba(250, 204, 21, 0.52);
-      background: linear-gradient(180deg, rgba(44, 38, 22, 0.90) 0%, rgba(15, 22, 36, 0.96) 55%, rgba(7, 12, 22, 0.98) 100%);
-      box-shadow:
-        inset 0 2px 0 rgba(254, 240, 138, 0.42),
-        0 0 20px rgba(250, 204, 21, 0.16),
-        0 10px 22px rgba(0, 0, 0, 0.62);
-    }
-    .lb-pedestal-2 {
-      min-height: 58px;
-      border-color: rgba(148, 163, 184, 0.45);
-      box-shadow:
-        inset 0 2px 0 rgba(226, 232, 240, 0.30),
-        0 0 14px rgba(56, 189, 248, 0.12),
-        0 8px 18px rgba(0, 0, 0, 0.55);
-    }
-    .lb-pedestal-3 {
-      min-height: 50px;
-      border-color: rgba(217, 119, 6, 0.45);
-      box-shadow:
-        inset 0 2px 0 rgba(253, 186, 116, 0.28),
-        0 0 14px rgba(217, 119, 6, 0.12),
-        0 8px 18px rgba(0, 0, 0, 0.55);
-    }
-    .lb-podium-plate {
-      position: relative;
-      z-index: 4;
-      width: 96%;
-      margin-top: -10px;
-      padding: 4px 6px 5px;
-      text-align: center;
-      background: linear-gradient(180deg, rgba(11, 22, 42, 0.96) 0%, rgba(5, 11, 23, 0.98) 100%);
-      border: 1px solid rgba(34, 211, 238, 0.42);
-      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%, 0 8px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
-    }
-    .lb-podium-plate-1 {
       border-color: rgba(250, 204, 21, 0.58);
-      box-shadow: 0 0 14px rgba(34, 211, 238, 0.18), 0 4px 12px rgba(0, 0, 0, 0.6);
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.16) 0%, rgba(14, 22, 38, 0.74) 52%, rgba(42, 34, 14, 0.42) 100%);
+      box-shadow: inset 0 0 16px rgba(250, 204, 21, 0.08);
     }
-    .lb-podium-deck {
-      position: relative;
-      height: 8px;
-      margin: 2px 4px 0;
-      background: linear-gradient(180deg, rgba(14, 34, 62, 0.82) 0%, rgba(6, 14, 28, 0.95) 100%);
-      border-bottom: 2px solid #22d3ee;
-      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
-      box-shadow: 0 2px 14px rgba(34, 211, 238, 0.55);
+    .cyber-hud-row.is-rank-1::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 26%;
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #facc15, #fef08a);
+      pointer-events: none;
     }
-    .lb-lower-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .cyber-hud-row.is-rank-1:hover {
+      border-color: rgba(250, 204, 21, 0.85);
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.22) 0%, rgba(18, 28, 46, 0.82) 52%, rgba(56, 44, 16, 0.50) 100%);
     }
-    .lb-lower-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
+    .cyber-hud-row.is-rank-2 {
+      border-color: rgba(203, 213, 225, 0.36);
+      background: linear-gradient(90deg, rgba(203, 213, 225, 0.10) 0%, rgba(9, 19, 36, 0.68) 58%, rgba(16, 28, 48, 0.82) 100%);
     }
-    .lb-lower-rank {
-      width: 30px;
-      height: 30px;
+    .cyber-hud-row.is-rank-2:hover {
+      border-color: rgba(226, 232, 240, 0.62);
+    }
+    .cyber-hud-row.is-rank-3 {
+      border-color: rgba(217, 119, 6, 0.40);
+      background: linear-gradient(90deg, rgba(217, 119, 6, 0.12) 0%, rgba(10, 18, 34, 0.68) 58%, rgba(30, 22, 18, 0.72) 100%);
+    }
+    .cyber-hud-row.is-rank-3:hover {
+      border-color: rgba(251, 146, 60, 0.68);
+    }
+    .cyber-rank-slot {
+      width: clamp(32px, 10cqi, 42px);
+      height: 24px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      color: #f8fafc;
-      background: linear-gradient(180deg, rgba(14, 29, 54, 0.92) 0%, rgba(7, 15, 29, 0.96) 100%);
-      border: 1px solid rgba(34, 211, 238, 0.52);
-      clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
-      box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.14);
     }
-    .lb-lower-bar {
-      flex: 1;
+    .cyber-player-name {
+      flex: 1 1 auto;
       min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 5px 12px 5px 10px;
-      background: linear-gradient(90deg, rgba(12, 26, 48, 0.88) 0%, rgba(8, 17, 34, 0.72) 65%, rgba(6, 13, 27, 0.82) 100%);
-      border: 1px solid rgba(34, 211, 238, 0.36);
-      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-      transition: border-color 0.18s ease, background 0.18s ease;
+      font-size: clamp(11.5px, 2.5cqi, 13px);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: 0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .lb-lower-row:hover .lb-lower-bar {
-      border-color: rgba(34, 211, 238, 0.72);
-      background: linear-gradient(90deg, rgba(18, 38, 68, 0.92) 0%, rgba(10, 22, 44, 0.82) 100%);
+    .cyber-score-zone {
+      position: relative;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-width: clamp(64px, 20cqi, 96px);
+      padding-left: clamp(10px, 3cqi, 18px);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(11px, 2.5cqi, 13px);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .cyber-score-zone::before {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 50%;
+      width: 1px;
+      height: 18px;
+      transform: translateY(-50%) rotate(28deg);
+      background: linear-gradient(180deg, transparent, rgba(56, 189, 248, 0.42), transparent);
+      pointer-events: none;
+    }
+    .cyber-hud-row.is-rank-1 .cyber-score-zone::before {
+      background: linear-gradient(180deg, transparent, rgba(250, 204, 21, 0.65), transparent);
+    }
+    .cyber-hud-row.is-rank-2 .cyber-score-zone::before {
+      background: linear-gradient(180deg, transparent, rgba(203, 213, 225, 0.48), transparent);
+    }
+    .cyber-hud-row.is-rank-3 .cyber-score-zone::before {
+      background: linear-gradient(180deg, transparent, rgba(251, 146, 60, 0.52), transparent);
+    }
+    @container lb-card (max-width: 310px) {
+      .cyber-hud-row {
+        gap: 5px;
+        padding: 2px 7px 2px 5px;
+        min-height: 27px;
+      }
+      .cyber-rank-slot {
+        width: 30px;
+        height: 22px;
+      }
+      .cyber-score-zone {
+        min-width: 54px;
+        padding-left: 6px;
+      }
+      .cyber-score-zone::before {
+        display: none;
+      }
+      .cyber-hud-slashes {
+        display: none !important;
+      }
     }
     .cyber-slash {
       display: inline-block;
-      width: 11px;
-      height: 11px;
+      width: 9px;
+      height: 9px;
       transform: skewX(-28deg);
       border-radius: 1px;
       background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.55);
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.55);
     }
 
   
@@ -1063,78 +1030,78 @@
 
 
         <!-- Dual Cyber Tech HUD Leaderboard (TOP 5 // 總分榜 + TOP 5 // 自學分榜) -->
-        <section id="homeLeaderboardSection" class="px-5 py-3.5 sm:px-7 sm:py-4 bg-[#070b18]/58">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <section id="homeLeaderboardSection" class="px-3 py-2 sm:px-5 sm:py-2.5 lg:px-7 bg-[#070b18]/58">
+          <div class="lb-dual-grid">
 
             <!-- Left HUD Card: TOP 5 // 總分榜 -->
             <div class="cyber-hud-wrap">
-              <div class="cyber-hud-card px-3.5 py-2.5 sm:px-4 sm:py-3 flex flex-col justify-between h-full">
+              <div class="cyber-hud-card px-2.5 py-2 sm:px-3.5 sm:py-2 flex flex-col justify-between h-full">
                 <!-- Header -->
-                <div class="flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-[#22d3ee]/25 pr-1">
-                  <div class="flex items-center gap-2.5 min-w-0">
-                    <span class="text-[#22d3ee] shrink-0" style="filter:drop-shadow(0 0 8px rgba(34,211,238,0.65));">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                <div class="flex items-center justify-between gap-2 pb-1 mb-1.5 border-b border-[#22d3ee]/25 pr-0.5">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-[#22d3ee] shrink-0" style="filter:drop-shadow(0 0 6px rgba(34,211,238,0.65));">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
                     </span>
-                    <div class="font-mono-code text-sm sm:text-[15px] font-bold tracking-wider truncate">
+                    <div class="font-mono-code text-[13px] sm:text-sm font-bold tracking-wider truncate">
                       <span class="text-white">TOP 5</span>
-                      <span class="text-[#22d3ee] mx-1.5">//</span>
+                      <span class="text-[#22d3ee] mx-1">//</span>
                       <span class="text-[#94a3b8]">總分榜</span>
                     </div>
                   </div>
-                  <div class="flex items-center gap-2 shrink-0 pt-1">
-                    <div class="hidden sm:flex items-center gap-1" aria-hidden="true">
+                  <div class="flex items-center gap-1.5 shrink-0 pt-0.5">
+                    <div class="cyber-hud-slashes hidden sm:flex items-center gap-1" aria-hidden="true">
                       <span class="cyber-slash"></span><span class="cyber-slash opacity-80"></span><span class="cyber-slash opacity-60"></span>
                     </div>
-                    <button id="lbRefreshBtn" type="button" class="w-6 h-6 rounded bg-[#0c1a30] hover:bg-[#142c4f] border border-[#22d3ee]/35 text-[#38bdf8] flex items-center justify-center transition" title="重新整理排行榜" aria-label="重新整理排行榜">
-                      <svg id="lbRefreshIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                    <button id="lbRefreshBtn" type="button" class="w-5 h-5 rounded bg-[#0c1a30] hover:bg-[#142c4f] border border-[#22d3ee]/35 text-[#38bdf8] flex items-center justify-center transition" title="重新整理排行榜" aria-label="重新整理排行榜">
+                      <svg id="lbRefreshIcon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
                     </button>
                   </div>
                 </div>
 
-                <!-- Top 5 Rows -->
-                <div id="lbOverallList" class="space-y-1 flex-1">
-                  <div class="py-8 text-center font-mono-code text-xs text-[#64748b]">正在載入總分榜...</div>
+                <!-- Top 5 Compact Rows -->
+                <div id="lbOverallList" class="flex-1">
+                  <div class="py-4 text-center font-mono-code text-xs text-[#64748b]">正在載入總分榜...</div>
                 </div>
 
                 <!-- Bottom Tech Accent + My Rank -->
-                <div class="mt-1.5 pt-1.5 border-t border-[#22d3ee]/15 flex items-center justify-between gap-2 text-[10px] font-mono-code">
-                  <span class="w-12 h-[3px] rounded-full bg-[#22d3ee]/70 shadow-[0_0_8px_#22d3ee]"></span>
+                <div class="mt-1.5 pt-1 border-t border-[#22d3ee]/15 flex items-center justify-between gap-2 text-[10px] font-mono-code">
+                  <span class="w-10 h-[2.5px] rounded-full bg-[#22d3ee]/70 shadow-[0_0_6px_#22d3ee] shrink-0"></span>
                   <span id="lbOverallMyRank" class="text-[#38bdf8] font-bold truncate"></span>
-                  <span class="w-16 h-[3px] rounded-full bg-gradient-to-r from-transparent to-[#22d3ee]/80"></span>
+                  <span class="w-12 h-[2.5px] rounded-full bg-gradient-to-r from-transparent to-[#22d3ee]/80 shrink-0"></span>
                 </div>
               </div>
             </div>
 
             <!-- Right HUD Card: TOP 5 // 自學分榜 -->
             <div class="cyber-hud-wrap">
-              <div class="cyber-hud-card px-3.5 py-2.5 sm:px-4 sm:py-3 flex flex-col justify-between h-full">
+              <div class="cyber-hud-card px-2.5 py-2 sm:px-3.5 sm:py-2 flex flex-col justify-between h-full">
                 <!-- Header -->
-                <div class="flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-[#22d3ee]/25 pr-1">
-                  <div class="flex items-center gap-2.5 min-w-0">
-                    <span class="text-[#22d3ee] shrink-0" style="filter:drop-shadow(0 0 8px rgba(34,211,238,0.65));">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                <div class="flex items-center justify-between gap-2 pb-1 mb-1.5 border-b border-[#22d3ee]/25 pr-0.5">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-[#22d3ee] shrink-0" style="filter:drop-shadow(0 0 6px rgba(34,211,238,0.65));">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
                     </span>
-                    <div class="font-mono-code text-sm sm:text-[15px] font-bold tracking-wider truncate">
+                    <div class="font-mono-code text-[13px] sm:text-sm font-bold tracking-wider truncate">
                       <span class="text-white">TOP 5</span>
-                      <span class="text-[#22d3ee] mx-1.5">//</span>
+                      <span class="text-[#22d3ee] mx-1">//</span>
                       <span class="text-[#94a3b8]">自學分榜</span>
                     </div>
                   </div>
-                  <div class="flex items-center gap-1 shrink-0 pt-1" aria-hidden="true">
+                  <div class="cyber-hud-slashes flex items-center gap-1 shrink-0 pt-0.5" aria-hidden="true">
                     <span class="cyber-slash"></span><span class="cyber-slash opacity-80"></span><span class="cyber-slash opacity-60"></span>
                   </div>
                 </div>
 
-                <!-- Top 5 Rows -->
-                <div id="lbSelfList" class="space-y-1 flex-1">
-                  <div class="py-8 text-center font-mono-code text-xs text-[#64748b]">正在載入自學分榜...</div>
+                <!-- Top 5 Compact Rows -->
+                <div id="lbSelfList" class="flex-1">
+                  <div class="py-4 text-center font-mono-code text-xs text-[#64748b]">正在載入自學分榜...</div>
                 </div>
 
                 <!-- Bottom Tech Accent + My Rank -->
-                <div class="mt-1.5 pt-1.5 border-t border-[#22d3ee]/15 flex items-center justify-between gap-2 text-[10px] font-mono-code">
-                  <span class="w-12 h-[3px] rounded-full bg-[#22d3ee]/70 shadow-[0_0_8px_#22d3ee]"></span>
+                <div class="mt-1.5 pt-1 border-t border-[#22d3ee]/15 flex items-center justify-between gap-2 text-[10px] font-mono-code">
+                  <span class="w-10 h-[2.5px] rounded-full bg-[#22d3ee]/70 shadow-[0_0_6px_#22d3ee] shrink-0"></span>
                   <span id="lbSelfMyRank" class="text-[#38bdf8] font-bold truncate"></span>
-                  <span class="w-16 h-[3px] rounded-full bg-gradient-to-r from-transparent to-[#22d3ee]/80"></span>
+                  <span class="w-12 h-[2.5px] rounded-full bg-gradient-to-r from-transparent to-[#22d3ee]/80 shrink-0"></span>
                 </div>
               </div>
             </div>
@@ -7715,136 +7682,38 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       return m ? Number(m[0]) > 0 : false;
     }
 
-    function podiumTrophySvg(rank, uid) {
-      if (rank === 1) {
-        // Metallic Gold Trophy Cup
-        return `
-          <svg class="lb-trophy-1" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="goldCup_${uid}" x1="12" y1="6" x2="52" y2="54" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#fef08a"/>
-                <stop offset="35%" stop-color="#facc15"/>
-                <stop offset="72%" stop-color="#d97706"/>
-                <stop offset="100%" stop-color="#92400e"/>
-              </linearGradient>
-              <linearGradient id="goldRim_${uid}" x1="16" y1="10" x2="48" y2="10" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#fef9c3"/>
-                <stop offset="50%" stop-color="#fde047"/>
-                <stop offset="100%" stop-color="#b45309"/>
-              </linearGradient>
-            </defs>
-            <path d="M18 14H10C10 24 14 31 21 33" stroke="url(#goldCup_${uid})" stroke-width="3.6" stroke-linecap="round"/>
-            <path d="M46 14H54C54 24 50 31 43 33" stroke="url(#goldCup_${uid})" stroke-width="3.6" stroke-linecap="round"/>
-            <path d="M17 10H47V22C47 32.5 40.3 40 32 40C23.7 40 17 32.5 17 22V10Z" fill="url(#goldCup_${uid})" stroke="#fef08a" stroke-width="1.2"/>
-            <rect x="15" y="8" width="34" height="4" rx="2" fill="url(#goldRim_${uid})"/>
-            <polygon points="32,16 37,19 37,25 32,28 27,25 27,19" fill="#fef9c3" fill-opacity="0.35" stroke="#fef9c3" stroke-width="1.1"/>
-            <path d="M29 40H35V49H29V40Z" fill="url(#goldCup_${uid})"/>
-            <path d="M21 49H43L46 55H18L21 49Z" fill="url(#goldCup_${uid})" stroke="#fef08a" stroke-width="1"/>
-            <rect x="16" y="55" width="32" height="3.5" rx="1.5" fill="#b45309"/>
-          </svg>
-        `;
-      }
-      if (rank === 2) {
-        // Metallic Silver </> Code Emblem Trophy
-        return `
-          <svg class="lb-trophy-2" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="silverMetal_${uid}" x1="10" y1="8" x2="54" y2="54" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#f8fafc"/>
-                <stop offset="40%" stop-color="#cbd5e1"/>
-                <stop offset="78%" stop-color="#64748b"/>
-                <stop offset="100%" stop-color="#334155"/>
-              </linearGradient>
-            </defs>
-            <path d="M23 15L10 28L23 41" stroke="url(#silverMetal_${uid})" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M41 15L54 28L41 41" stroke="url(#silverMetal_${uid})" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="36" y1="12" x2="28" y2="44" stroke="url(#silverMetal_${uid})" stroke-width="5" stroke-linecap="round"/>
-            <path d="M20 48H44L47 54H17L20 48Z" fill="url(#silverMetal_${uid})" stroke="#e2e8f0" stroke-width="1"/>
-            <rect x="15" y="54" width="34" height="3.5" rx="1.5" fill="#475569"/>
-          </svg>
-        `;
-      }
-      // Metallic Bronze 3D Isometric Cube Stack Trophy
-      return `
-        <svg class="lb-trophy-3" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="bronzeTop_${uid}" x1="16" y1="8" x2="48" y2="30" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#fed7aa"/>
-              <stop offset="100%" stop-color="#c27848"/>
-            </linearGradient>
-            <linearGradient id="bronzeLeft_${uid}" x1="16" y1="20" x2="32" y2="46" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#b4693a"/>
-              <stop offset="100%" stop-color="#6b3416"/>
-            </linearGradient>
-            <linearGradient id="bronzeRight_${uid}" x1="32" y1="20" x2="50" y2="46" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#9a5429"/>
-              <stop offset="100%" stop-color="#4e230d"/>
-            </linearGradient>
-          </defs>
-          <!-- Top cube -->
-          <polygon points="32,8 43,14 32,20 21,14" fill="url(#bronzeTop_${uid})" stroke="#fed7aa" stroke-width="0.9"/>
-          <polygon points="21,14 32,20 32,31 21,25" fill="url(#bronzeLeft_${uid})" stroke="#fdba74" stroke-width="0.7"/>
-          <polygon points="43,14 32,20 32,31 43,25" fill="url(#bronzeRight_${uid})" stroke="#fdba74" stroke-width="0.7"/>
-          <!-- Lower left cube -->
-          <polygon points="23,23 32,28 23,33 14,28" fill="url(#bronzeTop_${uid})" stroke="#fed7aa" stroke-width="0.8"/>
-          <polygon points="14,28 23,33 23,43 14,38" fill="url(#bronzeLeft_${uid})" stroke="#fdba74" stroke-width="0.7"/>
-          <polygon points="32,28 23,33 23,43 32,38" fill="url(#bronzeRight_${uid})" stroke="#fdba74" stroke-width="0.7"/>
-          <!-- Lower right cube -->
-          <polygon points="41,23 50,28 41,33 32,28" fill="url(#bronzeTop_${uid})" stroke="#fed7aa" stroke-width="0.8"/>
-          <polygon points="32,28 41,33 41,43 32,38" fill="url(#bronzeLeft_${uid})" stroke="#fdba74" stroke-width="0.7"/>
-          <polygon points="50,28 41,33 41,43 50,38" fill="url(#bronzeRight_${uid})" stroke="#fdba74" stroke-width="0.7"/>
-          <!-- Pedestal stand -->
-          <rect x="28" y="43" width="8" height="6" fill="url(#bronzeLeft_${uid})"/>
-          <path d="M20 49H44L47 55H17L20 49Z" fill="url(#bronzeTop_${uid})" stroke="#fed7aa" stroke-width="0.9"/>
-        </svg>
-      `;
-    }
-
     function laurelRankSvg(rank) {
       const palette = rank === 1
-        ? { main: '#facc15', hi: '#fef08a', glow: 'rgba(250,204,21,0.55)' }
+        ? { main: '#facc15', hi: '#fef08a', glow: 'rgba(250,204,21,0.58)' }
         : rank === 2
-          ? { main: '#cbd5e1', hi: '#f8fafc', glow: 'rgba(203,213,225,0.45)' }
-          : { main: '#d98c53', hi: '#fed7aa', glow: 'rgba(217,119,6,0.45)' };
+          ? { main: '#cbd5e1', hi: '#f8fafc', glow: 'rgba(203,213,225,0.48)' }
+          : { main: '#d98c53', hi: '#fed7aa', glow: 'rgba(217,119,6,0.48)' };
       return `
-        <svg class="w-[68px] h-[38px]" viewBox="0 0 88 48" fill="none" style="filter:drop-shadow(0 0 8px ${palette.glow});" aria-hidden="true">
+        <svg class="w-full h-full" viewBox="0 0 64 36" fill="none" style="filter:drop-shadow(0 0 5px ${palette.glow});" aria-hidden="true">
           <!-- Left Laurel -->
-          <path d="M24 40C15 35 12 24 18 12" stroke="${palette.main}" stroke-width="1.8" stroke-linecap="round"/>
-          <ellipse cx="14" cy="18" rx="4.2" ry="2" transform="rotate(-35 14 18)" fill="${palette.hi}"/>
-          <ellipse cx="13" cy="25" rx="4.4" ry="2" transform="rotate(-15 13 25)" fill="${palette.main}"/>
-          <ellipse cx="15" cy="32" rx="4.4" ry="2" transform="rotate(14 15 32)" fill="${palette.hi}"/>
-          <ellipse cx="20" cy="38" rx="4.2" ry="1.9" transform="rotate(34 20 38)" fill="${palette.main}"/>
-          <ellipse cx="19" cy="13" rx="3.6" ry="1.7" transform="rotate(-55 19 13)" fill="${palette.main}"/>
+          <path d="M18 31C10 27 8 18 13 8" stroke="${palette.main}" stroke-width="1.5" stroke-linecap="round"/>
+          <ellipse cx="10" cy="13" rx="3.4" ry="1.6" transform="rotate(-36 10 13)" fill="${palette.hi}"/>
+          <ellipse cx="9" cy="19" rx="3.6" ry="1.6" transform="rotate(-14 9 19)" fill="${palette.main}"/>
+          <ellipse cx="11" cy="25" rx="3.5" ry="1.6" transform="rotate(14 11 25)" fill="${palette.hi}"/>
+          <ellipse cx="15" cy="29.5" rx="3.3" ry="1.5" transform="rotate(34 15 29.5)" fill="${palette.main}"/>
           <!-- Right Laurel -->
-          <path d="M64 40C73 35 76 24 70 12" stroke="${palette.main}" stroke-width="1.8" stroke-linecap="round"/>
-          <ellipse cx="74" cy="18" rx="4.2" ry="2" transform="rotate(35 74 18)" fill="${palette.hi}"/>
-          <ellipse cx="75" cy="25" rx="4.4" ry="2" transform="rotate(15 75 25)" fill="${palette.main}"/>
-          <ellipse cx="73" cy="32" rx="4.4" ry="2" transform="rotate(-14 73 32)" fill="${palette.hi}"/>
-          <ellipse cx="68" cy="38" rx="4.2" ry="1.9" transform="rotate(-34 68 38)" fill="${palette.main}"/>
-          <ellipse cx="69" cy="13" rx="3.6" ry="1.7" transform="rotate(55 69 13)" fill="${palette.main}"/>
+          <path d="M46 31C54 27 56 18 51 8" stroke="${palette.main}" stroke-width="1.5" stroke-linecap="round"/>
+          <ellipse cx="54" cy="13" rx="3.4" ry="1.6" transform="rotate(36 54 13)" fill="${palette.hi}"/>
+          <ellipse cx="55" cy="19" rx="3.6" ry="1.6" transform="rotate(14 55 19)" fill="${palette.main}"/>
+          <ellipse cx="53" cy="25" rx="3.5" ry="1.6" transform="rotate(-14 53 25)" fill="${palette.hi}"/>
+          <ellipse cx="49" cy="29.5" rx="3.3" ry="1.5" transform="rotate(-34 49 29.5)" fill="${palette.main}"/>
           <!-- Rank Number -->
-          <text x="44" y="34" text-anchor="middle" fill="${palette.hi}" font-family="'Space Grotesk','IBM Plex Mono',sans-serif" font-size="30" font-weight="800">${rank}</text>
+          <text x="32" y="25.5" text-anchor="middle" fill="${palette.hi}" font-family="'Space Grotesk','IBM Plex Mono',sans-serif" font-size="22" font-weight="800">${rank}</text>
         </svg>
       `;
     }
 
-    function lowerRankEmblemSvg(rank) {
-      if (rank === 4) {
-        // Faceted Hexagonal Emerald Shield Emblem
-        return `
-          <svg class="w-6 h-6 shrink-0" viewBox="0 0 32 32" fill="none" style="filter:drop-shadow(0 0 6px rgba(16,185,129,0.45));" aria-hidden="true">
-            <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#134e3a" stroke="#6ee7b7" stroke-width="1.6"/>
-            <polygon points="16,6 24,10.8 24,21.2 16,26 8,21.2 8,10.8" fill="#10b981" fill-opacity="0.35" stroke="#a7f3d0" stroke-width="1.1"/>
-            <polygon points="16,10 20.5,12.8 20.5,19.2 16,22 11.5,19.2 11.5,12.8" fill="#6ee7b7"/>
-          </svg>
-        `;
-      }
-      // Faceted Emerald Crystal Prism Emblem (Rank 5)
+    function hexRankSvg(rank) {
       return `
-        <svg class="w-6 h-6 shrink-0" viewBox="0 0 32 32" fill="none" style="filter:drop-shadow(0 0 6px rgba(52,211,153,0.45));" aria-hidden="true">
-          <polygon points="16,2 27,10 24,27 8,27 5,10" fill="#134e3a" stroke="#6ee7b7" stroke-width="1.5"/>
-          <polygon points="16,6 23,23 9,23" fill="#34d399" fill-opacity="0.55" stroke="#a7f3d0" stroke-width="1.1"/>
-          <polygon points="16,6 19.5,23 16,20 12.5,23" fill="#a7f3d0"/>
+        <svg class="w-full h-full" viewBox="0 0 64 36" fill="none" style="filter:drop-shadow(0 0 5px rgba(56,189,248,0.42));" aria-hidden="true">
+          <polygon points="32,3 45,10.5 45,25.5 32,33 19,25.5 19,10.5" fill="rgba(14,32,60,0.92)" stroke="#38bdf8" stroke-width="1.4"/>
+          <polygon points="32,6.5 41.5,12 41.5,24 32,29.5 22.5,24 22.5,12" fill="rgba(56,189,248,0.14)" stroke="rgba(125,211,252,0.45)" stroke-width="0.8"/>
+          <text x="32" y="24" text-anchor="middle" fill="#f8fafc" font-family="'Space Grotesk','IBM Plex Mono',sans-serif" font-size="16" font-weight="800">${rank}</text>
         </svg>
       `;
     }
@@ -7856,59 +7725,30 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
 
       const list = (rawList || []).filter(hasPositiveScore).slice(0, 5);
       if (list.length === 0) {
-        box.innerHTML = '<div class="py-8 text-center font-mono-code text-xs text-[#64748b]">暫未有上榜紀錄</div>';
+        box.innerHTML = '<div class="py-4 text-center font-mono-code text-xs text-[#64748b]">暫未有上榜紀錄</div>';
       } else {
-        // Classic 3-step podium order: Left #2, Center #1, Right #3
-        const podiumOrder = [2, 1, 3];
-        const podiumColsHtml = podiumOrder.map((rank) => {
-          const item = list[rank - 1] || null;
-          const displayName = item ? esc(item.name) : '虛位以待';
-          const displayScore = item ? esc(item.score) : '--';
-          const nameCls = item ? 'text-[#f8fafc]' : 'text-[#64748b]';
-          const scoreCls = item
-            ? (rank === 1 ? 'text-[#38bdf8] drop-shadow-[0_0_8px_rgba(56,189,248,0.6)]' : 'text-[#38bdf8]')
-            : 'text-[#475569]';
+        const rowsHtml = list.map((item, idx) => {
+          const rank = idx + 1;
+          const badgeSvg = rank <= 3 ? laurelRankSvg(rank) : hexRankSvg(rank);
+          const rowTierCls = `is-rank-${rank}`;
+          const nameCls = rank === 1 ? 'text-[#fef9c3]' : 'text-[#e2e8f0]';
+          const scoreCls = rank === 1
+            ? 'text-[#fde047] drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]'
+            : rank === 2
+              ? 'text-[#e2e8f0]'
+              : rank === 3
+                ? 'text-[#fdba74]'
+                : 'text-[#7dd3fc]';
           return `
-            <div class="lb-podium-col">
-              <div class="lb-trophy-wrap">${podiumTrophySvg(rank, containerId)}</div>
-              <div class="lb-pedestal lb-pedestal-${rank}">
-                ${laurelRankSvg(rank)}
-              </div>
-              <div class="lb-podium-plate ${rank === 1 ? 'lb-podium-plate-1' : ''}" title="${displayName}">
-                <div class="font-display text-[11px] sm:text-xs font-bold ${nameCls} truncate leading-tight">${displayName}</div>
-                <div class="font-mono-code text-[11px] sm:text-xs font-bold tabular-nums ${scoreCls} leading-tight mt-0.5">${displayScore}</div>
-              </div>
+            <div class="cyber-hud-row ${rowTierCls}">
+              <div class="cyber-rank-slot">${badgeSvg}</div>
+              <span class="cyber-player-name font-display ${nameCls}" title="${esc(item.name)}">${esc(item.name)}</span>
+              <span class="cyber-score-zone ${scoreCls}">${esc(item.score)}</span>
             </div>
           `;
         }).join('');
 
-        const lowerItems = list.slice(3, 5);
-        const lowerRowsHtml = lowerItems.length > 0 ? `
-          <div class="lb-lower-list">
-            ${lowerItems.map((item, i) => {
-              const rank = i + 4;
-              return `
-                <div class="lb-lower-row">
-                  <div class="lb-lower-rank">${rank}</div>
-                  <div class="lb-lower-bar">
-                    ${lowerRankEmblemSvg(rank)}
-                    <span class="font-display text-xs sm:text-sm font-bold text-[#f1f5f9] tracking-wide truncate flex-1 min-w-0" title="${esc(item.name)}">${esc(item.name)}</span>
-                    <span class="font-mono-code text-xs sm:text-[13px] font-bold tabular-nums whitespace-nowrap shrink-0 text-[#38bdf8]">${esc(item.score)}</span>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        ` : '';
-
-        box.innerHTML = `
-          <div class="lb-podium-stage">
-            <div class="lb-podium-rings" aria-hidden="true"></div>
-            <div class="lb-podium-grid">${podiumColsHtml}</div>
-            <div class="lb-podium-deck" aria-hidden="true"></div>
-          </div>
-          ${lowerRowsHtml}
-        `;
+        box.innerHTML = `<div class="lb-compact-list">${rowsHtml}</div>`;
       }
 
       if (myEl) {
@@ -7963,14 +7803,14 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         } else if (!LB_STATE.data) {
           ['lbOverallList', 'lbSelfList'].forEach((id) => {
             const el = document.getElementById(id);
-            if (el) el.innerHTML = '<div class="py-8 text-center font-mono-code text-xs text-[#94a3b8]">未能載入排行榜，請確認已部署最新版 Apps Script</div>';
+            if (el) el.innerHTML = '<div class="py-4 text-center font-mono-code text-xs text-[#94a3b8]">未能載入排行榜，請確認已部署最新版 Apps Script</div>';
           });
         }
       } catch (e) {
         if (!LB_STATE.data) {
           ['lbOverallList', 'lbSelfList'].forEach((id) => {
             const el = document.getElementById(id);
-            if (el) el.innerHTML = '<div class="py-8 text-center font-mono-code text-xs text-[#94a3b8]">暫時未能連線至排行榜伺服器</div>';
+            if (el) el.innerHTML = '<div class="py-4 text-center font-mono-code text-xs text-[#94a3b8]">暫時未能連線至排行榜伺服器</div>';
           });
         }
       } finally {
