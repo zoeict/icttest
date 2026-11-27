@@ -415,7 +415,7 @@
 
     <!-- Left Telemetry & Syllabus Rail -->
     <aside id="sidebarPanel" class="hidden lg:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
-      <div class="p-4 border-b border-[#1e2d44] space-y-3">
+      <div class="p-4 border-b border-[#1e2d44] min-h-[126px] flex flex-col justify-between gap-2">
         <div class="flex items-start justify-between gap-2">
           <div>
             <div class="text-[11px] font-bold text-[#9aa7b8]">學習進度</div>
@@ -456,8 +456,8 @@
         </div>
       </div>
 
-      <div class="p-3 flex-1 overflow-y-auto">
-        <div class="flex items-center justify-between px-1.5 pb-2 mb-2 border-b border-[#182438]">
+      <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
+        <div class="flex items-center justify-between px-1.5 pb-2 border-b border-[#182438] min-h-[29px]">
           <div class="flex items-center gap-2">
             <h2 class="text-xs font-bold text-[#cbd5e1]">單元目錄</h2>
             <span class="text-[10px] text-[#34d399] font-bold">23 課</span>
@@ -469,7 +469,7 @@
     </aside>
 
     <!-- Right Main Workbench -->
-    <main id="mainWorkbench" class="lg:col-span-12 flex flex-col divide-y divide-[#1e2d44]">
+    <main id="mainWorkbench" class="lg:col-span-12 flex flex-col">
 
       <!-- ===================================================================== -->
       <!-- MODE 0: HOME DASHBOARD + INTERACTIVE DRY-RUN TRACE VISUALIZER         -->
@@ -878,7 +878,7 @@
           <div id="tbSidebarBackdrop" class="hidden lg:flex lg:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
             <div id="tbSidebarPanel" class="flex flex-col flex-1 min-h-0">
               <!-- Unified Learning Progress Gauge Header -->
-              <div class="p-4 border-b border-[#1e2d44] space-y-3">
+              <div class="p-4 border-b border-[#1e2d44] min-h-[126px] flex flex-col justify-between gap-2">
                 <div class="flex items-start justify-between gap-2">
                   <div>
                     <div class="text-[11px] font-bold text-[#9aa7b8]">學習進度</div>
@@ -887,7 +887,6 @@
                       <span class="font-mono-code text-[10px] text-[#64748b]">/ 95</span>
                       <span class="font-mono-code text-[10px] px-1.5 py-0.5 rounded-sm bg-[#10d981]/15 text-[#10d981] border border-[#10d981]/30 font-bold">課本例題</span>
                     </div>
-                    <div class="mt-1.5 font-mono-code text-[10px] text-[#9aa7b8]">互動實作＋追蹤</div>
                   </div>
                   <div class="flex flex-col items-center">
                     <svg viewBox="0 0 100 54" class="w-24 h-12 overflow-visible">
@@ -909,7 +908,7 @@
 
               <!-- Directory & Filters -->
               <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
-                <div class="flex items-center justify-between px-1 pb-2 border-b border-[#182438]">
+                <div class="flex items-center justify-between px-1.5 pb-2 border-b border-[#182438] min-h-[29px]">
                   <div class="flex items-center gap-2">
                     <h2 class="text-xs font-bold text-[#cbd5e1]">例題目錄</h2>
                     <span class="text-[10px] text-[#34d399] font-bold">95 題</span>
@@ -937,7 +936,7 @@
 
           <!-- Right Frame: Practice Editor + Output + Live Dry-Run Trace (Matches 計分練習 lg:col-span-9 p-4 sm:p-6) -->
           <div id="tbRightFrame" class="lg:col-span-9 min-w-0 p-4 sm:p-6 bg-[#0e1726]/85 space-y-4">
-            <div class="chassis-surface rounded-sm p-3 sm:p-4 space-y-3 border-[#1e2d44]">
+            <div class="chassis-surface rounded-sm p-3.5 sm:p-4 space-y-3 border-[#1e2d44]">
               <div class="flex flex-wrap items-start justify-between gap-2 border-b border-[#1b283d] pb-3">
                 <div class="space-y-1">
                   <div class="flex flex-wrap items-center gap-1.5 font-mono-code text-[10px]">
@@ -1058,7 +1057,7 @@
           <div id="prSidebarBackdrop" class="hidden lg:flex lg:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
             <aside id="prSidebarPanel" class="flex flex-col flex-1 min-h-0">
             <!-- Unified Learning Progress Gauge Header -->
-            <div class="p-4 border-b border-[#1e2d44] space-y-3">
+            <div class="p-4 border-b border-[#1e2d44] min-h-[126px] flex flex-col justify-between gap-2">
               <div class="flex items-start justify-between gap-2">
                 <div>
                   <div class="text-[11px] font-bold text-[#9aa7b8]">學習進度</div>
@@ -1067,7 +1066,6 @@
                     <span class="font-mono-code text-[10px] text-[#64748b]">/ 521</span>
                     <span class="font-mono-code text-[10px] px-1.5 py-0.5 rounded-sm bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 font-bold">額外操練</span>
                   </div>
-                  <div class="mt-1.5 font-mono-code text-[10px] text-[#9aa7b8]">6 大課題 · 雲端即時批改</div>
                 </div>
                 <div class="flex flex-col items-center">
                   <svg viewBox="0 0 100 54" class="w-24 h-12 overflow-visible">
@@ -1085,31 +1083,35 @@
                 <span>完成題數</span>
                 <span id="prDoneCount" class="text-white font-bold">0 / 521 題</span>
               </div>
-              <div class="mt-2 pt-2 border-t border-[#182438] flex items-center justify-between gap-2">
-                <span class="font-mono-code text-[10px] text-[#9aa7b8]">自學腦力等級</span>
-                <button id="prSlLevelBadgeBtn" type="button" class="font-mono-code text-[10px] font-bold px-2 py-0.5 rounded bg-[#0c2236] border border-[#38bdf8]/45 text-[#38bdf8] hover:border-[#38bdf8] hover:text-white transition" title="點擊重溫已解鎖 3D 卡牌">Lv.0 未解鎖</button>
-              </div>
-              <div id="prTeacherSlPreviewBar" class="hidden mt-2 pt-2 border-t border-[#182438] space-y-1">
-                <div class="font-mono-code text-[10px] text-[#fbbf24] font-bold">✨ 老師預覽 3D 橫向卡（Lv.1–6）</div>
-                <div class="grid grid-cols-6 gap-1">
-                  <button type="button" data-sl-preview="1" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#38bdf8]/25 border border-[#38bdf8]/40 text-[#38bdf8] font-mono-code text-[10px] font-bold transition">1</button>
-                  <button type="button" data-sl-preview="2" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#00f0ff]/25 border border-[#00f0ff]/40 text-[#00f0ff] font-mono-code text-[10px] font-bold transition">2</button>
-                  <button type="button" data-sl-preview="3" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#c084fc]/25 border border-[#c084fc]/40 text-[#c084fc] font-mono-code text-[10px] font-bold transition">3</button>
-                  <button type="button" data-sl-preview="4" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#818cf8]/25 border border-[#818cf8]/40 text-[#818cf8] font-mono-code text-[10px] font-bold transition">4</button>
-                  <button type="button" data-sl-preview="5" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#a855f7]/25 border border-[#a855f7]/40 text-[#a855f7] font-mono-code text-[10px] font-bold transition">5</button>
-                  <button type="button" data-sl-preview="6" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#38f2ff]/25 border border-[#38f2ff]/40 text-[#38f2ff] font-mono-code text-[10px] font-bold transition">6</button>
-                </div>
-              </div>
             </div>
 
             <!-- Directory & 2-Level Accordion -->
             <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
-              <div class="flex items-center justify-between px-1 pb-2 border-b border-[#182438]">
+              <div class="flex items-center justify-between px-1.5 pb-2 border-b border-[#182438] min-h-[29px]">
                 <div class="flex items-center gap-2">
                   <h2 class="text-xs font-bold text-[#cbd5e1]">課題單元導航</h2>
                   <span id="prSidebarSummary" class="text-[10px] text-[#38bdf8] font-bold">6 大課題</span>
                 </div>
                 <button id="prDrawerCloseBtn" type="button" class="lg:hidden p-1 rounded-sm bg-[#141b25] text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+              </div>
+
+              <!-- Self-Learning 6-Level Card Status & Teacher Preview -->
+              <div class="rounded-sm bg-[#09111f] border border-[#1a2740] px-2.5 py-2 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono-code text-[10px] text-[#9aa7b8]">自學腦力等級</span>
+                  <button id="prSlLevelBadgeBtn" type="button" class="font-mono-code text-[10px] font-bold px-2 py-0.5 rounded bg-[#0c2236] border border-[#38bdf8]/45 text-[#38bdf8] hover:border-[#38bdf8] hover:text-white transition" title="點擊重溫已解鎖 3D 卡牌">Lv.0 (0/6 課題達80%)</button>
+                </div>
+                <div id="prTeacherSlPreviewBar" class="hidden pt-1.5 border-t border-[#182438] space-y-1">
+                  <div class="font-mono-code text-[10px] text-[#fbbf24] font-bold">✨ 老師預覽 3D 橫向卡（Lv.1–6）</div>
+                  <div class="grid grid-cols-6 gap-1">
+                    <button type="button" data-sl-preview="1" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#38bdf8]/25 border border-[#38bdf8]/40 text-[#38bdf8] font-mono-code text-[10px] font-bold transition">1</button>
+                    <button type="button" data-sl-preview="2" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#00f0ff]/25 border border-[#00f0ff]/40 text-[#00f0ff] font-mono-code text-[10px] font-bold transition">2</button>
+                    <button type="button" data-sl-preview="3" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#c084fc]/25 border border-[#c084fc]/40 text-[#c084fc] font-mono-code text-[10px] font-bold transition">3</button>
+                    <button type="button" data-sl-preview="4" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#818cf8]/25 border border-[#818cf8]/40 text-[#818cf8] font-mono-code text-[10px] font-bold transition">4</button>
+                    <button type="button" data-sl-preview="5" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#a855f7]/25 border border-[#a855f7]/40 text-[#a855f7] font-mono-code text-[10px] font-bold transition">5</button>
+                    <button type="button" data-sl-preview="6" class="py-1 rounded bg-[#0c1b2e] hover:bg-[#38f2ff]/25 border border-[#38f2ff]/40 text-[#38f2ff] font-mono-code text-[10px] font-bold transition">6</button>
+                  </div>
+                </div>
               </div>
 
               <!-- Quick Search -->
@@ -5052,7 +5054,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const hBar = document.getElementById('homeExtraBar');
       if (hBar) hBar.style.width = `${pctN}%`;
       if (window.SelfLearningCardEngine && typeof window.SelfLearningCardEngine.syncBadge === 'function') {
-        window.SelfLearningCardEngine.syncBadge(doneN);
+        window.SelfLearningCardEngine.syncBadge(practiceState.done);
       }
     }
 
@@ -5386,13 +5388,11 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         practiceState.attempts[q.id] = (practiceState.attempts[q.id] || 0) + 1;
         const passed = Boolean(res.passed);
         if (passed) {
-          const prevSlDone = Object.keys(practiceState.done).length;
-          const prevSlLv = window.SelfLearningCardEngine ? window.SelfLearningCardEngine.getLevel(prevSlDone) : 0;
+          const prevSlLv = window.SelfLearningCardEngine ? window.SelfLearningCardEngine.getLevel(practiceState.done) : 0;
           practiceState.done[q.id] = true;
           document.getElementById('prDoneTag')?.classList.remove('hidden');
           renderPracticeList();
-          const newSlDone = Object.keys(practiceState.done).length;
-          const newSlLv = window.SelfLearningCardEngine ? window.SelfLearningCardEngine.getLevel(newSlDone) : 0;
+          const newSlLv = window.SelfLearningCardEngine ? window.SelfLearningCardEngine.getLevel(practiceState.done) : 0;
           if (newSlLv > prevSlLv && window.SelfLearningCardEngine) {
             setTimeout(() => window.SelfLearningCardEngine.play(newSlLv), 320);
           }
@@ -5628,32 +5628,44 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       6: { hex: '#38f2ff', color: 0x38f2ff, master: true }
     };
 
-    // 額外操練 6 級升級門檻（共 521 題）
-    const SL_THRESHOLDS = [1, 30, 80, 160, 300, 450];
+    // 按 6 大課題進度：每完成 1 個大課題（達 80%）解鎖 1 級，完成全部 6 個大課題解鎖 Lv.6 Master
+    const SL_TOPIC_PASS_RATIO = 0.80;
 
     let activeSession = null;
     let isMuted = false;
 
-    function getLevel(doneCount) {
-      let lv = 0;
-      for (let i = 0; i < SL_THRESHOLDS.length; i++) {
-        if (doneCount >= SL_THRESHOLDS[i]) lv = i + 1;
+    function getLevel(doneMap) {
+      const map = (doneMap && typeof doneMap === 'object')
+        ? doneMap
+        : ((typeof practiceState !== 'undefined' && practiceState && practiceState.done) ? practiceState.done : {});
+      if (typeof PRACTICE_TAXONOMY === 'undefined' || typeof PRACTICE_BANK === 'undefined') return 0;
+      let cleared = 0;
+      for (let i = 0; i < PRACTICE_TAXONOMY.length; i++) {
+        const catKey = PRACTICE_TAXONOMY[i].catKey;
+        let tot = 0, done = 0;
+        for (let j = 0; j < PRACTICE_BANK.length; j++) {
+          if (PRACTICE_BANK[j].cat === catKey) {
+            tot++;
+            if (map[PRACTICE_BANK[j].id]) done++;
+          }
+        }
+        if (tot > 0 && (done / tot) >= SL_TOPIC_PASS_RATIO) cleared++;
       }
-      return lv;
+      return Math.min(6, cleared);
     }
 
-    function syncBadge(doneCount) {
-      const lv = getLevel(doneCount);
+    function syncBadge(doneMap) {
+      const lv = getLevel(doneMap);
       const btn = document.getElementById('prSlLevelBadgeBtn');
       if (!btn) return;
       if (lv <= 0) {
-        btn.textContent = 'Lv.0 (1題解鎖)';
+        btn.textContent = 'Lv.0 (0/6 課題達80%)';
         btn.style.borderColor = 'rgba(100,116,139,0.45)';
         btn.style.color = '#94a3b8';
         btn.dataset.unlockedLv = '0';
       } else {
         const cfg = SL_LEVELS[lv];
-        btn.textContent = lv === 6 ? 'Lv.6 MASTER ★' : `Lv.${lv} 查看卡牌`;
+        btn.textContent = lv === 6 ? 'Lv.6 MASTER ★' : `Lv.${lv} (${lv}/6 課題)`;
         btn.style.borderColor = cfg.hex;
         btn.style.color = cfg.hex;
         btn.dataset.unlockedLv = String(lv);
@@ -5957,13 +5969,16 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.18;
+      renderer.domElement.style.width = '100%';
+      renderer.domElement.style.height = '100%';
+      renderer.domElement.style.display = 'block';
       host.innerHTML = '';
       host.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(38, 16 / 9, 0.1, 100);
-      camera.position.set(0, 0.25, 8.8);
-      camera.lookAt(0, -0.25, 0);
+      camera.position.set(0, 0.10, 8.8);
+      camera.lookAt(0, -0.15, 0);
 
       // Lights
       scene.add(new THREE.AmbientLight(0x94a3b8, 0.9));
@@ -6356,22 +6371,37 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const sparkPoints = new THREE.Points(spGeo, spMat);
       scene.add(sparkPoints);
 
-      // === Responsive Framing via ResizeObserver (iPad Landscape & PC Widescreen) ===
+      // === Responsive Framing (iPad Landscape/Portrait & PC Browser Resize/Zoom) ===
       function updateCameraFraming() {
-        const w = Math.max(1, overlay.clientWidth || window.innerWidth);
-        const h = Math.max(1, overlay.clientHeight || window.innerHeight);
+        const vv = window.visualViewport;
+        const w = Math.max(1, Math.round(overlay.clientWidth || (vv ? vv.width : window.innerWidth)));
+        const h = Math.max(1, Math.round(overlay.clientHeight || (vv ? vv.height : window.innerHeight)));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(w, h, false);
+        renderer.domElement.style.width = '100%';
+        renderer.domElement.style.height = '100%';
         camera.aspect = w / h;
-        // Fit full 7.2w x 4.9h bounding stage cleanly without clipping
+        // Fit full stage (8.2w x 5.4h incl. landscape card, dual laser rails & hex pad) cleanly
         const vFov = THREE.MathUtils.degToRad(camera.fov);
-        const distH = (5.0 / 2) / Math.tan(vFov / 2);
-        const distW = (7.4 / 2) / (Math.tan(vFov / 2) * camera.aspect);
-        camera.position.z = Math.max(7.6, distH, distW);
+        const halfTan = Math.tan(vFov / 2);
+        const distH = (5.4 / 2) / halfTan;
+        const distW = (8.2 / 2) / (halfTan * camera.aspect);
+        camera.position.set(0, 0.10, Math.max(7.4, distH, distW));
+        camera.lookAt(0, -0.15, 0);
         camera.updateProjectionMatrix();
+      }
+      function onViewportChange() {
+        updateCameraFraming();
+        setTimeout(updateCameraFraming, 120);
       }
       updateCameraFraming();
       const ro = new ResizeObserver(updateCameraFraming);
       ro.observe(overlay);
+      window.addEventListener('resize', onViewportChange);
+      window.addEventListener('orientationchange', onViewportChange);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', onViewportChange);
+      }
 
       // === Pointer / Touch 3D Tilt ===
       let targetX = 0, targetY = 0, smX = 0, smY = 0;
@@ -6544,6 +6574,11 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         cleanup() {
           cancelAnimationFrame(rafId);
           ro.disconnect();
+          window.removeEventListener('resize', onViewportChange);
+          window.removeEventListener('orientationchange', onViewportChange);
+          if (window.visualViewport) {
+            window.visualViewport.removeEventListener('resize', onViewportChange);
+          }
           overlay.removeEventListener('pointermove', onPointerMove);
           overlay.removeEventListener('touchmove', onPointerMove);
           overlay.removeEventListener('click', onOverlayClick);
@@ -6578,7 +6613,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         });
       });
       if (typeof practiceState !== 'undefined' && practiceState && practiceState.done) {
-        syncBadge(Object.keys(practiceState.done).length);
+        syncBadge(practiceState.done);
       }
     }
     if (document.readyState === 'loading') {
@@ -6592,7 +6627,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       close,
       getLevel,
       syncBadge,
-      THRESHOLDS: SL_THRESHOLDS
+      TOPIC_PASS_RATIO: SL_TOPIC_PASS_RATIO
     };
   })();
   </script>
