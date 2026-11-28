@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Python Lab</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&family=Stardos+Stencil:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="antialiased selection:bg-[#38bdf8] selection:text-[#04131e]">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-30 border-b border-[#1d2b40] bg-[#070b12]/95 backdrop-blur-md">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="mobileMenuBtn" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#0c2236] border border-[#38bdf8]/60 text-[#38bdf8] hover:text-white hover:border-[#38bdf8] text-xs font-bold items-center gap-1.5 shrink-0 transition" aria-label="收合或展開目錄" aria-expanded="true" data-tooltip="收合或展開側邊單元目錄">
+          <i data-lucide="panel-left" class="w-4 h-4 shrink-0"></i>
+          <span>目錄</span>
+        </button>
+        <button id="brandHomeBtn" class="flex items-center gap-2 text-left group">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#101c2e] border border-[#2c405e] group-hover:border-[#38bdf8] transition">
+            <span class="w-2 h-2 rounded-full bg-[#38bdf8] shadow-[0_0_8px_rgba(56,189,248,0.8)]"></span>
+            <span class="font-display font-bold text-xs sm:text-sm tracking-wider text-white">PYTHON</span>
+            <span class="text-[#38bdf8] font-mono-code font-bold text-xs sm:text-sm">LAB</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="flex items-center lg:justify-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:flex-1 min-w-0 overflow-x-auto touch-scroll-x pb-0.5 lg:pb-0">
+        <div class="flex items-center gap-0.5 rounded bg-[#0a111d] border border-[#1d2b40] p-1 text-[11px] sm:text-xs font-bold shrink-0">
+          <button id="modeHomeBtn" class="px-3 py-1.5 rounded-[3px] bg-[#38bdf8] text-[#04131e] font-bold shadow-[0_0_12px_rgba(56,189,248,0.22)] transition whitespace-nowrap">首頁</button>
+          <button id="modeProfileBtn" class="px-3 py-1.5 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">個人檔案</button>
+          <button id="modeQuestBtn" class="px-3 py-1.5 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">計分練習</button>
+          <button id="modeTextbookBtn" class="px-3 py-1.5 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">課本例題</button>
+          <button id="modeExtraBtn" class="px-3 py-1.5 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">額外操練</button>
+          
+          
+          
+          
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 order-2 lg:order-3 shrink-0">
+        <!-- 老師工具下拉選單（整合老師模式、學生視角、預覽升級、3D 橫向卡 Lv.1-6） -->
+        <div id="teacherToolsWrap" class="hidden relative">
+          <button id="teacherToolsBtn" type="button" aria-expanded="false" aria-haspopup="true"
+            class="hw-btn h-[34px] px-2.5 rounded-md bg-[#f59e0b]/15 hover:bg-[#f59e0b]/25 border border-[#f59e0b]/50 text-[#fbbf24] font-mono-code text-[11px] font-bold inline-flex items-center gap-1 whitespace-nowrap transition">
+            <span>🛠️ 老師工具</span>
+            <span class="text-[9px] opacity-80">▾</span>
+          </button>
+          <div id="teacherToolsMenu" class="hidden absolute right-0 mt-1.5 w-60 rounded-md bg-[#0b1322] border border-[#243754] shadow-2xl p-2.5 space-y-2 z-50">
+            <div class="flex items-center justify-between pb-1.5 border-b border-[#182438]">
+              <span id="headerTeacherBadge" class="hidden items-center gap-1 px-2 py-0.5 rounded bg-[#f59e0b]/15 border border-[#f59e0b]/45 text-[#fbbf24] font-mono-code text-[10px] font-bold">老師模式</span>
+              <span class="font-mono-code text-[10px] text-[#38bdf8] font-bold">全部已解鎖</span>
+            </div>
+            <button id="switchToStudentViewBtn" type="button" class="hidden w-full justify-start hw-btn px-2.5 py-2 rounded bg-[#38bdf8]/12 hover:bg-[#38bdf8]/22 border border-[#38bdf8]/40 text-[#bae6fd] font-mono-code text-xs font-bold items-center gap-2 whitespace-nowrap">🎓 切換學生視角</button>
+            <button id="headerPreviewLvUpBtn" type="button" class="hidden w-full justify-start hw-btn px-2.5 py-2 rounded bg-[#10b981]/12 hover:bg-[#10b981]/22 border border-[#10b981]/40 text-[#6ee7b7] font-mono-code text-xs font-bold items-center gap-2 whitespace-nowrap">✨ 預覽課堂升級動畫</button>
+            <div id="prTeacherSlPreviewBar" class="hidden pt-1.5 border-t border-[#182438] space-y-1.5">
+              <div class="font-mono-code text-[10px] text-[#fbbf24] font-bold">✨ 預覽 3D 橫向卡（Lv.1–6）</div>
+              <div class="grid grid-cols-6 gap-1">
+                <button type="button" data-sl-preview="1" class="py-1.5 rounded bg-[#0c1b2e] hover:bg-[#38bdf8]/25 border border-[#38bdf8]/40 text-[#38bdf8] font-mono-code text-[10px] font-bold transition">1</button>
+                <button type="button" data-sl-preview="2" class="py-1.5 rounded bg-[#0c1b2e] hover:bg-[#00f0ff]/25 border border-[#00f0ff]/40 text-[#00f0ff] font-mono-code text-[10px] font-bold transition">2</button>
+                <button type="button" data-sl-preview="3" class="py-1.5 rounded bg-[#0c1b2e] hover:bg-[#c084fc]/25 border border-[#c084fc]/40 text-[#c084fc] font-mono-code text-[10px] font-bold transition">3</button>
+                <button type="button" data-sl-preview="4" class="py-1.5 rounded bg-[#0c1b2e] hover:bg-[#818cf8]/25 border border-[#818cf8]/40 text-[#818cf8] font-mono-code text-[10px] font-bold transition">4</button>
+                <button type="button" data-sl-preview="5" class="py-1.5 rounded bg-[#0c1b2e] hover:bg-[#a855f7]/25 border border-[#a855f7]/40 text-[#a855f7] font-mono-code text-[10px] font-bold transition">5</button>
+                <button type="button" data-sl-preview="6" class="py-1.5 rounded bg-[#0c1b2e] hover:bg-[#38f2ff]/25 border border-[#38f2ff]/40 text-[#38f2ff] font-mono-code text-[10px] font-bold transition">6</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="returnTeacherViewBtn" type="button" class="hidden hw-btn h-[34px] px-2.5 rounded-md bg-[#f59e0b]/20 hover:bg-[#f59e0b]/30 border border-[#f59e0b]/55 text-[#fde68a] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" data-tooltip="返回老師模式">↩ 返回老師</button>
+        <button id="studentProfileBtn" class="hw-btn h-[34px] px-2.5 rounded bg-[#0f1d30] hover:bg-[#162943] text-[#bae6fd] border border-[#2c405e] hover:border-[#38bdf8]/70 text-xs font-bold flex items-center gap-1.5 whitespace-nowrap shrink-0">
+          <i data-lucide="user-check" class="w-3.5 h-3.5 text-[#38bdf8] shrink-0"></i>
+          <span id="headerStudentLabel" class="max-w-[84px] truncate">登入</span>
+        </button>
+        <button id="soundToggleBtn" class="hw-btn h-[34px] w-[34px] rounded bg-[#0f1d30] hover:bg-[#162943] text-[#34d399] border border-[#2c405e] flex items-center justify-center shrink-0" data-tooltip="開關互動音效">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <div class="max-w-[1440px] mx-auto grid grid-cols-1 xl:grid-cols-12 min-h-[calc(100dvh-3.5rem)]">
+
+    <!-- Left Telemetry & Syllabus Rail -->
+    <aside id="sidebarPanel" class="hidden xl:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
+      <!-- Module 1 Compact 2-Row Neon Character Card: 計分練習 -->
+      <div class="p-2.5 border-b border-[#1e2d44]">
+        <div class="relative overflow-hidden rounded-md border border-[#38bdf8]/50 bg-gradient-to-br from-[#071c30] via-[#0a1326] to-[#060b16] p-2.5 flex flex-col gap-2 shadow-[0_0_16px_rgba(0,245,255,0.10)]">
+          <div class="relative z-10 flex items-center gap-2.5">
+            <div class="relative w-11 h-11 rounded-md overflow-hidden border border-[#00f5ff]/55 bg-[#061224] shrink-0">
+              <img src="./assets/img/avatar-quest.webp" loading="lazy" decoding="async" alt="計分練習" class="w-full h-full object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+              <div style="display:none" class="w-full h-full items-center justify-center text-[#00f5ff]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="11" r="1.5" fill="currentColor"/><circle cx="15" cy="11" r="1.5" fill="currentColor"/><path d="M9 16h6"/></svg></div>
+            </div>
+            <div class="min-w-0 flex-1 space-y-0.5">
+              <div class="flex items-center justify-between gap-1">
+                <span class="font-mono-code text-[11px] font-bold text-[#00f5ff] truncate">計分練習</span>
+                <span id="levelBadge" class="font-mono-code text-[10px] px-1.5 py-0.5 rounded bg-[#00f5ff]/15 text-[#00f5ff] border border-[#00f5ff]/40 font-bold shrink-0 cursor-pointer">LV.1</span>
+              </div>
+              <div class="flex items-baseline gap-1.5 font-mono-code">
+                <span id="xpReadout" class="pl-stat-trigger text-base font-bold text-[#f5a623] leading-none" role="button" tabindex="0">0</span>
+                <span class="text-[10px] text-[#64748b]">XP</span>
+                <span id="penaltyReadout" class="pl-stat-trigger text-[10px] text-[#fda4af] font-bold ml-auto" role="button" tabindex="0">扣分: 0</span>
+              </div>
+            </div>
+          </div>
+          <div class="relative z-10 space-y-1">
+            <div class="flex items-center justify-between font-mono-code text-[10px]">
+              <span id="completedCountText" class="text-white font-bold">0 / 138 題</span>
+              <span id="masteryPct" class="text-[#00f5ff] font-bold">0%</span>
+            </div>
+            <div class="h-1.5 w-full rounded-full bg-[#060d1a] border border-[#1d3554] overflow-hidden">
+              <div id="questSidebarBar" class="h-full rounded-full bg-gradient-to-r from-[#00f5ff] to-[#38bdf8] shadow-[0_0_8px_rgba(0,245,255,0.7)] transition-all duration-300" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="hidden">
+            <span id="tabSwitchReadout"></span>
+            <span id="teacherModeTag">全部已解鎖</span>
+            <button id="teacherPreviewLvUpBtn" type="button">✨ 預覽升級</button>
+            <span id="engineStatus"></span><span id="syncStatusTag"></span>
+          </div>
+          <svg class="hidden" viewBox="0 0 100 54"><path id="gaugeArc" d="M 10 48 A 40 40 0 0 1 90 48" stroke-dasharray="126" stroke-dashoffset="126"/><g id="gaugeNeedle"></g></svg>
+        </div>
+      </div>
+
+      <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
+        <div class="flex items-center justify-between px-1.5 pb-2 border-b border-[#182438] min-h-[29px]">
+          <div class="flex items-center gap-2">
+            <h2 class="text-xs font-bold text-[#cbd5e1]">單元目錄</h2>
+            <span class="text-[10px] text-[#34d399] font-bold">23 課</span>
+          </div>
+
+        </div>
+        <div id="chapterList" class="space-y-2.5"></div>
+      </div>
+    </aside>
+
+    <!-- Right Main Workbench -->
+    <main id="mainWorkbench" class="xl:col-span-12 flex flex-col">
+
+      <!-- ===================================================================== -->
+      <!-- MODE 0: HOME DASHBOARD + INTERACTIVE DRY-RUN TRACE VISUALIZER         -->
+      <!-- ===================================================================== -->
+      <div id="homeContainer" class="divide-y divide-[#1d2b40]">
+        <!-- Studio Blueprint Hero & Interactive Student Workbench -->
+        <section class="relative overflow-hidden p-5 sm:p-7 hero-panel">
+          <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            <!-- Left: Pixel Brand Logo + Integrated Telemetry Strip -->
+            <div class="lg:col-span-12 flex flex-col justify-between gap-5">
+              <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-[#243754]/75">
+                <div class="space-y-2.5">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-mono-code text-[10px] uppercase tracking-[0.14em] text-[#38bdf8] font-bold">HKDSE 必修 D × 選修 C</span>
+                    <span class="text-[#38bdf8]/40">•</span>
+                    <span id="homeRankBadge" class="font-mono-code text-[11px] font-bold text-[#34d399]">LV.1 Python 新手</span>
+                    <span id="homeXpPill" class="px-2 py-0.5 rounded bg-[#f59e0b]/15 border border-[#f59e0b]/35 text-[#fbbf24] font-mono-code text-[10px] font-bold backdrop-blur-sm">0 分</span>
+                  </div>
+                  <div class="flex items-center">
+                    <div class="stencil-title-stage" title="Python Lab">
+                      <span class="stencil-draft-grid" aria-hidden="true"></span>
+                      <span class="stencil-aura" aria-hidden="true"></span>
+                      <span class="stencil-spark stencil-spark-gold stencil-spark-1" aria-hidden="true"></span>
+                      <span class="stencil-spark stencil-spark-blue stencil-spark-2" aria-hidden="true"></span>
+                      <span class="stencil-spark stencil-spark-gold stencil-spark-3" aria-hidden="true"></span>
+                      <span class="stencil-spark stencil-spark-blue stencil-spark-4" aria-hidden="true"></span>
+                      <span class="stencil-spark stencil-spark-gold stencil-spark-5" aria-hidden="true"></span>
+                      <h1 class="stencil-hero-title" aria-label="Python Lab">
+                        <span class="stencil-line stencil-line-top" data-text="PYTHON">PYTHON</span>
+                        <span class="stencil-line stencil-line-bottom" data-text="LAB">LAB</span>
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Compact Recessed Progress Gauge -->
+                <div class="flex items-center gap-3.5 bg-[#070d17]/82 backdrop-blur-md border border-[#243754]/80 rounded-md px-3.5 py-2.5 shrink-0 self-start sm:self-auto shadow-[0_8px_24px_rgba(0,0,0,0.45)]">
+                  <div class="relative w-11 h-11 flex items-center justify-center">
+                    <svg viewBox="0 0 36 36" class="w-11 h-11 -rotate-90">
+                      <circle cx="18" cy="18" r="15" fill="none" stroke="#162235" stroke-width="3.2" />
+                      <circle id="homeRingArc" cx="18" cy="18" r="15" fill="none" stroke="#38bdf8" stroke-width="3.2" stroke-dasharray="94.2" stroke-dashoffset="94.2" stroke-linecap="round" />
+                    </svg>
+                    <span id="homeRingPct" class="absolute font-mono-code text-[10px] font-bold text-white">0%</span>
+                  </div>
+                  <div class="text-xs space-y-1.5 font-mono-code min-w-[205px]">
+                    <div class="space-y-0.5">
+                      <div class="flex items-center justify-between gap-3 text-[#9aa7b8]"><span>計分練習</span><span id="homeQuestStat" class="font-bold text-white">0 / 138 (0%)</span></div>
+                      <div class="h-1 w-full bg-[#070b12] rounded-full overflow-hidden"><div id="homeQuestBar" class="h-full bg-[#38bdf8] transition-all duration-300" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-0.5">
+                      <div class="flex items-center justify-between gap-3 text-[#9aa7b8]"><span>課本例題</span><span id="homeTbStat" class="font-bold text-[#34d399]">0 / 95 (0%)</span></div>
+                      <div class="h-1 w-full bg-[#070b12] rounded-full overflow-hidden"><div id="homeTbBar" class="h-full bg-[#10b981] transition-all duration-300" style="width:0%"></div></div>
+                    </div>
+                    <div class="space-y-0.5">
+                      <div class="flex items-center justify-between gap-3 text-[#9aa7b8]"><span>額外操練</span><span id="homeExtraStat" class="font-bold text-[#7dd3fc]">0 / 521 (0%)</span></div>
+                      <div class="h-1 w-full bg-[#070b12] rounded-full overflow-hidden"><div id="homeExtraBar" class="h-full bg-gradient-to-r from-[#38bdf8] to-[#a78bfa] transition-all duration-300" style="width:0%"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sleek High-Contrast Home Cloud Sync Pill -->
+              <div id="homeSyncBanner" class="hidden w-full flex justify-center py-0.5">
+                <div id="homeSyncPill" class="home-sync-pill is-syncing">
+                  <span id="homeSyncDot" class="inline-block w-4 h-4 rounded-full border-2 border-[#fbbf24]/25 border-t-[#fbbf24] animate-spin shrink-0"></span>
+                  <span id="homeSyncText" class="font-mono-code text-xs sm:text-[13px] font-bold tracking-wider">雲端同步中...</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- Dual Cyber Tech HUD Leaderboard (TOP 5 // 總分榜 + TOP 5 // 自學分榜) -->
+        <section id="homeLeaderboardSection" class="px-3 py-2 sm:px-5 sm:py-2.5 lg:px-7 bg-[#070b18]/58">
+          <div class="lb-dual-grid">
+
+            <!-- Left HUD Card: TOP 5 // 總分榜 -->
+            <div class="cyber-hud-wrap">
+              <div class="cyber-hud-card px-2.5 py-2 sm:px-3.5 sm:py-2 flex flex-col justify-between h-full">
+                <!-- Header -->
+                <div class="flex items-center justify-between gap-2 pb-1 mb-1.5 border-b border-[#22d3ee]/25 pr-0.5">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-[#22d3ee] shrink-0" style="filter:drop-shadow(0 0 6px rgba(34,211,238,0.65));">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                    </span>
+                    <div class="font-mono-code text-[13px] sm:text-sm font-bold tracking-wider truncate">
+                      <span class="text-white">TOP 5</span>
+                      <span class="text-[#22d3ee] mx-1">//</span>
+                      <span class="text-[#94a3b8]">總分榜</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1.5 shrink-0 pt-0.5">
+                    <div class="cyber-hud-slashes hidden sm:flex items-center gap-1" aria-hidden="true">
+                      <span class="cyber-slash"></span><span class="cyber-slash opacity-80"></span><span class="cyber-slash opacity-60"></span>
+                    </div>
+                    <button id="lbRefreshBtn" type="button" class="w-5 h-5 rounded bg-[#0c1a30] hover:bg-[#142c4f] border border-[#22d3ee]/35 text-[#38bdf8] flex items-center justify-center transition" data-tooltip="重新整理即時排行榜" aria-label="重新整理排行榜">
+                      <svg id="lbRefreshIcon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Top 5 Compact Rows -->
+                <div id="lbOverallList" class="flex-1">
+                  <div class="py-4 text-center font-mono-code text-xs text-[#64748b]">正在載入總分榜...</div>
+                </div>
+
+                <!-- Bottom Tech Accent + My Rank -->
+                <div class="mt-1.5 pt-1 border-t border-[#22d3ee]/15 flex items-center justify-between gap-2 text-[10px] font-mono-code">
+                  <span class="w-10 h-[2.5px] rounded-full bg-[#22d3ee]/70 shadow-[0_0_6px_#22d3ee] shrink-0"></span>
+                  <span id="lbOverallMyRank" class="text-[#38bdf8] font-bold truncate"></span>
+                  <span class="w-12 h-[2.5px] rounded-full bg-gradient-to-r from-transparent to-[#22d3ee]/80 shrink-0"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right HUD Card: TOP 5 // 自學分榜 -->
+            <div class="cyber-hud-wrap">
+              <div class="cyber-hud-card px-2.5 py-2 sm:px-3.5 sm:py-2 flex flex-col justify-between h-full">
+                <!-- Header -->
+                <div class="flex items-center justify-between gap-2 pb-1 mb-1.5 border-b border-[#22d3ee]/25 pr-0.5">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-[#22d3ee] shrink-0" style="filter:drop-shadow(0 0 6px rgba(34,211,238,0.65));">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+                    </span>
+                    <div class="font-mono-code text-[13px] sm:text-sm font-bold tracking-wider truncate">
+                      <span class="text-white">TOP 5</span>
+                      <span class="text-[#22d3ee] mx-1">//</span>
+                      <span class="text-[#94a3b8]">自學分榜</span>
+                    </div>
+                  </div>
+                  <div class="cyber-hud-slashes flex items-center gap-1 shrink-0 pt-0.5" aria-hidden="true">
+                    <span class="cyber-slash"></span><span class="cyber-slash opacity-80"></span><span class="cyber-slash opacity-60"></span>
+                  </div>
+                </div>
+
+                <!-- Top 5 Compact Rows -->
+                <div id="lbSelfList" class="flex-1">
+                  <div class="py-4 text-center font-mono-code text-xs text-[#64748b]">正在載入自學分榜...</div>
+                </div>
+
+                <!-- Bottom Tech Accent + My Rank -->
+                <div class="mt-1.5 pt-1 border-t border-[#22d3ee]/15 flex items-center justify-between gap-2 text-[10px] font-mono-code">
+                  <span class="w-10 h-[2.5px] rounded-full bg-[#22d3ee]/70 shadow-[0_0_6px_#22d3ee] shrink-0"></span>
+                  <span id="lbSelfMyRank" class="text-[#38bdf8] font-bold truncate"></span>
+                  <span class="w-12 h-[2.5px] rounded-full bg-gradient-to-r from-transparent to-[#22d3ee]/80 shrink-0"></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Pure-English 6-Level Neon /// COURSE MAP (Zero Chinese Text in Map) -->
+        <section id="homeCourseMapSection" class="p-5 sm:p-7 bg-[#070b18]/58 space-y-5">
+          <div class="rounded-md border border-[#1d2b40] bg-gradient-to-b from-[#0b1326]/95 to-[#060a15]/98 shadow-[0_12px_36px_rgba(0,0,0,0.42)] overflow-hidden">
+            <!-- Header: /// COURSE MAP -->
+            <div class="px-4 sm:px-5 py-3.5 border-b border-[#19263b] bg-[#091122]/85 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="inline-flex items-center gap-[3px]" aria-hidden="true">
+                  <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#22d3ee] shadow-[0_0_8px_#22d3ee]"></span>
+                  <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
+                  <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#e879f9] shadow-[0_0_8px_#e879f9]"></span>
+                </span>
+                <h2 class="font-display text-base sm:text-lg font-bold italic tracking-wider text-white">COURSE MAP</h2>
+              </div>
+              <button id="toggleDetailedLessonsBtn" type="button" class="font-mono-code text-[11px] font-bold px-2.5 py-1 rounded bg-[#0c1629] hover:bg-[#142442] border border-[#243754] hover:border-[#38bdf8]/60 text-[#94a3b8] hover:text-white transition">23 LESSONS ▾</button>
+            </div>
+
+            <!-- 6-Level Horizontal Neon Nodes -->
+            <div class="p-4 sm:p-6 overflow-x-auto touch-scroll-x">
+              <div id="courseMapNodesRow" class="flex items-start justify-between min-w-[780px] lg:min-w-0 gap-1 sm:gap-2"></div>
+            </div>
+          </div>
+
+          <!-- Collapsible 23-Lesson Detailed Grid (Preserves Existing #homeRoadmapGrid & Filters) -->
+          <div id="homeDetailedRoadmapWrap" class="hidden space-y-3 pt-1">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div id="homeTermFilters" class="flex items-center gap-0.5 rounded border border-[#1d2b40] bg-[#070b12] p-0.5 text-[11px] font-bold">
+                <button data-term="ALL" class="px-2.5 py-1 rounded-[3px] bg-[#38bdf8] text-[#04131e]">ALL (23)</button>
+                <button data-term="1" class="px-2.5 py-1 rounded-[3px] text-[#9aa7b8] hover:text-white transition">UNIT D (11)</button>
+                <button data-term="2" class="px-2.5 py-1 rounded-[3px] text-[#9aa7b8] hover:text-white transition">ELECTIVE C (12)</button>
+              </div>
+            </div>
+            <div id="homeRoadmapGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"></div>
+          </div>
+        </section>
+      </div>
+
+
+      <!-- ===================================================================== -->
+      <!-- MODE: STUDENT PROFILE DASHBOARD (個人檔案 — 雲端即時成績 ＋ 能力分佈)   -->
+      <!-- ===================================================================== -->
+      <section id="profileContainer" class="hidden px-4 py-5 sm:px-7 sm:py-6">
+        <div class="max-w-[1140px] mx-auto space-y-3">
+          <!-- Auth Notice Banner (Shown when not logged in or token expired) -->
+          <div id="profAuthNotice" class="hidden rounded-lg border border-[#fbbf24]/45 bg-[#1b1407]/80 backdrop-blur-md px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs text-[#fde68a]">
+            <span id="profAuthNoticeText">請先按右上角以學校 Google 帳戶登入，即可檢視你的個人成績檔案。</span>
+            <button id="profReloginBtn" type="button" class="px-2.5 py-1 rounded bg-[#fbbf24] text-[#0b0f19] font-bold text-xs hover:bg-[#fde047] transition">前往登入</button>
+          </div>
+
+          <!-- Teacher Preview Selector (Visible ONLY in Teacher Mode) -->
+          <div id="profTeacherBar" class="hidden rounded-lg border border-[#fbbf24]/35 bg-[#141008]/75 backdrop-blur-md px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 font-mono-code text-xs text-[#fbbf24] font-bold">
+              <span>👁 老師預覽模式</span>
+              <span class="text-[#94a3b8] font-normal hidden sm:inline">選擇學生即時檢視個人檔案：</span>
+            </div>
+            <select id="profTeacherStudentSelect" class="bg-[#070d18]/90 border border-[#2c405e] rounded px-2.5 py-1 text-xs text-white font-mono-code outline-none focus:border-[#38bdf8] min-w-[200px]">
+              <option value="">-- 檢視目前登入帳戶 --</option>
+            </select>
+          </div>
+
+          <!-- Unified Course-Map-Style Translucent Glowing Glass Frame -->
+          <div class="prof-master-frame">
+            <!-- Signature /// Header Bar (Matches Homepage Course Map) -->
+            <div class="px-4 sm:px-5 py-3 border-b border-[#22d3ee]/15 bg-[#081022]/45 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="inline-flex items-center gap-[3px]" aria-hidden="true">
+                  <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#22d3ee] shadow-[0_0_8px_#22d3ee]"></span>
+                  <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#38bdf8] shadow-[0_0_8px_#38bdf8]"></span>
+                  <span class="w-[5px] h-4 -skew-x-[22deg] rounded-[1px] bg-[#e879f9] shadow-[0_0_8px_#e879f9]"></span>
+                </span>
+                <h2 class="font-display text-sm sm:text-base font-bold italic tracking-wider text-white">PERSONAL PROFILE</h2>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="font-mono-code text-[11px] text-[#94a3b8] hidden sm:inline">🕒 <span id="profUpdatedAt" class="text-[#cbd5e1] font-bold">--</span></span>
+                <button id="profRefreshBtn" type="button" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0c1a30]/75 hover:bg-[#142a4a]/90 border border-[#22d3ee]/40 hover:border-[#22d3ee]/80 text-[#e0f2fe] font-mono-code text-[11px] font-bold transition">
+                  <svg id="profRefreshIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                  <span>重新整理成績</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Upper Band: Enlarged Radar Chart (Left) + 平時分 & 老師評語 (Right) -->
+            <div class="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+              <!-- Left: Enlarged Pure Ability Radar Chart -->
+              <div class="md:col-span-5 flex flex-col items-center justify-center">
+                <svg id="profRadarSvg" viewBox="0 0 280 246" class="w-full max-w-[300px] h-[220px] sm:h-[236px]">
+                  <polygon points="140,44 214,118 140,192 66,118" fill="rgba(14,28,52,0.35)" stroke="rgba(56,189,248,0.30)" stroke-width="1.2"/>
+                  <polygon points="140,68.7 189.3,118 140,167.3 90.7,118" fill="none" stroke="rgba(56,189,248,0.20)" stroke-width="1"/>
+                  <polygon points="140,93.3 164.7,118 140,142.7 115.3,118" fill="none" stroke="rgba(56,189,248,0.14)" stroke-width="1"/>
+                  <line x1="140" y1="44" x2="140" y2="192" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
+                  <line x1="66" y1="118" x2="214" y2="118" stroke="rgba(56,189,248,0.24)" stroke-width="1"/>
+                  <polygon id="profRadarPoly" points="140,118 140,118 140,118 140,118" fill="rgba(34,211,238,0.28)" stroke="#22d3ee" stroke-width="2.2" style="filter:drop-shadow(0 0 10px rgba(34,211,238,0.5));"/>
+                  <circle id="profDotTop" cx="140" cy="118" r="4.2" fill="#22d3ee" stroke="#060b16" stroke-width="1.2"/>
+                  <circle id="profDotRight" cx="140" cy="118" r="4.2" fill="#34d399" stroke="#060b16" stroke-width="1.2"/>
+                  <circle id="profDotBottom" cx="140" cy="118" r="4.2" fill="#c084fc" stroke="#060b16" stroke-width="1.2"/>
+                  <circle id="profDotLeft" cx="140" cy="118" r="4.2" fill="#fb923c" stroke="#060b16" stroke-width="1.2"/>
+                  <text x="140" y="18" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="bold">文字題</text>
+                  <text id="profRadarPctTop" x="140" y="33" text-anchor="middle" fill="#22d3ee" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                  <text x="224" y="114" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">編程題</text>
+                  <text id="profRadarPctRight" x="224" y="129" text-anchor="start" fill="#34d399" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                  <text x="140" y="211" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="bold">功課</text>
+                  <text id="profRadarPctBottom" x="140" y="226" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                  <text x="56" y="114" text-anchor="end" fill="#e2e8f0" font-size="12" font-weight="bold">測驗</text>
+                  <text id="profRadarPctLeft" x="56" y="129" text-anchor="end" fill="#fb923c" font-size="12" font-weight="bold" font-family="monospace">--%</text>
+                </svg>
+              </div>
+
+              <!-- Right: Golden 平時分 Spotlight + Teacher Feedback -->
+              <div class="md:col-span-7 flex flex-col gap-3">
+                <!-- Translucent Golden 平時分 Panel -->
+                <div class="prof-a2-glass px-4 py-3.5 space-y-2.5">
+                  <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-12 h-12 flex items-center justify-center shrink-0" style="filter:drop-shadow(0 0 12px rgba(250,204,21,0.55));">
+                        <svg viewBox="0 0 64 64" class="w-full h-full">
+                          <path d="M12 44 C6 36, 6 22, 13 14 M15 48 C10 42, 10 28, 16 20" fill="none" stroke="#facc15" stroke-width="2.4" stroke-linecap="round"/>
+                          <path d="M52 44 C58 36, 58 22, 51 14 M49 48 C54 42, 54 28, 48 20" fill="none" stroke="#facc15" stroke-width="2.4" stroke-linecap="round"/>
+                          <path d="M22 14 H42 V28 C42 35, 37.5 40, 32 40 C26.5 40, 22 35, 22 28 Z" fill="url(#a2GoldGrad)" stroke="#fef08a" stroke-width="1.5"/>
+                          <path d="M22 18 H15 C15 26, 18 30, 22 30 M42 18 H49 C49 26, 46 30, 42 30" fill="none" stroke="#facc15" stroke-width="2.6" stroke-linecap="round"/>
+                          <rect x="29" y="40" width="6" height="8" fill="#eab308"/>
+                          <rect x="21" y="48" width="22" height="5" rx="2" fill="#facc15"/>
+                          <defs><linearGradient id="a2GoldGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fef08a"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs>
+                        </svg>
+                      </div>
+                      <div>
+                        <div class="font-display text-xs sm:text-sm font-bold text-[#fde68a] tracking-wide">平時分</div>
+                        <div class="flex items-baseline gap-1.5 mt-0.5">
+                          <span id="profA2Score" class="font-mono-code text-3xl sm:text-4xl font-black italic text-[#facc15] tabular-nums leading-none" style="text-shadow:0 0 18px rgba(250,204,21,0.55);">--</span>
+                          <span class="font-mono-code text-sm font-bold text-[#fde68a]/80">/ 100</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span id="profA2GradeBadge" class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#facc15]/15 border border-[#facc15]/50 text-[#fde047] font-display text-xs sm:text-sm font-bold tracking-wide shrink-0">尚未公佈</span>
+                  </div>
+                  <div class="h-2 w-full rounded-full bg-[#090d18]/75 border border-[#facc15]/30 overflow-hidden">
+                    <div id="profA2Bar" class="h-full rounded-full bg-gradient-to-r from-[#facc15] via-[#fde047] to-[#fb923c] shadow-[0_0_10px_rgba(250,204,21,0.75)] transition-all duration-500" style="width:0%"></div>
+                  </div>
+                </div>
+
+                <!-- Translucent Teacher Feedback Inset -->
+                <div class="prof-glass-inset px-4 py-3 space-y-1.5">
+                  <div class="flex items-center gap-1.5 font-display text-xs font-bold text-[#94a3b8]">
+                    <span>💬</span><span>老師評語</span>
+                  </div>
+                  <div class="flex items-start gap-2.5 min-h-[48px]">
+                    <span class="text-base leading-none mt-0.5 shrink-0">💡</span>
+                    <div id="profFeedbackText" class="text-xs sm:text-sm text-[#e2e8f0] leading-relaxed whitespace-pre-line">載入個人成績與老師評語中...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lower Band: 4 Sleek Translucent Score Tiles (Hairline Divider, Course Map Rhythm) -->
+            <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-4 border-t border-[#22d3ee]/15 bg-[#060c1a]/30 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- 文字題總分 -->
+              <div class="prof-score-tile px-3.5 py-3 flex flex-col justify-between gap-2">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent opacity-80"></div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-[#22d3ee]/12 border border-[#22d3ee]/35 text-[#22d3ee] flex items-center justify-center shrink-0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+                    </span>
+                    <span class="text-xs font-bold text-[#e2e8f0]">文字題總分</span>
+                  </div>
+                  <div class="flex items-baseline gap-1">
+                    <span id="profTextScore" class="font-mono-code text-2xl font-bold italic text-white tabular-nums leading-none">--</span>
+                    <span class="font-mono-code text-xs text-[#64748b]">/ 100</span>
+                  </div>
+                </div>
+                <div class="h-1.5 w-full rounded-full bg-[#081224]/80 overflow-hidden">
+                  <div id="profTextBar" class="h-full rounded-full bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] transition-all duration-500" style="width:0%"></div>
+                </div>
+              </div>
+
+              <!-- 編程題總分 (4 Inline Breakdown Items) -->
+              <div class="prof-score-tile px-3.5 py-3 space-y-2">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#34d399] to-transparent opacity-80"></div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-[#10b981]/12 border border-[#10b981]/35 text-[#34d399] flex items-center justify-center shrink-0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/><polyline points="9 9 6 11.5 9 14"/><polyline points="15 9 18 11.5 15 14"/></svg>
+                    </span>
+                    <span class="text-xs font-bold text-[#e2e8f0]">編程題總分</span>
+                  </div>
+                  <div class="flex items-baseline gap-1">
+                    <span id="profCodeScore" class="font-mono-code text-2xl font-bold italic text-white tabular-nums leading-none">--</span>
+                    <span class="font-mono-code text-xs text-[#64748b]">/ 100</span>
+                  </div>
+                </div>
+                <div class="h-1.5 w-full rounded-full bg-[#071a15]/80 overflow-hidden">
+                  <div id="profCodeBar" class="h-full rounded-full bg-gradient-to-r from-[#059669] to-[#34d399] transition-all duration-500" style="width:0%"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 pt-1.5 border-t border-[#10b981]/15 font-mono-code text-[10px]">
+                  <div class="space-y-0.5">
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>計分練習</span><span id="profQuestStat" class="font-bold text-[#38bdf8] tabular-nums">0 / 138</span></div>
+                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profQuestBar" class="h-full bg-[#38bdf8] transition-all duration-300" style="width:0%"></div></div>
+                  </div>
+                  <div class="space-y-0.5">
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>紙本功課</span><span id="profPaperHwStat" class="font-bold text-[#fbbf24] tabular-nums">-- / 100</span></div>
+                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profPaperHwBar" class="h-full bg-[#fbbf24] transition-all duration-300" style="width:0%"></div></div>
+                  </div>
+                  <div class="space-y-0.5">
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>課本例題</span><span id="profTbStat" class="font-bold text-[#34d399] tabular-nums">0 / 95</span></div>
+                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profTbBar" class="h-full bg-[#10b981] transition-all duration-300" style="width:0%"></div></div>
+                  </div>
+                  <div class="space-y-0.5">
+                    <div class="flex items-center justify-between text-[#94a3b8]"><span>額外操練</span><span id="profPrStat" class="font-bold text-[#c084fc] tabular-nums">0 / 521</span></div>
+                    <div class="h-1 w-full rounded-full bg-[#081020]/80 overflow-hidden"><div id="profPrBar" class="h-full bg-[#c084fc] transition-all duration-300" style="width:0%"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 功課總分 -->
+              <div class="prof-score-tile px-3.5 py-3 flex flex-col justify-between gap-2">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#c084fc] to-transparent opacity-80"></div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-[#c084fc]/12 border border-[#c084fc]/35 text-[#c084fc] flex items-center justify-center shrink-0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M9.5 20v-6h5v6"/></svg>
+                    </span>
+                    <span class="text-xs font-bold text-[#e2e8f0]">功課總分</span>
+                  </div>
+                  <div class="flex items-baseline gap-1">
+                    <span id="profHwScore" class="font-mono-code text-2xl font-bold italic text-white tabular-nums leading-none">--</span>
+                    <span class="font-mono-code text-xs text-[#64748b]">/ 100</span>
+                  </div>
+                </div>
+                <div class="h-1.5 w-full rounded-full bg-[#150b24]/80 overflow-hidden">
+                  <div id="profHwBar" class="h-full rounded-full bg-gradient-to-r from-[#9333ea] to-[#c084fc] transition-all duration-500" style="width:0%"></div>
+                </div>
+              </div>
+
+              <!-- 測驗總分 -->
+              <div class="prof-score-tile px-3.5 py-3 flex flex-col justify-between gap-2">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#fb923c] to-transparent opacity-80"></div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-[#fb923c]/12 border border-[#fb923c]/35 text-[#fb923c] flex items-center justify-center shrink-0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><polyline points="9 12 11 14 15 10"/></svg>
+                    </span>
+                    <span class="text-xs font-bold text-[#e2e8f0]">測驗總分</span>
+                  </div>
+                  <div class="flex items-baseline gap-1">
+                    <span id="profTestScore" class="font-mono-code text-2xl font-bold italic text-white tabular-nums leading-none">--</span>
+                    <span class="font-mono-code text-xs text-[#64748b]">/ 100</span>
+                  </div>
+                </div>
+                <div class="h-1.5 w-full rounded-full bg-[#1e1207]/80 overflow-hidden">
+                  <div id="profTestBar" class="h-full rounded-full bg-gradient-to-r from-[#ea580c] to-[#fb923c] transition-all duration-500" style="width:0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODE 1: QUEST WORKBENCH (44 PYTHON LEVELS + 11 HKDSE DEBUG QUIZZES)   -->
+      <!-- ===================================================================== -->
+      <div id="questContainer" class="hidden divide-y divide-[#212a36]">
+        <!-- Mobile & Collapsed-Sidebar Live Telemetry Bar (Level, Score, Penalty, Progress %) -->
+        <div id="compactHudBar" class="xl:hidden px-3 sm:px-6 py-2.5 bg-[#0a1220] border-b border-[#1e2d44] flex flex-wrap items-center justify-between gap-2 font-mono-code text-[11px]">
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <span id="mobLevelBadge" class="px-2 py-0.5 rounded bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/40 font-bold">LV.0</span>
+            <span class="text-[#94a3b8]">分數: <b id="mobXpReadout" class="pl-stat-trigger text-[#f5a623]" role="button" tabindex="0">0</b></span>
+            <span id="mobPenaltyReadout" class="pl-stat-trigger text-[#fda4af] font-bold" role="button" tabindex="0">扣分: 0</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="mobCompletedCount" class="text-[#94a3b8] text-[10px]">0 / 138</span>
+            <div class="w-16 sm:w-24 h-2 rounded-full bg-[#05080f] border border-[#243754] overflow-hidden">
+              <div id="mobProgressFill" class="h-full bg-gradient-to-r from-[#10b981] to-[#38bdf8] transition-all duration-300" style="width:0%"></div>
+            </div>
+            <span id="mobMasteryPct" class="text-[#38bdf8] font-bold">0%</span>
+          </div>
+        </div>
+        <!-- Top Full-Width Compact Mission Card (Zero Empty Void) -->
+        <section class="px-4 sm:px-6 py-3.5 bg-[#0e1726]/92 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="min-w-0 space-y-0.5">
+              <div class="flex items-center gap-1.5 font-mono-code text-[11px] text-[#9aa7b8] flex-wrap">
+                <span id="questLvBadge" class="hidden">LV.0</span>
+                <span id="lvlTypeTag" class="hidden"></span>
+                <span id="lvlLessonTag" class="text-[#38bdf8] font-semibold"></span>
+                <span class="text-[#475569]">·</span>
+                <span id="lvlTopicProgressTag" class="text-[#9aa7b8]"></span>
+              </div>
+              <h1 id="lvlTitle" class="font-display text-lg sm:text-xl font-bold text-white leading-tight"></h1>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 shrink-0 font-mono-code text-[11px]">
+              <span id="lvlDiffTag" class="px-2 py-0.5 rounded-[2px] font-bold"></span>
+              <span id="lvlXpTag" class="text-[#f5a623] font-bold px-1"></span>
+              <button id="toggleNotesBtn" type="button" class="hw-btn touch-target px-2.5 py-1.5 rounded-sm bg-[#0c2236] hover:bg-[#13324d] border border-[#38bdf8]/45 text-xs font-bold text-[#38bdf8] inline-flex items-center gap-1">
+                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> 重點筆記
+              </button>
+              <button id="prevLevelBtn" class="hw-btn touch-target px-3 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-slate-200 disabled:opacity-35">← 上一題</button>
+              <button id="nextLevelBtn" class="hw-btn touch-target px-3 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-slate-200 disabled:opacity-35">下一題 →</button>
+            </div>
+          </div>
+
+          <!-- Full-Width Mission Prompt (Copy-Protected) -->
+          <div class="no-copy border-l-2 border-[#10b981] bg-[#080d16] px-4 py-2.5 rounded-r-sm flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-3">
+            <span class="font-mono-code text-[10px] tracking-widest text-[#10b981] uppercase font-bold inline-flex items-center gap-1 shrink-0">
+              <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> 題目要求
+            </span>
+            <div id="lvlPrompt" class="text-sm sm:text-[15px] font-bold text-white leading-relaxed"></div>
+          </div>
+
+          <!-- Collapsible Lesson Notes & Pseudocode Drawer (Opened via 重點筆記 button) -->
+          <div id="lessonNotesDrawer" class="hidden chassis-well rounded-sm p-3.5 space-y-2.5 border border-[#243754]">
+            <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-[#1b2430]">
+              <span class="text-xs font-bold text-[#38bdf8]">重點筆記與考評局偽代碼對照</span>
+              <span id="lvlTextbookRef" class="font-mono-code text-[10px] text-[#9aa7b8]"></span>
+            </div>
+            <ul id="lessonNotesList" class="text-xs text-[#cbd5e1] space-y-1 list-disc pl-4 leading-relaxed"></ul>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-[#324052] text-[#38bdf8]">
+                    <th class="py-1.5 px-2.5">項目</th>
+                    <th class="py-1.5 px-2.5">Python（0-based）</th>
+                    <th class="py-1.5 px-2.5">考評局偽代碼（1-based）</th>
+                  </tr>
+                </thead>
+                <tbody id="pseudoCompareBody" class="divide-y divide-[#18202b] font-mono-code text-[#e2e8f0]"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom Full-Width Workspace Container -->
+        <div id="questSplitBody" class="p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-4">
+          <div class="min-w-0 space-y-4">
+        <!-- PYTHON CODING WORKSPACE (Full-Width: Left 62% Editor | Right 38% STDIN + Output) -->
+        <section id="pyWorkspace" class="bg-[#0b1322]/90 border border-[#1e2d44] rounded-sm p-3.5 sm:p-4 space-y-3">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+            <!-- Left (~62%): Clean 2-Layer Code Editor + Single-Row Action Bar -->
+            <div class="lg:col-span-7 xl:col-span-8 min-w-0 space-y-2.5">
+              <!-- Layer 1: Unified Editor Header Bar -->
+              <div class="rounded-sm border border-[#243754] bg-[#060a12] overflow-hidden">
+                <div class="px-3 py-2 bg-[#0c1422] border-b border-[#1b283d] flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 font-mono-code text-xs">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5 text-[#10d981]"></i>
+                    <span id="editorFileName" class="font-bold text-white">L01_1.py</span>
+                    <span class="hidden sm:inline text-[10px] text-[#64748b]">PYTHON 3 · Ctrl+Enter 執行</span>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <button id="togglePyAssistBtn" type="button" class="hw-btn px-2 py-1 rounded-sm bg-[#111c2d] hover:bg-[#1a2b44] text-[11px] font-bold text-[#94a3b8] hover:text-white border border-[#243754]">⌨️ 輔助鍵</button>
+                    <button id="toggleHintBtn" class="hw-btn px-2.5 py-1 rounded-sm bg-[#141b25] hover:bg-[#1e2837] text-[11px] font-bold text-[#f5a623] border border-[#f5a623]/35">睇提示</button>
+                    <button id="resetStarterBtn" class="hw-btn px-2.5 py-1 rounded-sm bg-[#141b25] hover:bg-[#1e2837] text-[11px] font-bold text-[#94a3b8] border border-[#243754]">重設骨架</button>
+                    <button id="teacherRevealPyBtn" type="button" class="hidden hw-btn px-2.5 py-1 rounded-sm bg-[#f59e0b]/15 hover:bg-[#f59e0b]/25 text-[11px] font-bold text-[#fbbf24] border border-[#f59e0b]/45">👁️ 老師答案</button>
+                  </div>
+                </div>
+
+                <!-- Teacher Answer Drawer -->
+                <div id="teacherPyAnsBox" class="hidden bg-[#151208] border-b border-[#f59e0b]/45 p-3 space-y-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-mono-code text-[11px] font-bold text-[#fbbf24]">老師參考答案（雲端即時提取）</span>
+                    <button id="teacherFillPyBtn" type="button" class="hw-btn px-2 py-0.5 rounded-sm bg-[#f59e0b] hover:bg-[#fbbf24] text-[#1a1200] text-[11px] font-bold">一鍵填入編輯器</button>
+                  </div>
+                  <pre id="teacherPyAnsPre" class="font-mono-code text-xs text-[#fef3c7] bg-[#090805] border border-[#f59e0b]/25 p-2.5 rounded-sm overflow-x-auto whitespace-pre"></pre>
+                </div>
+
+                <!-- Layer 2 (Collapsible on Desktop / Auto-ready on iPad): Combined Assist Strip -->
+                <div id="pyAssistDrawer" class="hidden bg-[#091220] border-b border-[#1b283d] px-2.5 py-1.5 space-y-1.5">
+                  <div id="pyKeywordBar" class="flex flex-nowrap overflow-x-auto touch-scroll-x gap-1.5 pb-0.5"></div>
+                  <div class="ipad-key-bar !border-0 !bg-transparent !p-0" data-target-editor="pyInput"></div>
+                </div>
+                <div id="questZhBar" class="hidden flex flex-wrap items-center gap-1.5 px-2.5 py-1.5 bg-[#091220] border-b border-[#1b283d] text-[11px]"></div>
+
+                <!-- Code Editor Area -->
+                <div class="code-editor-wrap !border-0">
+                  <div id="pyLineGutter" class="line-gutter">1</div>
+                  <textarea id="pyInput" rows="12" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                    class="py-editor" placeholder="請親手輸入標準 Python 程式碼（不可貼上，不可使用 +=、-=、;）..."></textarea>
+                </div>
+              </div>
+
+              <!-- Real-Time AST Alert & Hint -->
+              <div id="astAlertBox" class="hidden border-l-2 border-[#f5a623] bg-[#f5a623]/10 px-3.5 py-2 text-xs text-[#fde68a] flex items-start gap-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-[#f5a623] shrink-0 mt-0.5"></i>
+                <div id="astAlertText"></div>
+              </div>
+              <div id="hintBox" class="hidden border-l-2 border-[#38bdf8] bg-[#38bdf8]/8 px-3.5 py-2 text-xs text-[#bae6fd] leading-relaxed"></div>
+
+              <!-- Single Horizontal Action Bar (NEVER stacks awkwardly) -->
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-0.5">
+                <button id="runPyBtn" class="hw-btn hw-btn-cyan touch-target px-4 py-2 rounded-sm font-bold text-xs sm:text-sm inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <i data-lucide="play" class="w-3.5 h-3.5"></i> 執行測試 (Run)
+                </button>
+                <button id="checkPyBtn" class="hw-btn hw-btn-primary touch-target px-5 py-2 rounded-sm font-bold text-xs sm:text-sm inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 提交批改 (Check)
+                </button>
+                <button data-inline-next class="hw-btn touch-target sm:ml-auto px-4 py-2 rounded-sm bg-[#141b25] border border-[#2a3647] text-[#9aa7b8] font-bold text-xs sm:text-sm disabled:opacity-40 whitespace-nowrap" disabled>
+                  <span>答對後解鎖下一題 →</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right (~38%): Side-by-Side STDIN + Feedback + Live Execution Output -->
+            <div class="lg:col-span-5 xl:col-span-4 min-w-0 space-y-3">
+              <div class="rounded-sm bg-[#070b13] border border-[#243754] p-3 space-y-1.5">
+                <label for="manualStdin" class="block font-mono-code text-[10px] text-[#9aa7b8] font-bold">測試輸入數據（STDIN，每行一個 input() 值）</label>
+                <textarea id="manualStdin" rows="3" class="w-full rounded-sm bg-[#04070d] border border-[#1e2d44] focus:border-[#38bdf8] p-2 text-xs font-mono-code text-white outline-none resize-y" placeholder="例如：\n12.5\n4"></textarea>
+              </div>
+
+              <div id="pyFeedback" class="hidden px-3.5 py-2.5 rounded-sm text-xs sm:text-sm font-bold"></div>
+
+              <div class="chassis-well rounded-sm p-3 border border-[#1e2d44]">
+                <div class="font-mono-code text-[10px] text-[#34d399] font-bold mb-1.5">執行輸出（Console）</div>
+                <pre id="pyOutputArea" class="text-xs sm:text-sm font-mono-code text-[#a7f3d0] whitespace-pre-wrap overflow-x-auto min-h-[150px] max-h-[320px] overflow-y-auto">// 點擊「執行測試」或「提交批改」檢視輸出...</pre>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Live Per-Lesson Dry-Run Trace Panel -->
+          <div class="pt-2 space-y-2.5 border-t border-[#1e2d44]">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="git-commit-horizontal" class="w-4 h-4 text-[#fbbf24]"></i>
+                <span class="text-xs font-bold text-white">逐步空運行追蹤（Dry-Run Trace）</span>
+              </div>
+              <button id="questTraceBtn" class="hw-btn px-3 py-1.5 rounded-sm bg-[#132035] hover:bg-[#1b2e4b] text-[#fbbf24] border border-[#f59e0b]/45 text-xs font-bold flex items-center gap-1.5">
+                <i data-lucide="step-forward" class="w-3.5 h-3.5"></i> 追蹤目前程式碼
+              </button>
+            </div>
+            <div id="questTraceWrap" class="hidden greenbar-paper rounded-sm overflow-hidden flex">
+              <div class="hidden sm:block w-5 shrink-0 tractor-strip border-r"></div>
+              <div class="flex-1 min-w-0">
+                <div class="bg-[#f4f1e6] border-b-2 border-[#181c20] px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                  <div class="font-display font-black text-xs text-[#181c20]">Dry-Run 追蹤表</div>
+                  <div class="flex items-center gap-1.5">
+                    <button id="qTracePrevBtn" class="px-2 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#f4f1e6] hover:bg-[#e5e0cf] text-[#181c20]">← 上一步</button>
+                    <button id="qTraceNextBtn" class="px-2.5 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#1d4ed8] hover:bg-[#1e40af] text-white">下一步 →</button>
+                    <button id="qTraceAutoBtn" class="px-2.5 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#181c20] text-[#f4f1e6]">▶ 自動</button>
+                  </div>
+                </div>
+                <div id="qTraceCanvas" class="p-3.5 min-h-[170px]"></div>
+                <div class="bg-[#181c20] text-[#f4f1e6] px-3.5 py-1.5 flex items-center justify-between text-xs font-mono-code">
+                  <span id="qTraceNote" class="truncate"></span>
+                  <span id="qTraceCounter" class="text-[#4ade80] font-bold shrink-0 ml-2"></span>
+                </div>
+              </div>
+              <div class="hidden sm:block w-5 shrink-0 tractor-strip border-l"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HKDSE DRY-RUN & ALGORITHM COMPARISON WORKSPACE (Tier 5 per lesson) -->
+        <section id="debugQuizWorkspace" class="hidden p-4 sm:p-6 bg-[#0e1726]/90 space-y-4">
+          <!-- Clean 2-Step Progress Indicator -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1d2b40]">
+            <div class="flex items-center gap-2 font-mono-code text-xs font-bold">
+              <button id="dqStep1Tab" type="button" class="px-3 py-1.5 rounded-md bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/50 transition">① 甲部：空運行與除錯</button>
+              <span class="text-[#475569]">→</span>
+              <button id="dqStep2Tab" type="button" class="px-3 py-1.5 rounded-md bg-[#0c1422] text-[#64748b] border border-[#1d2b40] transition">② 乙部：算法比較</button>
+            </div>
+            <button id="teacherRevealDqBtn" type="button" class="hidden hw-btn px-2.5 py-1 rounded-sm bg-[#f59e0b]/15 hover:bg-[#f59e0b]/25 text-xs font-bold text-[#fbbf24] border border-[#f59e0b]/45">👁️ 老師答案</button>
+          </div>
+
+          <!-- STEP 1: Part A (Debug & Dry-Run MCQ) -->
+          <div id="dqStep1Pane" class="space-y-4">
+            <div class="no-copy chassis-well rounded-sm p-4 space-y-2 border-l-2 border-l-[#38bdf8]">
+              <div class="font-bold text-xs text-[#38bdf8]">【甲部：空運行與除錯】</div>
+              <pre id="dqDebugPrompt" class="text-xs sm:text-sm font-mono-code text-[#e2e8f0] whitespace-pre-wrap leading-relaxed"></pre>
+            </div>
+            <div class="chassis-surface rounded-sm p-4 space-y-3">
+              <div id="dqMcqStem" class="text-sm font-bold text-white"></div>
+              <div id="dqMcqOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <button id="checkDebugQuizBtn" type="button" class="hw-btn hw-btn-primary px-5 py-2 rounded-sm font-bold text-xs sm:text-sm flex items-center gap-1.5">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 核對甲部
+                </button>
+                <button id="dqGoStep2Btn" type="button" class="hidden hw-btn px-4 py-2 rounded-sm bg-[#10b981] hover:bg-[#34d399] text-[#03150e] font-bold text-xs sm:text-sm flex items-center gap-1.5">
+                  <span>進入乙部：算法比較 →</span>
+                </button>
+              </div>
+              <div id="dqFeedback" class="hidden px-3.5 py-3 text-sm font-bold"></div>
+              <div id="dqModelAnsBox" class="hidden border-l-2 border-[#10d981] bg-[#10d981]/10 p-3.5 text-xs text-[#d1fae5] space-y-1.5">
+                <div><b class="text-[#10d981]">甲部參考解析：</b><pre id="dqDebugAns" class="font-mono-code whitespace-pre-wrap mt-1"></pre></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Part B (Algorithm Comparison MCQ) -->
+          <div id="dqStep2Pane" class="hidden space-y-4">
+            <div class="no-copy chassis-well rounded-sm p-4 space-y-2 border-l-2 border-l-[#10d981]">
+              <div class="font-bold text-xs text-[#10d981]">【乙部：算法比較】</div>
+              <pre id="dqComparePrompt" class="text-xs sm:text-sm font-mono-code text-[#e2e8f0] whitespace-pre-wrap leading-relaxed"></pre>
+            </div>
+            <div class="chassis-surface rounded-sm p-4 space-y-3">
+              <div id="dqCompareMcqStem" class="text-sm font-bold text-white"></div>
+              <div id="dqCompareMcqOptions" class="grid grid-cols-1 gap-2"></div>
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <button id="checkDebugPartBBtn" type="button" class="hw-btn hw-btn-primary px-5 py-2 rounded-sm font-bold text-xs sm:text-sm flex items-center gap-1.5">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 核對乙部並完成本關
+                </button>
+                <button id="dqBackStep1Btn" type="button" class="hw-btn px-3.5 py-2 rounded-sm bg-[#132035] hover:bg-[#1e3252] border border-[#243754] text-xs font-bold text-[#9aa7b8]">← 查看甲部</button>
+                <button data-inline-next class="hw-btn px-4 py-2 rounded-sm bg-[#141b25] border border-[#2a3647] text-[#9aa7b8] font-bold text-xs sm:text-sm disabled:opacity-40" disabled>
+                  <span>答對後解鎖下一題 →</span>
+                </button>
+              </div>
+              <div id="dqFeedbackB" class="hidden px-3.5 py-3 text-sm font-bold"></div>
+              <div id="dqModelAnsBoxB" class="hidden border-l-2 border-[#10d981] bg-[#10d981]/10 p-3.5 text-xs text-[#d1fae5] space-y-1.5">
+                <div><b class="text-[#10d981]">乙部參考解析：</b><pre id="dqCompareAns" class="font-mono-code whitespace-pre-wrap mt-1"></pre></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PER-LESSON DRY-RUN / FIND-OUTPUT WORKSPACE (Tier 6 per lesson, NO Run button) -->
+        <section id="dryrunWorkspace" class="hidden p-4 sm:p-6 bg-[#0e1726]/90 space-y-4">
+          <div class="no-copy chassis-well rounded-sm overflow-hidden border border-[#243754]">
+            <div class="px-3.5 py-2 bg-[#0c1320] border-b border-[#243754] flex flex-wrap items-center justify-between gap-2 font-mono-code text-[11px]">
+              <span id="drSourceBadge" class="text-[#fbbf24] font-bold">課本練習</span>
+              <span class="text-[#9aa7b8]">空運行模式</span>
+            </div>
+            <div class="p-3.5 bg-[#070b13] overflow-x-auto">
+              <pre id="drCodeBlock" class="text-xs sm:text-sm font-mono-code text-[#e2e8f0] leading-relaxed"></pre>
+            </div>
+          </div>
+
+          <div class="chassis-surface rounded-sm p-4 space-y-3 border-[#1e2d44]">
+            <label for="drUserInput" class="block text-xs font-bold text-[#38bdf8]">請輸入程式的準確輸出（如有多行，請按 Enter 換行）：</label>
+            <textarea id="drUserInput" rows="3" spellcheck="false" autocomplete="off"
+              class="w-full rounded-sm bg-[#070b13] border border-[#2a3b55] focus:border-[#38bdf8] p-3 text-sm font-mono-code text-white outline-none"
+              placeholder="輸入預期輸出後按「提交核對」或 Ctrl+Enter..."></textarea>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <button id="checkDryrunBtn" class="hw-btn hw-btn-primary px-5 py-2 rounded-sm font-bold text-xs sm:text-sm flex items-center gap-1.5">
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 提交核對
+              </button>
+              <button data-inline-next class="hw-btn px-4 py-2 rounded-sm bg-[#141b25] border border-[#2a3647] text-[#9aa7b8] font-bold text-xs sm:text-sm disabled:opacity-40" disabled>
+                <span>答對後解鎖下一題 →</span>
+              </button>
+            </div>
+            <div class="flex justify-end"><button id="teacherRevealDrBtn" type="button" class="hidden hw-btn px-2.5 py-1 rounded-sm bg-[#f59e0b]/15 hover:bg-[#f59e0b]/25 text-xs font-bold text-[#fbbf24] border border-[#f59e0b]/45">👁️ 老師答案</button></div>
+            <div id="drFeedback" class="hidden px-3.5 py-3 text-sm font-bold"></div>
+            <div id="drExplainBox" class="hidden border-l-2 border-[#10d981] bg-[#10d981]/10 p-3.5 text-xs text-[#d1fae5] space-y-1.5">
+              <div><b class="text-[#10d981]">標準輸出：</b><pre id="drModelAns" class="font-mono-code whitespace-pre-wrap mt-1 text-white"></pre></div>
+              <div><b class="text-[#38bdf8]">追蹤解析：</b><span id="drExplainText" class="leading-relaxed"></span></div>
+            </div>
+            <div class="pt-2 space-y-2.5 border-t border-[#1e2d44]">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="git-commit-horizontal" class="w-4 h-4 text-[#fbbf24]"></i>
+                  <span class="text-xs font-bold text-white">逐步空運行追蹤（Dry-Run Trace）</span>
+                </div>
+                <button id="drTraceBtn" class="hw-btn px-3 py-1.5 rounded-sm bg-[#132035] hover:bg-[#1b2e4b] text-[#fbbf24] border border-[#f59e0b]/45 text-xs font-bold flex items-center gap-1.5">
+                  <i data-lucide="step-forward" class="w-3.5 h-3.5"></i> 逐步追蹤過程
+                </button>
+              </div>
+              <div id="drTraceWrap" class="hidden greenbar-paper rounded-sm overflow-hidden flex">
+                <div class="hidden sm:block w-5 shrink-0 tractor-strip border-r"></div>
+                <div class="flex-1 min-w-0">
+                  <div class="bg-[#f4f1e6] border-b-2 border-[#181c20] px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                    <div class="font-display font-black text-xs text-[#181c20]">Dry-Run 追蹤表</div>
+                    <div class="flex items-center gap-1.5">
+                      <button id="drTracePrevBtn" class="px-2 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#f4f1e6] hover:bg-[#e5e0cf] text-[#181c20]">← 上一步</button>
+                      <button id="drTraceNextBtn" class="px-2.5 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#1d4ed8] hover:bg-[#1e40af] text-white">下一步 →</button>
+                      <button id="drTraceAutoBtn" class="px-2.5 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#181c20] text-[#f4f1e6]">▶ 自動</button>
+                    </div>
+                  </div>
+                  <div id="drTraceCanvas" class="p-3.5 min-h-[170px]"></div>
+                  <div class="bg-[#181c20] text-[#f4f1e6] px-3.5 py-1.5 flex items-center justify-between text-xs font-mono-code">
+                    <span id="drTraceNote" class="truncate"></span>
+                    <span id="drTraceCounter" class="text-[#4ade80] font-bold shrink-0 ml-2"></span>
+                  </div>
+                </div>
+                <div class="hidden sm:block w-5 shrink-0 tractor-strip border-l"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+                </div>
+        </div>
+      </div>
+
+<section id="textbookContainer" class="hidden">
+        <!-- Unified 12-Col Frame: Exact lg:col-span-3 Left Rail + lg:col-span-9 Main Workbench (Matches 計分練習 1:1) -->
+        <div id="tbExamplesPane" class="grid grid-cols-1 xl:grid-cols-12 min-h-[calc(100dvh-3.5rem)]">
+          <!-- Left Telemetry & Directory Rail (Exact same width & gauge style as 計分練習) -->
+          <div id="tbSidebarBackdrop" class="hidden xl:flex xl:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
+            <div id="tbSidebarPanel" class="flex flex-col flex-1 min-h-0">
+              <!-- Module 2 Compact 2-Row Neon Character Card: 實戰工匠 -->
+              <div class="p-2.5 border-b border-[#1e2d44]">
+                <div class="relative overflow-hidden rounded-md border border-[#facc15]/50 bg-gradient-to-br from-[#271b07] via-[#13121e] to-[#060b16] p-2.5 flex flex-col gap-2 shadow-[0_0_16px_rgba(250,204,21,0.10)]">
+                  <div class="relative z-10 flex items-center gap-2.5">
+                    <div class="relative w-11 h-11 rounded-md overflow-hidden border border-[#facc15]/55 bg-[#1a1306] shrink-0">
+                      <img src="./assets/img/avatar-textbook.webp" loading="lazy" decoding="async" alt="實戰工匠" class="w-full h-full object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                      <div style="display:none" class="w-full h-full items-center justify-center text-[#facc15]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+                    </div>
+                    <div class="min-w-0 flex-1 space-y-1">
+                      <div class="flex items-center justify-between gap-1">
+                        <span class="font-mono-code text-[11px] font-bold text-[#facc15] truncate">實戰工匠</span>
+                        <span id="tbCharLvBadge" class="font-mono-code text-[10px] px-1.5 py-0.5 rounded bg-[#facc15]/15 text-[#facc15] border border-[#facc15]/40 font-bold shrink-0">Lv.1</span>
+                      </div>
+                      <div class="flex items-center justify-between font-mono-code text-[10px]">
+                        <span id="tbDoneCount" class="text-white font-bold">0 / 95 題</span>
+                        <span id="tbMasteryPct" class="text-[#facc15] font-bold">0%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="h-1.5 w-full rounded-full bg-[#060d1a] border border-[#3d2e12] overflow-hidden">
+                    <div id="tbSidebarBar" class="h-full rounded-full bg-gradient-to-r from-[#facc15] to-[#fb923c] shadow-[0_0_8px_rgba(250,204,21,0.7)] transition-all duration-300" style="width:0%"></div>
+                  </div>
+                  <span id="tbDoneBig" class="hidden">0</span>
+                  <svg class="hidden" viewBox="0 0 100 54"><path id="tbGaugeArc" d="M 10 48 A 40 40 0 0 1 90 48" stroke-dasharray="126" stroke-dashoffset="126"/><g id="tbGaugeNeedle"></g></svg>
+                </div>
+              </div>
+
+              <!-- Directory & Filters -->
+              <div class="p-3 flex-1 overflow-y-auto space-y-2.5">
+                <div class="flex items-center justify-between px-1.5 pb-2 border-b border-[#182438] min-h-[29px]">
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-xs font-bold text-[#cbd5e1]">例題目錄</h2>
+                    <span class="text-[10px] text-[#34d399] font-bold">95 題</span>
+                  </div>
+                  <button id="tbDrawerCloseBtn" class="xl:hidden p-1.5 rounded-sm bg-[#141b25] text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+                <div id="tbBookFilters" class="grid grid-cols-3 gap-1 text-[11px] font-bold">
+                  <button data-book="ALL" class="py-1.5 rounded-sm bg-[#10b981] text-[#04140e]">全部</button>
+                  <button data-book="D1" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">D1</button>
+                  <button data-book="D2" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">D2</button>
+                  <button data-book="CP" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">測試站</button>
+                  <button data-book="XC" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">選修C</button>
+                  <button data-book="WB" class="py-1.5 rounded-sm bg-[#132035] text-[#cbd5e1] border border-[#243754]">作業</button>
+                </div>
+                <div id="tbOriginFilters" class="grid grid-cols-3 gap-1 text-[11px] font-bold">
+                  <button data-origin="ALL" class="py-1 rounded-sm bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/50">全部來源</button>
+                  <button data-origin="textbook" class="py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]">課本原題</button>
+                  <button data-origin="concept" class="py-1 rounded-sm bg-[#0c1422] text-[#94a3b8] border border-[#1e2d44]">概念示範</button>
+                </div>
+                <input id="tbSearchInput" type="text" placeholder="搜尋課題或關鍵字..." class="w-full rounded-sm bg-[#070b13] border border-[#243754] px-3 py-1.5 text-xs text-white outline-none focus:border-[#38bdf8]" />
+                <div id="tbExampleList" class="space-y-1.5 max-h-[65vh] lg:max-h-[640px] overflow-y-auto pr-1"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Frame: Practice Editor + Output + Live Dry-Run Trace (Matches 計分練習 lg:col-span-9 p-4 sm:p-6) -->
+          <div id="tbRightFrame" class="xl:col-span-9 min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-4">
+            <!-- Mobile & Collapsed-Sidebar Live Telemetry Bar (Matches 計分練習 1:1) -->
+            <div id="tbCompactHudBar" class="xl:hidden -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 px-3 sm:px-6 py-2.5 bg-[#0a1220] border-b border-[#1e2d44] flex flex-wrap items-center justify-between gap-2 font-mono-code text-[11px]">
+              <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span id="tbMobLvBadge" class="px-2 py-0.5 rounded bg-[#facc15]/15 text-[#facc15] border border-[#facc15]/40 font-bold">Lv.0</span>
+                <span class="text-[#94a3b8]">實戰工匠 · <b class="text-[#fb923c]">課本例題</b></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="tbMobDoneCount" class="text-[#94a3b8] text-[10px]">0 / 95</span>
+                <div class="w-16 sm:w-24 h-2 rounded-full bg-[#05080f] border border-[#3d2e12] overflow-hidden">
+                  <div id="tbMobProgressFill" class="h-full bg-gradient-to-r from-[#facc15] to-[#fb923c] transition-all duration-300" style="width:0%"></div>
+                </div>
+                <span id="tbMobMasteryPct" class="text-[#facc15] font-bold">0%</span>
+              </div>
+            </div>
+            <div class="chassis-surface rounded-sm p-3.5 sm:p-4 space-y-3 border-[#1e2d44]">
+              <div class="flex flex-wrap items-start justify-between gap-2 border-b border-[#1b283d] pb-3">
+                <div class="space-y-1">
+                  <div class="flex flex-wrap items-center gap-1.5 font-mono-code text-[10px]">
+                    <span id="tbActiveBookBadge" class="hidden px-2 py-0.5 rounded-[2px] bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/35 font-bold">D1 Ch.1</span>
+                    <span id="tbActiveIdBadge" class="hidden px-2 py-0.5 rounded-[2px] bg-[#132035] text-[#cbd5e1] border border-[#243754]">D1-01</span>
+                    <span id="tbActivePageBadge" class="px-2 py-0.5 rounded-[2px] bg-[#131b26] text-[#94a3b8] border border-[#243042] font-normal">D1 p.1–25</span>
+                    <span id="tbActiveStatusBadge" class="hidden px-2 py-0.5 rounded-[2px] bg-[#10d981]/20 text-[#10d981] font-bold">✓ 已完成</span>
+                  </div>
+                  <h3 id="tbActiveTitle" class="font-display text-base sm:text-lg font-bold text-white"></h3>
+                </div>
+
+              </div>
+
+              <!-- Top Full-Width Compact Prompt + Concept/Pseudocode Strip -->
+              <div class="space-y-2.5">
+                <div class="bg-[#091322] border border-[#243754] border-l-2 border-l-[#10b981] px-3.5 py-2.5 rounded-sm text-xs sm:text-[13px] flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-3">
+                  <span class="font-mono-code text-[10px] text-[#34d399] font-bold shrink-0">題目要求</span>
+                  <div id="tbActiveTaskPrompt" class="text-[#f1f5f9] leading-relaxed"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+                  <div class="bg-[#080d16] border border-[#1b283d] px-3 py-2 rounded-sm">
+                    <div class="font-mono-code text-[10px] text-[#38bdf8] font-bold mb-0.5">重點</div>
+                    <div id="tbActiveConcept" class="text-[#cbd5e1] leading-relaxed"></div>
+                  </div>
+                  <details class="bg-[#080d16] border border-[#1b283d] rounded-sm text-xs">
+                    <summary class="cursor-pointer select-none py-2 px-3 font-mono-code text-[10px] text-[#fbbf24] font-bold flex items-center justify-between">
+                      <span>偽代碼對照（點擊展開／收起）</span>
+                      <span class="text-[#64748b]">▾</span>
+                    </summary>
+                    <div id="tbActivePseudo" class="px-3 pb-2.5 pt-1 border-t border-[#182438] text-[#cbd5e1] leading-relaxed"></div>
+                  </details>
+                </div>
+              </div>
+
+              <!-- Bottom Full-Width Editor (Left 62%) + STDIN & Output Comparison (Right 38%) -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start pt-1">
+                <!-- Left (~62%): Code Editor + Horizontal Action Bar -->
+                <div class="lg:col-span-7 xl:col-span-8 min-w-0 space-y-2.5">
+                  <div class="rounded-sm border border-[#243754] bg-[#060a12] overflow-hidden">
+                    <div class="flex items-center justify-between px-3 py-2 bg-[#0c1422] border-b border-[#1b283d] font-mono-code text-[11px] text-[#9aa7b8]">
+                      <span id="tbEditorModeTag" class="font-bold text-white">完成以下程式</span>
+                      <div class="flex items-center gap-2.5">
+                        <button id="toggleTbAssistBtn" type="button" class="text-[#94a3b8] hover:text-white font-bold">⌨️ 符號鍵</button>
+                        <button id="teacherRevealTbBtn" type="button" class="hidden text-[#fbbf24] hover:underline font-bold">👁️ 老師答案</button>
+                        <button id="tbResetCodeBtn" class="text-[#38bdf8] hover:underline font-bold">重設程式碼</button>
+                      </div>
+                    </div>
+                    <div id="teacherTbAnsBox" class="hidden bg-[#151208] border-b border-[#f59e0b]/40 p-3 space-y-2">
+                      <div class="flex items-center justify-between gap-2">
+                        <span class="font-mono-code text-[11px] font-bold text-[#fbbf24]">老師參考答案（雲端即時提取）</span>
+                        <button id="teacherFillTbBtn" type="button" class="hw-btn px-2 py-0.5 rounded-sm bg-[#f59e0b] hover:bg-[#fbbf24] text-[#1a1200] text-[11px] font-bold">一鍵填入編輯器</button>
+                      </div>
+                      <pre id="teacherTbAnsPre" class="font-mono-code text-xs text-[#fef3c7] bg-[#090805] border border-[#f59e0b]/25 p-2.5 rounded-sm overflow-x-auto whitespace-pre"></pre>
+                    </div>
+                    <div id="tbZhBar" class="hidden flex flex-wrap items-center gap-1.5 px-2.5 py-1.5 bg-[#091220] border-b border-[#1b283d] text-[11px]"></div>
+                    <div id="tbAssistDrawer" class="hidden bg-[#091220] border-b border-[#1b283d] px-2.5 py-1">
+                      <div class="ipad-key-bar !border-0 !bg-transparent !p-0" data-target-editor="tbCodeInput"></div>
+                    </div>
+                    <div class="flex">
+                      <div id="tbLineGutter" class="line-gutter">1</div>
+                      <textarea id="tbCodeInput" rows="12" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" class="py-editor w-full bg-transparent text-[#e2e8f0] outline-none resize-y"></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Single Horizontal Action Bar -->
+                  <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                    <button id="tbRunBtn" class="hw-btn touch-target px-4 py-2 rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <i data-lucide="play" class="w-3.5 h-3.5"></i> 運行
+                    </button>
+                    <button id="tbCheckBtn" class="hw-btn touch-target px-4 py-2 rounded-sm bg-[#10b981] hover:bg-[#059669] text-[#04140e] text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 核對輸出
+                    </button>
+                    <button id="tbTraceBtn" class="hw-btn touch-target sm:ml-auto px-3.5 py-2 rounded-sm bg-[#132035] hover:bg-[#1c2e4a] text-[#fbbf24] border border-[#f59e0b]/45 text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <i data-lucide="step-forward" class="w-3.5 h-3.5"></i> Dry-Run 追蹤
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Right (~38%): STDIN + Feedback + Actual vs Expected Output -->
+                <div class="lg:col-span-5 xl:col-span-4 min-w-0 space-y-2.5">
+                  <div class="rounded-sm bg-[#060a12] border border-[#243754] p-2.5 space-y-1">
+                    <div class="flex items-center justify-between">
+                      <label for="tbStdinInput" class="font-mono-code text-[10px] text-[#9aa7b8] font-bold">測試輸入（STDIN）</label>
+                      <button id="tbResetStdinBtn" type="button" class="text-[10px] text-[#38bdf8] hover:underline font-bold">恢復預設</button>
+                    </div>
+                    <textarea id="tbStdinInput" rows="2" spellcheck="false" class="w-full rounded-sm bg-[#04070d] border border-[#1e2d44] p-2 font-mono-code text-xs text-[#e2e8f0] outline-none"></textarea>
+                  </div>
+
+                  <div id="tbFeedbackBox" class="hidden rounded-sm px-3 py-2 text-xs font-bold"></div>
+
+                  <div class="rounded-sm bg-[#060a12] border border-[#1b283d] p-2.5">
+                    <div class="font-mono-code text-[10px] text-[#34d399] font-bold mb-1">實際輸出</div>
+                    <pre id="tbOutputPre" class="font-mono-code text-xs text-[#e2e8f0] whitespace-pre-wrap min-h-[72px] max-h-[160px] overflow-y-auto">按「運行」或「核對輸出」測試...</pre>
+                  </div>
+                  <div class="rounded-sm bg-[#060a12] border border-[#1b283d] p-2.5">
+                    <div class="font-mono-code text-[10px] text-[#38bdf8] font-bold mb-1">預期輸出</div>
+                    <pre id="tbExpectedPre" class="font-mono-code text-xs text-[#94a3b8] whitespace-pre-wrap min-h-[56px] max-h-[140px] overflow-y-auto"></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Dry-Run Trace inside 例題庫 Right Frame -->
+            <div class="greenbar-paper rounded-sm overflow-hidden flex">
+              <div class="hidden sm:block w-5 shrink-0 tractor-strip border-r"></div>
+              <div class="flex-1 min-w-0">
+                <div class="bg-[#f4f1e6] border-b-2 border-[#181c20] px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                  <div class="font-display font-black text-xs text-[#181c20]">Dry-Run 追蹤表</div>
+                  <div class="flex items-center gap-1.5">
+                    <button id="tbTracePrevBtn" class="px-2 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#f4f1e6] hover:bg-[#e5e0cf] text-[#181c20]">← 上一步</button>
+                    <button id="tbTraceNextBtn" class="px-2.5 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#1d4ed8] hover:bg-[#1e40af] text-white">下一步 →</button>
+                    <button id="tbTraceAutoBtn" class="px-2.5 py-1 text-xs font-bold border-2 border-[#181c20] bg-[#181c20] text-[#f4f1e6]">▶ 自動</button>
+                  </div>
+                </div>
+                <div id="tbTraceCanvas" class="p-3.5 min-h-[170px] text-xs font-mono-code text-[#181c20]">按「Dry-Run 追蹤」逐步檢視變量變化</div>
+                <div class="bg-[#181c20] text-[#f4f1e6] px-3.5 py-1.5 flex items-center justify-between text-xs font-mono-code">
+                  <span id="tbTraceNote" class="truncate">就緒</span>
+                  <span id="tbTraceCounter" class="text-[#4ade80] font-bold shrink-0 ml-2">STEP 0 / 0</span>
+                </div>
+              </div>
+              <div class="hidden sm:block w-5 shrink-0 tractor-strip border-l"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- MODE 4: EXTRA PRACTICE BANK (額外操練 — 521 題雲端批改與即時同步)       -->
+      <!-- ===================================================================== -->
+      <section id="extraPracticeContainer" class="hidden">
+        <!-- Unified 12-Col Frame: Exact lg:col-span-3 Left Rail + lg:col-span-9 Main Workbench (Matches 計分練習 1:1) -->
+        <div id="tbPracticePane" class="grid grid-cols-1 xl:grid-cols-12 min-h-[calc(100dvh-3.5rem)]">
+          <!-- Left Telemetry & 2-Level Accordion Rail (Collapsible on Desktop + Mobile Drawer, 1:1 with 計分練習) -->
+          <div id="prSidebarBackdrop" class="hidden xl:flex xl:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95">
+            <aside id="prSidebarPanel" class="flex flex-col flex-1 min-h-0">
+            <!-- Module 3 Compact 2-Row Neon Character Card: 自學腦力 (Single Progress Bar, No Duplicate SL Block) -->
+            <div class="p-2.5 border-b border-[#1e2d44]">
+              <div class="relative overflow-hidden rounded-md border border-[#c084fc]/50 bg-gradient-to-br from-[#230e35] via-[#120e24] to-[#060b16] p-2.5 flex flex-col gap-2 shadow-[0_0_16px_rgba(192,132,252,0.12)]">
+                <div class="relative z-10 flex items-center gap-2.5">
+                  <div class="relative w-11 h-11 rounded-md overflow-hidden border border-[#c084fc]/55 bg-[#160824] shrink-0">
+                    <img src="./assets/img/avatar-practice.webp" loading="lazy" decoding="async" alt="自學腦力" class="w-full h-full object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                    <div style="display:none" class="w-full h-full items-center justify-center text-[#c084fc]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08A2.5 2.5 0 0 0 12 19.5a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 12 4.5"/></svg></div>
+                  </div>
+                  <div class="min-w-0 flex-1 space-y-1">
+                    <div class="flex items-center justify-between gap-1">
+                      <span class="font-mono-code text-[11px] font-bold text-[#c084fc] truncate">自學腦力</span>
+                      <span id="prCharLvBadge" class="font-mono-code text-[10px] px-1.5 py-0.5 rounded bg-[#c084fc]/15 text-[#e879f9] border border-[#c084fc]/40 font-bold shrink-0">Lv.0</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-1 font-mono-code text-[10px]">
+                      <span id="prDoneCount" class="text-white font-bold">0 / 516 題</span>
+                      <span id="prMasteryPct" class="text-[#c084fc] font-bold">0%</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="relative z-10 space-y-1">
+                  <div class="h-1.5 w-full rounded-full bg-[#060d1a] border border-[#351f4d] overflow-hidden">
+                    <div id="prSidebarBar" class="h-full rounded-full bg-gradient-to-r from-[#c084fc] to-[#a855f7] shadow-[0_0_8px_rgba(192,132,252,0.7)] transition-all duration-300" style="width:0%"></div>
+                  </div>
+                  <div class="flex items-center justify-end">
+                    <button id="prSlLevelBadgeBtn" type="button" class="font-mono-code text-[10px] font-bold text-[#38bdf8] hover:text-white transition truncate" data-tooltip="點擊重溫已解鎖 3D 卡牌">Lv.0 (0/6 課題達80%)</button>
+                  </div>
+                </div>
+                <span id="prDoneBig" class="hidden">0</span>
+                <svg class="hidden" viewBox="0 0 100 54"><path id="prGaugeArc" d="M 10 48 A 40 40 0 0 1 90 48" stroke-dasharray="126" stroke-dashoffset="126"/><g id="prGaugeNeedle"></g></svg>
+              </div>
+            </div>
+
+            <!-- Directory & 2-Level Accordion -->
+            <div class="p-2.5 flex-1 overflow-y-auto space-y-2">
+              <div class="flex items-center justify-between px-1.5 pb-1.5 border-b border-[#182438]">
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xs font-bold text-[#cbd5e1]">課題單元導航</h2>
+                  <span id="prSidebarSummary" class="text-[10px] text-[#38bdf8] font-bold">6 大課題</span>
+                </div>
+                <button id="prDrawerCloseBtn" type="button" class="xl:hidden p-1.5 rounded-sm bg-[#141b25] text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+              </div>
+
+              <!-- Quick Search -->
+              <div class="relative">
+                <input id="prSearchInput" type="text" placeholder="搜尋編號（如 2.1）或關鍵字..." class="w-full bg-[#070b13] border border-[#1e2d44] focus:border-[#38bdf8] text-white text-xs rounded-sm pl-3 pr-7 py-2 focus:outline-none transition placeholder:text-[#475569]" />
+                <button id="prSearchClearBtn" type="button" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-[#64748b] hover:text-white text-xs font-bold px-1">✕</button>
+              </div>
+
+              <!-- Live Search Results Dropdown (Shown ONLY while searching) -->
+              <div id="prSearchResultsWrap" class="hidden space-y-1.5 max-h-[58vh] overflow-y-auto pr-0.5"></div>
+
+              <!-- 2-Level Accordion Tree (Default: ONLY active Major Category expanded) -->
+              <div id="prAccordionNav" class="space-y-1.5"></div>
+            </div>
+            </aside>
+          </div>
+
+          <!-- Right Main Workspace (Matches 計分練習 lg:col-span-9 p-4 sm:p-6) -->
+          <div id="prRightFrame" class="xl:col-span-9 min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5">
+            <!-- Mobile & Collapsed-Sidebar Live Telemetry Bar (Matches 計分練習 1:1) -->
+            <div id="prCompactHudBar" class="xl:hidden -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 px-3 sm:px-6 py-2.5 bg-[#0a1220] border-b border-[#1e2d44] flex flex-wrap items-center justify-between gap-2 font-mono-code text-[11px]">
+              <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <span id="prMobLvBadge" class="px-2 py-0.5 rounded bg-[#c084fc]/15 text-[#e879f9] border border-[#c084fc]/40 font-bold">Lv.0</span>
+                <span class="text-[#94a3b8]">自學腦力 · <b class="text-[#c084fc]">額外操練</b></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="prMobDoneCount" class="text-[#94a3b8] text-[10px]">0 / 521</span>
+                <div class="w-16 sm:w-24 h-2 rounded-full bg-[#05080f] border border-[#351f4d] overflow-hidden">
+                  <div id="prMobProgressFill" class="h-full bg-gradient-to-r from-[#c084fc] to-[#a855f7] transition-all duration-300" style="width:0%"></div>
+                </div>
+                <span id="prMobMasteryPct" class="text-[#c084fc] font-bold">0%</span>
+              </div>
+            </div>
+            <!-- Compact Single-Row Sub-Unit Header & Horizontal Scrollable Question Strip -->
+            <div class="chassis-surface rounded-sm p-3 sm:p-3.5 border-[#1e2d44] space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="min-w-0">
+                  <div id="prBreadcrumb" class="font-mono-code text-[10px] text-[#38bdf8]/90 truncate"></div>
+                  <h3 id="prSubHeaderTitle" class="font-display text-base sm:text-lg font-bold text-white leading-tight truncate"></h3>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
+                  <div id="prStatusPills" class="inline-flex items-center rounded-sm bg-[#070b13] border border-[#1e2d44] p-0.5 text-[11px] font-bold">
+                    <button type="button" data-prstatus="ALL" class="px-2.5 py-1 rounded-sm bg-[#1b2d4a] text-white transition">全部</button>
+                    <button type="button" data-prstatus="TODO" class="px-2.5 py-1 rounded-sm text-[#94a3b8] hover:text-white transition">未做</button>
+                    <button type="button" data-prstatus="DONE" class="px-2.5 py-1 rounded-sm text-[#94a3b8] hover:text-white transition">已過關</button>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="hidden sm:block w-20 h-1.5 rounded-full bg-[#0b1322] overflow-hidden border border-[#182438]">
+                      <div id="prSubProgressBar" class="h-full bg-gradient-to-r from-[#38bdf8] to-[#10b981] transition-all duration-300" style="width:0%"></div>
+                    </div>
+                    <span id="prSubProgressText" class="font-mono-code text-[11px] text-[#94a3b8] shrink-0">0 / 0 已過關</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Single-Row Horizontal Scroll Question Strip + Expand All Toggle -->
+              <div class="flex items-center gap-2 pt-1 border-t border-[#182438]">
+                <div id="prQuestionStrip" class="flex flex-nowrap overflow-x-auto touch-scroll-x gap-1.5 flex-1 min-w-0 pb-0.5"></div>
+                <button id="prNavToggleBtn" type="button" class="hidden shrink-0 font-mono-code text-[10px] px-2 py-1 rounded-sm bg-[#0c1b2e] border border-[#243754] text-[#38bdf8] hover:border-[#38bdf8] transition whitespace-nowrap"></button>
+              </div>
+            </div>
+
+            <!-- Active Question Card (Anti-AI Protected) -->
+            <div class="chassis-surface rounded-sm p-4 sm:p-6 border-[#1e2d44] space-y-4">
+              <!-- Question Meta Header (Student view: ONLY Code Badge + Passed Tag; Teacher view: adds PR-xxxx) -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#182438] pb-2.5">
+                <div class="flex items-center gap-2">
+                  <span id="prCodeBadge" class="font-mono-code text-xs font-bold px-2.5 py-0.5 rounded-sm bg-[#38bdf8] text-[#04141e]"></span>
+                  <span id="prDoneTag" class="hidden font-mono-code text-[11px] px-2 py-0.5 rounded-sm bg-[#06281c] text-[#34d399] border border-[#10b981]/40 font-bold">✓ 已過關</span>
+                  <span id="prBadgeDiff" class="hidden"></span>
+                  <span id="prBadgeMode" class="hidden"></span>
+                  <span id="prBadgeTopic" class="hidden"></span>
+                </div>
+                <div class="flex items-center gap-2 font-mono-code text-[11px]">
+                  <span id="prQidLabel" class="hidden text-[#64748b] px-1.5 py-0.5 rounded bg-[#0c1422] border border-[#1e2d44]"></span>
+                </div>
+              </div>
+
+              <!-- Protected Stem Area (Anti-AI no-copy; prTitle hidden to prevent redundant truncated title) -->
+              <div class="space-y-3 no-copy select-none" id="prProtectedArea">
+                <h4 id="prTitle" class="hidden"></h4>
+                <div id="prStem" class="text-sm sm:text-[15px] text-[#e2e8f0] leading-relaxed space-y-3 overflow-x-auto"></div>
+              </div>
+
+              <!-- Mode 1: MCQ Options -->
+              <div id="prMcqWrap" class="grid grid-cols-1 gap-2.5 no-copy select-none pt-1"></div>
+
+              <!-- Mode 2: Short / Trace / Coding Input (Paste-Blocked Anti-AI) -->
+              <div id="prShortWrap" class="hidden space-y-2 pt-1">
+                <div class="flex flex-wrap items-center justify-between gap-1 text-xs text-[#94a3b8]">
+                  <span>請輸入你的解答／追蹤結果／程式碼（已啟用防貼上保護）：</span>
+                  <span class="font-mono-code text-[10px] text-[#38bdf8]">提交後即時核對並寫入 Google Sheet</span>
+                </div>
+                <textarea id="prShortInput" rows="6" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" placeholder="在此自行輸入你的答案..." class="w-full bg-[#060a12] border border-[#243754] focus:border-[#38bdf8] rounded-sm p-3.5 text-sm text-[#e2e8f0] font-mono-code focus:outline-none resize-y leading-relaxed"></textarea>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-[#182438]">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button id="prSubmitBtn" type="button" class="px-5 py-2.5 rounded-sm bg-[#10b981] hover:bg-[#059669] text-[#04140e] text-xs sm:text-sm font-bold transition flex items-center gap-1.5 shadow-sm">
+                    <span>✓ 提交核對</span>
+                  </button>
+                  <button id="prTeacherAnsBtn" type="button" class="hidden px-3.5 py-2.5 rounded-sm bg-[#1c1608] hover:bg-[#2a210c] text-[#fbbf24] border border-[#fbbf24]/40 text-xs font-bold transition">
+                    👁️ 老師答案
+                  </button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="prPosCounter" class="font-mono-code text-[11px] text-[#64748b] hidden sm:inline"></span>
+                  <button id="prPrevBtn" type="button" class="px-3 py-2 rounded-sm bg-[#111c2d] hover:bg-[#1b2d4a] text-[#cbd5e1] border border-[#243754] text-xs font-bold transition disabled:opacity-40">← 上一題</button>
+                  <button id="prNextBtn" type="button" class="px-3.5 py-2 rounded-sm bg-[#0f243b] hover:bg-[#163352] text-[#38bdf8] border border-[#38bdf8]/40 text-xs font-bold transition disabled:opacity-40">下一題 →</button>
+                </div>
+              </div>
+
+              <!-- Instant Grading Feedback & Collapsible Explanation / Trace Table -->
+              <div id="prFeedbackBox" class="hidden rounded-sm p-4 border text-sm space-y-3 overflow-x-auto"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- MODE 5: HKDSE PAST PAPER WORKBENCH (2012-2024 PAPER 1B & PAPER 2C)    -->
+      <!-- ===================================================================== -->
+      
+
+
+      <!-- ===================================================================== -->
+      <!-- MODE 6: HKDSE ALGORITHM ANIMATION STUDIO (SVG + OPERATION STREAM)     -->
+      <!-- ===================================================================== -->
+      
+
+    </main>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div id="mobileDrawer" class="hidden fixed inset-0 z-40 bg-black/75 backdrop-blur-sm lg:hidden">
+    <div class="w-80 max-w-[85vw] h-full bg-[#0c1320] border-r border-[#212a36] p-4 overflow-y-auto">
+      <div class="flex items-center justify-between mb-3 pb-2 border-b border-[#1b2430]">
+        <span class="font-mono-code font-bold text-xs text-[#38bdf8] tracking-wider">單元目錄</span>
+        <button id="closeMobileDrawerBtn" class="p-1.5 rounded-sm bg-[#141b25] text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div id="mobileChapterList" class="space-y-2.5"></div>
+    </div>
+  </div>
+
+  <!-- Student Gmail Login Modal -->
+  <div id="loginModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
+    <div class="w-full max-w-md chassis-surface rounded-sm p-5 shadow-2xl space-y-4 border-[#243754]">
+      <div class="flex items-center justify-between border-b border-[#1e2d44] pb-3">
+        <div>
+          <h3 class="font-display text-lg font-bold text-white">登入學校 Gmail</h3>
+          <p class="text-[11px] text-[#9aa7b8] mt-0.5">使用學校 Google 帳戶一鍵登入，自動同步進度</p>
+        </div>
+        <button id="closeLoginModalBtn" class="hw-btn p-1.5 rounded-sm bg-[#132035] text-slate-300 border border-[#243754]"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <!-- Verified Gmail Account Card (shown after Google Sign-In) -->
+      <div id="gmailSignedInBox" class="hidden flex items-center justify-between gap-3 bg-[#080d16] border border-[#10b981]/45 rounded-sm p-3">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <img id="gmailAvatarImg" src="" alt="" class="w-9 h-9 rounded-full border border-[#38bdf8]/50 hidden" />
+          <div class="min-w-0">
+            <div id="gmailNameText" class="text-xs font-bold text-white truncate"></div>
+            <div id="gmailEmailText" class="font-mono-code text-[11px] text-[#34d399] truncate"></div>
+          </div>
+        </div>
+        <button id="gmailSignOutBtn" class="px-2.5 py-1 rounded-sm bg-[#132035] hover:bg-[#1e2d44] text-[11px] text-[#fda4af] font-bold border border-[#f43f5e]/35 shrink-0">登出</button>
+      </div>
+
+      <!-- Official Google Sign-In Button Container -->
+      <div id="gmailSignInSection" class="space-y-2.5">
+        <div id="googleBtnWrap" class="flex justify-center py-1"></div>
+        <div id="gmailFallbackNote" class="hidden bg-[#080d16] border border-[#f59e0b]/40 rounded-sm p-3 space-y-2">
+          <div class="text-[11px] text-[#fde68a] font-bold">目前為預覽模式（請輸入學校 Gmail 登入並同步雲端進度）</div>
+          <input id="loginEmailInput" type="email" placeholder="例如：s240101@frcss.edu.hk" class="w-full rounded-sm bg-[#060a12] border border-[#243754] px-3 py-2 text-xs font-mono-code text-white outline-none focus:border-[#38bdf8]" />
+        </div>
+      </div>
+      <div id="loginCloudStatus" class="hidden text-xs font-bold text-[#38bdf8]"></div>
+      <div id="loginErrorMsg" class="hidden text-xs font-bold text-[#fda4af]"></div>
+    </div>
+  </div>
+
+  <!-- Teacher Google Sheet Sync Modal -->
+  <div id="teacherSyncModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
+    <div class="w-full max-w-lg chassis-surface rounded-sm p-5 shadow-2xl space-y-4 border-[#324052]">
+      <div class="flex items-center justify-between border-b border-[#212a36] pb-3">
+        <div>
+          <div class="font-mono-code text-[10px] text-[#10d981] font-bold uppercase">GOOGLE SHEET SYNC // 教師即時追蹤設定</div>
+          <h3 class="font-display text-lg font-bold text-white">連接學校 Google Sheet 進度總表</h3>
+        </div>
+        <button id="closeSyncModalBtn" class="hw-btn p-1.5 rounded-sm bg-[#141b25] text-slate-300 border border-[#2a3647]"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <p class="text-xs text-[#cbd5e1] leading-relaxed">
+        將 <code>google_apps_script_sync.txt</code> 貼上學校 Google Sheet 的 Apps Script 並部署為 Web App 後，把獲得的網址貼入下方（或直接寫死於本 HTML 程式碼頂部的 <code>GAS_WEBAPP_URL</code> 變數再上載 GitHub Pages）。每次學生提交即自動記錄：班別、學號、題號、得分、切頁次數、離開秒數、疑似超綱語法及程式碼。
+      </p>
+      <div>
+        <div class="space-y-2.5">
+        <div>
+          <label class="block text-[11px] font-bold text-[#cbd5e1] mb-1">Google Apps Script 同步網址（/exec）</label>
+          <input id="gasUrlInput" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full rounded-sm bg-[#070b13] border border-[#243754] px-3 py-2 text-xs font-mono-code text-white outline-none" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-[#cbd5e1] mb-1">Google OAuth Client ID（啟用官方 Gmail 登入按鈕）</label>
+          <input id="googleClientIdInput" type="text" placeholder="1234567890-xxxx.apps.googleusercontent.com" class="w-full rounded-sm bg-[#070b13] border border-[#243754] px-3 py-2 text-xs font-mono-code text-white outline-none" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-[#cbd5e1] mb-1">限制電郵網域（選填，例如 frcss.edu.hk；留空則接受所有 Google 帳戶）</label>
+          <input id="allowedDomainInput" type="text" placeholder="frcss.edu.hk" class="w-full rounded-sm bg-[#070b13] border border-[#243754] px-3 py-2 text-xs font-mono-code text-white outline-none" />
+        </div>
+      </div>
+      </div>
+      <div id="gasSaveMsg" class="hidden text-xs font-bold text-[#10d981]"></div>
+      <div class="flex justify-end gap-2">
+        <button id="saveGasUrlBtn" class="hw-btn hw-btn-primary px-5 py-2 rounded-sm text-xs font-bold">儲存同步網址</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reusable Confirm Modal (z-index: 70) -->
+  <div id="confirmActionModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+    <div class="w-full max-w-sm chassis-surface rounded-md p-5 shadow-2xl space-y-4 border-[#2c405e]">
+      <div class="flex items-start justify-between gap-3 border-b border-[#1d2b40] pb-3">
+        <h3 id="confirmModalTitle" class="font-display text-base font-bold text-white">確認操作</h3>
+        <button id="confirmModalCloseBtn" type="button" class="p-1 rounded bg-[#132035] hover:bg-[#1e2d44] text-slate-300 border border-[#243754] leading-none" aria-label="關閉">✕</button>
+      </div>
+      <p id="confirmModalMessage" class="text-xs sm:text-sm text-[#cbd5e1] leading-relaxed whitespace-pre-line"></p>
+      <div class="flex items-center justify-end gap-2 pt-1">
+        <button id="confirmModalCancelBtn" type="button" class="hw-btn px-3.5 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-[#cbd5e1]">取消</button>
+        <button id="confirmModalOkBtn" type="button" class="hw-btn px-4 py-1.5 rounded-sm text-xs font-bold text-white bg-[#2563eb] hover:bg-[#1d4ed8] border border-[#3b82f6]">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popover Host (z-index: 65) -->
+  <div id="plPopoverHost" aria-live="polite"></div>
+
+  <!-- Toast Container (z-index: 85) -->
+  <div id="plToastContainer" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Tooltip HUD (z-index: 90) -->
+  <div id="plTooltip" role="tooltip" aria-hidden="true"></div>
+
+
+  <!-- Self-Learning 6-Level 3D Landscape Card Overlay (Zero UI Text · iPad Landscape / PC Widescreen) -->
+  <div id="slCardOverlay" style="display:none;position:fixed;inset:0;width:100vw;height:100dvh;overflow:hidden;z-index:9999;background:#04070f;touch-action:none;user-select:none;-webkit-user-select:none;">
+    <div id="slCanvasHost" style="position:absolute;inset:0;width:100%;height:100%;"></div>
+    <div id="slFlashOverlay" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.96) 0%, rgba(165,243,252,0.72) 45%, rgba(4,7,15,0) 85%);transition:opacity 0.08s ease-out;"></div>
+    <button id="slMuteIconBtn" type="button" aria-label="Toggle audio" style="position:absolute;top:18px;right:68px;z-index:10;width:40px;height:40px;border-radius:9999px;border:1px solid rgba(255,255,255,0.18);background:rgba(4,7,15,0.45);color:rgba(255,255,255,0.78);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
+      <svg id="slVolOnSvg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+      <svg id="slVolOffSvg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    </button>
+    <button id="slCloseIconBtn" type="button" aria-label="Close" style="position:absolute;top:18px;right:18px;z-index:10;width:40px;height:40px;border-radius:9999px;border:1px solid rgba(255,255,255,0.18);background:rgba(4,7,15,0.45);color:rgba(255,255,255,0.82);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 0.25s ease;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+
+  <script src="./js/data-curriculum.js" defer></script>
+  <script src="./js/data-practice.js" defer></script>
+  <script src="./js/app-core.js" defer></script>
+  <script src="./js/fx-3d-cards.js" defer></script>
+  <script src="./js/app-addons.js" defer></script>
+</body>
+</html>

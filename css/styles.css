@@ -907,10 +907,8 @@
     .pl-stat-trigger:hover { filter: brightness(1.18); text-decoration: underline dotted; text-underline-offset: 3px; }
 
 /* === Phase 3: iPad (768-1180px) & 17" Laptop (1280-1536px) Responsive Enhancements === */
-@media (pointer: coarse), (max-width: 1180px) {
+@media (pointer: coarse) {
   .touch-target,
-  #modeHomeBtn, #modeProfileBtn, #modeQuestBtn, #modeTextbookBtn, #modeExtraBtn,
-  #mobileMenuBtn, #studentProfileBtn, #soundToggleBtn, #teacherToolsBtn,
   #prSubmitBtn, #prPrevBtn, #prNextBtn, #runPyBtn, #checkPyBtn {
     min-height: 40px;
   }

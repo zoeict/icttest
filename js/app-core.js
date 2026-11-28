@@ -674,7 +674,7 @@
       if (retT) { retT.classList.toggle('hidden', !isActingStu); retT.classList.toggle('inline-flex', isActingStu); }
       const hp = document.getElementById('headerPreviewLvUpBtn');
       if (hp) { hp.classList.toggle('hidden', !isT); hp.classList.toggle('inline-flex', isT); }
-      ['teacherRevealPyBtn', 'teacherRevealDqBtn', 'teacherRevealDrBtn', 'teacherRevealTbBtn', 'teacherPreviewLvUpBtn', 'prTeacherSlPreviewBar'].forEach((id) => {
+      ['teacherRevealPyBtn', 'teacherRevealDqBtn', 'teacherRevealDrBtn', 'teacherRevealTbBtn', 'teacherPreviewLvUpBtn', 'prTeacherSlPreviewBar', 'prQidLabel'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', !isT);
       });
@@ -3677,6 +3677,23 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       document.getElementById('prSidebarBackdrop')?.addEventListener('click', (e) => {
         if (e.target === e.currentTarget && window.innerWidth < 1280) applyExtraSidebarLayout(false);
       });
+      // Collapsible Coding Assist Bar (auto-expanded on touch/iPad, toggled on desktop)
+      const _isTouchDevice = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      const _bindAssistToggle = (btnId, drawerId) => {
+        const b = document.getElementById(btnId);
+        const d = document.getElementById(drawerId);
+        if (!b || !d) return;
+        if (_isTouchDevice) d.classList.remove('hidden');
+        b.addEventListener('click', () => {
+          const open = d.classList.contains('hidden');
+          d.classList.toggle('hidden', !open);
+          b.classList.toggle('text-[#38bdf8]', open);
+          b.classList.toggle('border-[#38bdf8]/50', open);
+        });
+      };
+      _bindAssistToggle('togglePyAssistBtn', 'pyAssistDrawer');
+      _bindAssistToggle('toggleTbAssistBtn', 'tbAssistDrawer');
+
       // Teacher Tools Dropdown toggle & outside-click close
       const _ttBtn = document.getElementById('teacherToolsBtn');
       const _ttMenu = document.getElementById('teacherToolsMenu');
