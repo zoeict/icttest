@@ -22,8 +22,8 @@
 
   <!-- Top Navigation Header -->
   <header class="sticky top-0 z-30 border-b border-[#1d2b40] bg-[#070b12]/95 backdrop-blur-md">
-    <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2 flex flex-wrap md:flex-nowrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
+    <div class="max-w-[1440px] mx-auto px-3 sm:px-4 py-2 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 shrink-0">
         <button id="mobileMenuBtn" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#0c2236] border border-[#38bdf8]/60 text-[#38bdf8] hover:text-white hover:border-[#38bdf8] text-xs font-bold items-center gap-1.5 shrink-0 transition" aria-label="收合或展開目錄" aria-expanded="true" data-tooltip="收合或展開側邊單元目錄">
           <i data-lucide="panel-left" class="w-4 h-4 shrink-0"></i>
           <span>目錄</span>
@@ -37,7 +37,7 @@
         </button>
       </div>
 
-      <div class="flex items-center gap-1.5 order-3 sm:order-2 w-full sm:w-auto overflow-x-auto touch-scroll-x pb-0.5 sm:pb-0">
+      <div class="flex items-center lg:justify-center gap-1.5 order-3 lg:order-2 w-full lg:w-auto lg:flex-1 min-w-0 overflow-x-auto touch-scroll-x pb-0.5 lg:pb-0">
         <div class="flex items-center gap-0.5 rounded bg-[#0a111d] border border-[#1d2b40] p-1 text-[11px] sm:text-xs font-bold shrink-0">
           <button id="modeHomeBtn" class="px-3 py-1.5 rounded-[3px] bg-[#38bdf8] text-[#04131e] font-bold shadow-[0_0_12px_rgba(56,189,248,0.22)] transition whitespace-nowrap">首頁</button>
           <button id="modeProfileBtn" class="px-3 py-1.5 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap">個人檔案</button>
@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-1.5 sm:gap-2 order-2 sm:order-3 shrink-0">
+      <div class="flex items-center gap-1.5 sm:gap-2 order-2 lg:order-3 shrink-0">
         <!-- 老師工具下拉選單（整合老師模式、學生視角、預覽升級、3D 橫向卡 Lv.1-6） -->
         <div id="teacherToolsWrap" class="hidden relative">
           <button id="teacherToolsBtn" type="button" aria-expanded="false" aria-haspopup="true"
@@ -576,8 +576,8 @@
             <span id="mobMasteryPct" class="text-[#38bdf8] font-bold">0%</span>
           </div>
         </div>
-        <!-- Streamlined Mission Header (Deduped LV.0 & 程度標籤) -->
-        <section class="px-4 sm:px-6 py-3.5 bg-[#0e1726]/90 space-y-2.5">
+        <!-- Top Full-Width Compact Mission Card (Zero Empty Void) -->
+        <section class="px-4 sm:px-6 py-3.5 bg-[#0e1726]/92 space-y-2.5">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="min-w-0 space-y-0.5">
               <div class="flex items-center gap-1.5 font-mono-code text-[11px] text-[#9aa7b8] flex-wrap">
@@ -592,128 +592,127 @@
             <div class="flex flex-wrap items-center gap-1.5 shrink-0 font-mono-code text-[11px]">
               <span id="lvlDiffTag" class="px-2 py-0.5 rounded-[2px] font-bold"></span>
               <span id="lvlXpTag" class="text-[#f5a623] font-bold px-1"></span>
+              <button id="toggleNotesBtn" type="button" class="hw-btn touch-target px-2.5 py-1.5 rounded-sm bg-[#0c2236] hover:bg-[#13324d] border border-[#38bdf8]/45 text-xs font-bold text-[#38bdf8] inline-flex items-center gap-1">
+                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> 重點筆記
+              </button>
               <button id="prevLevelBtn" class="hw-btn touch-target px-3 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-slate-200 disabled:opacity-35">← 上一題</button>
               <button id="nextLevelBtn" class="hw-btn touch-target px-3 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-slate-200 disabled:opacity-35">下一題 →</button>
             </div>
           </div>
+
+          <!-- Full-Width Mission Prompt (Copy-Protected) -->
+          <div class="no-copy border-l-2 border-[#10b981] bg-[#080d16] px-4 py-2.5 rounded-r-sm flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-3">
+            <span class="font-mono-code text-[10px] tracking-widest text-[#10b981] uppercase font-bold inline-flex items-center gap-1 shrink-0">
+              <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> 題目要求
+            </span>
+            <div id="lvlPrompt" class="text-sm sm:text-[15px] font-bold text-white leading-relaxed"></div>
+          </div>
+
+          <!-- Collapsible Lesson Notes & Pseudocode Drawer (Opened via 重點筆記 button) -->
+          <div id="lessonNotesDrawer" class="hidden chassis-well rounded-sm p-3.5 space-y-2.5 border border-[#243754]">
+            <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-[#1b2430]">
+              <span class="text-xs font-bold text-[#38bdf8]">重點筆記與考評局偽代碼對照</span>
+              <span id="lvlTextbookRef" class="font-mono-code text-[10px] text-[#9aa7b8]"></span>
+            </div>
+            <ul id="lessonNotesList" class="text-xs text-[#cbd5e1] space-y-1 list-disc pl-4 leading-relaxed"></ul>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-[#324052] text-[#38bdf8]">
+                    <th class="py-1.5 px-2.5">項目</th>
+                    <th class="py-1.5 px-2.5">Python（0-based）</th>
+                    <th class="py-1.5 px-2.5">考評局偽代碼（1-based）</th>
+                  </tr>
+                </thead>
+                <tbody id="pseudoCompareBody" class="divide-y divide-[#18202b] font-mono-code text-[#e2e8f0]"></tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
-        <!-- Responsive Split Workspace (lg+ 42% Prompt Left / 58% Coding Right) -->
-        <div id="questSplitBody" class="p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-          <!-- Left Column (~42%): Prompt & Slim Collapsible Notes -->
-          <div id="questLeftBriefCol" class="lg:col-span-5 space-y-3 lg:sticky lg:top-[4.25rem] lg:max-h-[calc(100dvh-5.25rem)] lg:overflow-y-auto lg:pr-1">
-            <!-- Slim Collapsible Lesson Notes Bar (py-2 px-3) -->
-            <div class="chassis-well rounded-sm py-2 px-3 space-y-2">
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-1.5 min-w-0">
-                  <i data-lucide="book-open" class="w-3.5 h-3.5 text-[#38bdf8] shrink-0"></i>
-                  <span class="text-xs font-bold text-white truncate">重點筆記與偽代碼對照</span>
-                  <span id="lvlTextbookRef" class="hidden xl:inline font-mono-code text-[10px] text-[#9aa7b8] truncate"></span>
+        <!-- Bottom Full-Width Workspace Container -->
+        <div id="questSplitBody" class="p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-4">
+          <div class="min-w-0 space-y-4">
+        <!-- PYTHON CODING WORKSPACE (Full-Width: Left 62% Editor | Right 38% STDIN + Output) -->
+        <section id="pyWorkspace" class="bg-[#0b1322]/90 border border-[#1e2d44] rounded-sm p-3.5 sm:p-4 space-y-3">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+            <!-- Left (~62%): Clean 2-Layer Code Editor + Single-Row Action Bar -->
+            <div class="lg:col-span-7 xl:col-span-8 min-w-0 space-y-2.5">
+              <!-- Layer 1: Unified Editor Header Bar -->
+              <div class="rounded-sm border border-[#243754] bg-[#060a12] overflow-hidden">
+                <div class="px-3 py-2 bg-[#0c1422] border-b border-[#1b283d] flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 font-mono-code text-xs">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5 text-[#10d981]"></i>
+                    <span id="editorFileName" class="font-bold text-white">L01_1.py</span>
+                    <span class="hidden sm:inline text-[10px] text-[#64748b]">PYTHON 3 · Ctrl+Enter 執行</span>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <button id="togglePyAssistBtn" type="button" class="hw-btn px-2 py-1 rounded-sm bg-[#111c2d] hover:bg-[#1a2b44] text-[11px] font-bold text-[#94a3b8] hover:text-white border border-[#243754]">⌨️ 輔助鍵</button>
+                    <button id="toggleHintBtn" class="hw-btn px-2.5 py-1 rounded-sm bg-[#141b25] hover:bg-[#1e2837] text-[11px] font-bold text-[#f5a623] border border-[#f5a623]/35">睇提示</button>
+                    <button id="resetStarterBtn" class="hw-btn px-2.5 py-1 rounded-sm bg-[#141b25] hover:bg-[#1e2837] text-[11px] font-bold text-[#94a3b8] border border-[#243754]">重設骨架</button>
+                    <button id="teacherRevealPyBtn" type="button" class="hidden hw-btn px-2.5 py-1 rounded-sm bg-[#f59e0b]/15 hover:bg-[#f59e0b]/25 text-[11px] font-bold text-[#fbbf24] border border-[#f59e0b]/45">👁️ 老師答案</button>
+                  </div>
                 </div>
-                <button id="toggleNotesBtn" class="hw-btn px-2 py-1 rounded-sm bg-[#141b25] border border-[#2a3647] text-[11px] font-bold text-[#38bdf8] shrink-0">
-                  展開／收起
+
+                <!-- Teacher Answer Drawer -->
+                <div id="teacherPyAnsBox" class="hidden bg-[#151208] border-b border-[#f59e0b]/45 p-3 space-y-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-mono-code text-[11px] font-bold text-[#fbbf24]">老師參考答案（雲端即時提取）</span>
+                    <button id="teacherFillPyBtn" type="button" class="hw-btn px-2 py-0.5 rounded-sm bg-[#f59e0b] hover:bg-[#fbbf24] text-[#1a1200] text-[11px] font-bold">一鍵填入編輯器</button>
+                  </div>
+                  <pre id="teacherPyAnsPre" class="font-mono-code text-xs text-[#fef3c7] bg-[#090805] border border-[#f59e0b]/25 p-2.5 rounded-sm overflow-x-auto whitespace-pre"></pre>
+                </div>
+
+                <!-- Layer 2 (Collapsible on Desktop / Auto-ready on iPad): Combined Assist Strip -->
+                <div id="pyAssistDrawer" class="hidden bg-[#091220] border-b border-[#1b283d] px-2.5 py-1.5 space-y-1.5">
+                  <div id="pyKeywordBar" class="flex flex-nowrap overflow-x-auto touch-scroll-x gap-1.5 pb-0.5"></div>
+                  <div class="ipad-key-bar !border-0 !bg-transparent !p-0" data-target-editor="pyInput"></div>
+                </div>
+                <div id="questZhBar" class="hidden flex flex-wrap items-center gap-1.5 px-2.5 py-1.5 bg-[#091220] border-b border-[#1b283d] text-[11px]"></div>
+
+                <!-- Code Editor Area -->
+                <div class="code-editor-wrap !border-0">
+                  <div id="pyLineGutter" class="line-gutter">1</div>
+                  <textarea id="pyInput" rows="12" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                    class="py-editor" placeholder="請親手輸入標準 Python 程式碼（不可貼上，不可使用 +=、-=、;）..."></textarea>
+                </div>
+              </div>
+
+              <!-- Real-Time AST Alert & Hint -->
+              <div id="astAlertBox" class="hidden border-l-2 border-[#f5a623] bg-[#f5a623]/10 px-3.5 py-2 text-xs text-[#fde68a] flex items-start gap-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-[#f5a623] shrink-0 mt-0.5"></i>
+                <div id="astAlertText"></div>
+              </div>
+              <div id="hintBox" class="hidden border-l-2 border-[#38bdf8] bg-[#38bdf8]/8 px-3.5 py-2 text-xs text-[#bae6fd] leading-relaxed"></div>
+
+              <!-- Single Horizontal Action Bar (NEVER stacks awkwardly) -->
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-0.5">
+                <button id="runPyBtn" class="hw-btn hw-btn-cyan touch-target px-4 py-2 rounded-sm font-bold text-xs sm:text-sm inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <i data-lucide="play" class="w-3.5 h-3.5"></i> 執行測試 (Run)
+                </button>
+                <button id="checkPyBtn" class="hw-btn hw-btn-primary touch-target px-5 py-2 rounded-sm font-bold text-xs sm:text-sm inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 提交批改 (Check)
+                </button>
+                <button data-inline-next class="hw-btn touch-target sm:ml-auto px-4 py-2 rounded-sm bg-[#141b25] border border-[#2a3647] text-[#9aa7b8] font-bold text-xs sm:text-sm disabled:opacity-40 whitespace-nowrap" disabled>
+                  <span>答對後解鎖下一題 →</span>
                 </button>
               </div>
-              <div id="lessonNotesDrawer" class="hidden pt-2 border-t border-[#1b2430] space-y-2.5">
-                <ul id="lessonNotesList" class="text-xs text-[#cbd5e1] space-y-1 list-disc pl-4 leading-relaxed"></ul>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr class="border-b border-[#324052] text-[#38bdf8]">
-                        <th class="py-1.5 px-2">項目</th>
-                        <th class="py-1.5 px-2">Python（0-based）</th>
-                        <th class="py-1.5 px-2">考評局偽代碼（1-based）</th>
-                      </tr>
-                    </thead>
-                    <tbody id="pseudoCompareBody" class="divide-y divide-[#18202b] font-mono-code text-[#e2e8f0]"></tbody>
-                  </table>
-                </div>
+            </div>
+
+            <!-- Right (~38%): Side-by-Side STDIN + Feedback + Live Execution Output -->
+            <div class="lg:col-span-5 xl:col-span-4 min-w-0 space-y-3">
+              <div class="rounded-sm bg-[#070b13] border border-[#243754] p-3 space-y-1.5">
+                <label for="manualStdin" class="block font-mono-code text-[10px] text-[#9aa7b8] font-bold">測試輸入數據（STDIN，每行一個 input() 值）</label>
+                <textarea id="manualStdin" rows="3" class="w-full rounded-sm bg-[#04070d] border border-[#1e2d44] focus:border-[#38bdf8] p-2 text-xs font-mono-code text-white outline-none resize-y" placeholder="例如：\n12.5\n4"></textarea>
+              </div>
+
+              <div id="pyFeedback" class="hidden px-3.5 py-2.5 rounded-sm text-xs sm:text-sm font-bold"></div>
+
+              <div class="chassis-well rounded-sm p-3 border border-[#1e2d44]">
+                <div class="font-mono-code text-[10px] text-[#34d399] font-bold mb-1.5">執行輸出（Console）</div>
+                <pre id="pyOutputArea" class="text-xs sm:text-sm font-mono-code text-[#a7f3d0] whitespace-pre-wrap overflow-x-auto min-h-[150px] max-h-[320px] overflow-y-auto">// 點擊「執行測試」或「提交批改」檢視輸出...</pre>
               </div>
             </div>
-
-            <!-- Mission Prompt (Copy-Protected) -->
-            <div class="no-copy border-l-2 border-[#10b981] bg-[#080d16] px-4 py-3.5 rounded-r-sm space-y-1.5">
-              <div class="font-mono-code text-[10px] tracking-widest text-[#10b981] uppercase font-bold flex items-center gap-1.5">
-                <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> 題目要求
-              </div>
-              <div id="lvlPrompt" class="text-sm sm:text-[15px] font-bold text-white leading-relaxed"></div>
-            </div>
-          </div>
-
-          <!-- Right Column (~58%): Coding / Debug Quiz / Dryrun Workspace -->
-          <div class="lg:col-span-7 min-w-0 space-y-4">
-        <!-- PYTHON CODING WORKSPACE -->
-        <section id="pyWorkspace" class="bg-[#0b1322]/90 border border-[#1e2d44] rounded-sm p-3.5 sm:p-4 space-y-3">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-              <i data-lucide="terminal" class="w-4 h-4 text-[#10d981]"></i>
-              <span class="text-sm font-bold text-white">Python 標準編輯器</span>
-              
-            </div>
-            <div class="flex flex-wrap items-center gap-1.5">
-              <button id="toggleHintBtn" class="hw-btn px-2.5 py-1 rounded-sm bg-[#141b25] hover:bg-[#1e2837] text-xs font-bold text-[#f5a623] border border-[#f5a623]/35">睇提示</button>
-              <button id="resetStarterBtn" class="hw-btn px-2.5 py-1 rounded-sm bg-[#141b25] hover:bg-[#1e2837] text-xs font-bold text-[#64748b] border border-[#212a36]">重設骨架</button>
-              <button id="teacherRevealPyBtn" type="button" class="hidden hw-btn px-2.5 py-1 rounded-sm bg-[#f59e0b]/15 hover:bg-[#f59e0b]/25 text-xs font-bold text-[#fbbf24] border border-[#f59e0b]/45">👁️ 老師答案</button>
-            </div>
-          </div>
-          <div id="teacherPyAnsBox" class="hidden rounded-sm bg-[#151208] border border-[#f59e0b]/45 p-3 space-y-2">
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-mono-code text-[11px] font-bold text-[#fbbf24]">老師參考答案（雲端即時提取）</span>
-              <button id="teacherFillPyBtn" type="button" class="hw-btn px-2 py-0.5 rounded-sm bg-[#f59e0b] hover:bg-[#fbbf24] text-[#1a1200] text-[11px] font-bold">一鍵填入編輯器</button>
-            </div>
-            <pre id="teacherPyAnsPre" class="font-mono-code text-xs text-[#fef3c7] bg-[#090805] border border-[#f59e0b]/25 p-2.5 rounded-sm overflow-x-auto whitespace-pre"></pre>
-          </div>
-
-          <!-- Quick Python Keyword Chips -->
-          <div id="pyKeywordBar" class="flex flex-wrap gap-1.5"></div>
-          <div id="questZhBar" class="hidden flex flex-wrap items-center gap-1.5 px-2.5 py-1.5 rounded-sm bg-[#091220] border border-[#1b283d] text-[11px]"></div>
-
-          <!-- VS Code-feel Line-Numbered Editor -->
-          <div class="rounded-sm overflow-hidden">
-            <div class="px-3 py-1 bg-[#0c1320] border border-b-0 border-[#212a36] flex items-center justify-between font-mono-code text-[10px] text-[#64748b]">
-              <span id="editorFileName">L01_1.py</span>
-              <span>PYTHON 3 // Tab 自動 4 格縮排 // Ctrl+Enter 執行</span>
-            </div>
-            <div class="ipad-key-bar" data-target-editor="pyInput"></div>
-            <div class="code-editor-wrap">
-              <div id="pyLineGutter" class="line-gutter">1</div>
-              <textarea id="pyInput" rows="9" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
-                class="py-editor" placeholder="請親手輸入標準 Python 程式碼（不可貼上，不可使用 +=、-=、;）..."></textarea>
-            </div>
-          </div>
-
-          <!-- Real-Time AST Standard Python & Anti-AI Trap Banner -->
-          <div id="astAlertBox" class="hidden border-l-2 border-[#f5a623] bg-[#f5a623]/10 px-3.5 py-2.5 text-xs text-[#fde68a] flex items-start gap-2">
-            <i data-lucide="alert-triangle" class="w-4 h-4 text-[#f5a623] shrink-0 mt-0.5"></i>
-            <div id="astAlertText"></div>
-          </div>
-
-          <div id="hintBox" class="hidden border-l-2 border-[#38bdf8] bg-[#38bdf8]/8 px-3.5 py-2.5 text-xs text-[#bae6fd] leading-relaxed"></div>
-
-          <!-- Manual Test Stdin Input + Action Buttons -->
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-            <div class="md:col-span-5">
-              <label class="block font-mono-code text-[10px] text-[#9aa7b8] mb-1">測試輸入數據（STDIN，每行一個 input() 值，按「執行測試」用）</label>
-              <textarea id="manualStdin" rows="2" class="w-full rounded-sm bg-[#070a0e] border border-[#2a3647] focus:border-[#38bdf8] p-2 text-xs font-mono-code text-white outline-none" placeholder="例如：\n12.5\n4"></textarea>
-            </div>
-            <div class="md:col-span-7 flex flex-wrap items-center gap-2">
-              <button id="runPyBtn" class="hw-btn hw-btn-cyan px-4 py-2 rounded-sm font-bold text-xs sm:text-sm flex items-center gap-1.5">
-                <i data-lucide="play" class="w-3.5 h-3.5"></i> 執行測試 (Run)
-              </button>
-              <button id="checkPyBtn" class="hw-btn hw-btn-primary px-5 py-2 rounded-sm font-bold text-xs sm:text-sm flex items-center gap-1.5">
-                <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 提交批改 (Check)
-              </button>
-              <button data-inline-next class="hw-btn px-4 py-2 rounded-sm bg-[#141b25] border border-[#2a3647] text-[#9aa7b8] font-bold text-xs sm:text-sm disabled:opacity-40" disabled>
-                <span>答對後解鎖下一題 →</span>
-              </button>
-            </div>
-          </div>
-
-          <div id="pyFeedback" class="hidden px-3.5 py-3 text-sm font-bold"></div>
-
-          <div class="chassis-well rounded-sm p-3">
-            <div class="font-mono-code text-[10px] text-[#64748b] mb-1">執行輸出</div>
-            <pre id="pyOutputArea" class="text-xs sm:text-sm font-mono-code text-[#a7f3d0] whitespace-pre-wrap overflow-x-auto">// 點擊「執行測試」或「提交批改」檢視輸出...</pre>
           </div>
         
           <!-- Live Per-Lesson Dry-Run Trace Panel -->
@@ -969,16 +968,15 @@
 
               </div>
 
-              <!-- Responsive 2-Column Coding Split (lg+ 42% Prompt/Ref Left / 58% Editor/Output Right) -->
-              <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-                <!-- Left Column (~42%): Prompt, Concept, Pseudocode & Expected Output -->
-                <div class="lg:col-span-5 space-y-2.5 lg:max-h-[calc(100dvh-11rem)] lg:overflow-y-auto lg:pr-1">
-                  <div class="bg-[#091322] border border-[#243754] border-l-2 border-l-[#10b981] p-3 rounded-sm text-xs sm:text-[13px]">
-                    <div class="font-mono-code text-[10px] text-[#34d399] font-bold mb-1">題目要求</div>
-                    <div id="tbActiveTaskPrompt" class="text-[#f1f5f9] leading-relaxed"></div>
-                  </div>
-                  <div class="bg-[#080d16] border border-[#1b283d] p-2.5 rounded-sm text-xs">
-                    <div class="font-mono-code text-[10px] text-[#38bdf8] font-bold mb-1">重點</div>
+              <!-- Top Full-Width Compact Prompt + Concept/Pseudocode Strip -->
+              <div class="space-y-2.5">
+                <div class="bg-[#091322] border border-[#243754] border-l-2 border-l-[#10b981] px-3.5 py-2.5 rounded-sm text-xs sm:text-[13px] flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-3">
+                  <span class="font-mono-code text-[10px] text-[#34d399] font-bold shrink-0">題目要求</span>
+                  <div id="tbActiveTaskPrompt" class="text-[#f1f5f9] leading-relaxed"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+                  <div class="bg-[#080d16] border border-[#1b283d] px-3 py-2 rounded-sm">
+                    <div class="font-mono-code text-[10px] text-[#38bdf8] font-bold mb-0.5">重點</div>
                     <div id="tbActiveConcept" class="text-[#cbd5e1] leading-relaxed"></div>
                   </div>
                   <details class="bg-[#080d16] border border-[#1b283d] rounded-sm text-xs">
@@ -988,18 +986,18 @@
                     </summary>
                     <div id="tbActivePseudo" class="px-3 pb-2.5 pt-1 border-t border-[#182438] text-[#cbd5e1] leading-relaxed"></div>
                   </details>
-                  <div class="rounded-sm bg-[#060a12] border border-[#1b283d] p-2.5">
-                    <div class="font-mono-code text-[10px] text-[#38bdf8] font-bold mb-1">預期輸出</div>
-                    <pre id="tbExpectedPre" class="font-mono-code text-xs text-[#94a3b8] whitespace-pre-wrap min-h-[48px] overflow-x-auto"></pre>
-                  </div>
                 </div>
+              </div>
 
-                <!-- Right Column (~58%): Code Editor, Stdin, Action Buttons & Actual Output -->
-                <div class="lg:col-span-7 min-w-0 space-y-3">
+              <!-- Bottom Full-Width Editor (Left 62%) + STDIN & Output Comparison (Right 38%) -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start pt-1">
+                <!-- Left (~62%): Code Editor + Horizontal Action Bar -->
+                <div class="lg:col-span-7 xl:col-span-8 min-w-0 space-y-2.5">
                   <div class="rounded-sm border border-[#243754] bg-[#060a12] overflow-hidden">
-                    <div class="flex items-center justify-between px-3 py-1.5 bg-[#0c1422] border-b border-[#1b283d] font-mono-code text-[10px] text-[#9aa7b8]">
-                      <span id="tbEditorModeTag">完成以下程式</span>
-                      <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between px-3 py-2 bg-[#0c1422] border-b border-[#1b283d] font-mono-code text-[11px] text-[#9aa7b8]">
+                      <span id="tbEditorModeTag" class="font-bold text-white">完成以下程式</span>
+                      <div class="flex items-center gap-2.5">
+                        <button id="toggleTbAssistBtn" type="button" class="text-[#94a3b8] hover:text-white font-bold">⌨️ 符號鍵</button>
                         <button id="teacherRevealTbBtn" type="button" class="hidden text-[#fbbf24] hover:underline font-bold">👁️ 老師答案</button>
                         <button id="tbResetCodeBtn" class="text-[#38bdf8] hover:underline font-bold">重設程式碼</button>
                       </div>
@@ -1012,36 +1010,48 @@
                       <pre id="teacherTbAnsPre" class="font-mono-code text-xs text-[#fef3c7] bg-[#090805] border border-[#f59e0b]/25 p-2.5 rounded-sm overflow-x-auto whitespace-pre"></pre>
                     </div>
                     <div id="tbZhBar" class="hidden flex flex-wrap items-center gap-1.5 px-2.5 py-1.5 bg-[#091220] border-b border-[#1b283d] text-[11px]"></div>
-                    <div class="ipad-key-bar" data-target-editor="tbCodeInput"></div>
+                    <div id="tbAssistDrawer" class="hidden bg-[#091220] border-b border-[#1b283d] px-2.5 py-1">
+                      <div class="ipad-key-bar !border-0 !bg-transparent !p-0" data-target-editor="tbCodeInput"></div>
+                    </div>
                     <div class="flex">
                       <div id="tbLineGutter" class="line-gutter">1</div>
-                      <textarea id="tbCodeInput" rows="11" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" class="py-editor w-full bg-transparent text-[#e2e8f0] outline-none resize-y"></textarea>
+                      <textarea id="tbCodeInput" rows="12" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" class="py-editor w-full bg-transparent text-[#e2e8f0] outline-none resize-y"></textarea>
                     </div>
                   </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-end">
-                    <div class="md:col-span-5">
-                      <div class="flex items-center justify-between mb-1"><label class="font-mono-code text-[10px] text-[#9aa7b8]">測試輸入（STDIN）</label><button id="tbResetStdinBtn" type="button" class="text-[10px] text-[#38bdf8] hover:underline font-bold">恢復預設</button></div>
-                      <textarea id="tbStdinInput" rows="2" spellcheck="false" class="w-full rounded-sm bg-[#060a12] border border-[#243754] p-2 font-mono-code text-xs text-[#e2e8f0] outline-none"></textarea>
+                  <!-- Single Horizontal Action Bar -->
+                  <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                    <button id="tbRunBtn" class="hw-btn touch-target px-4 py-2 rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <i data-lucide="play" class="w-3.5 h-3.5"></i> 運行
+                    </button>
+                    <button id="tbCheckBtn" class="hw-btn touch-target px-4 py-2 rounded-sm bg-[#10b981] hover:bg-[#059669] text-[#04140e] text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 核對輸出
+                    </button>
+                    <button id="tbTraceBtn" class="hw-btn touch-target sm:ml-auto px-3.5 py-2 rounded-sm bg-[#132035] hover:bg-[#1c2e4a] text-[#fbbf24] border border-[#f59e0b]/45 text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap">
+                      <i data-lucide="step-forward" class="w-3.5 h-3.5"></i> Dry-Run 追蹤
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Right (~38%): STDIN + Feedback + Actual vs Expected Output -->
+                <div class="lg:col-span-5 xl:col-span-4 min-w-0 space-y-2.5">
+                  <div class="rounded-sm bg-[#060a12] border border-[#243754] p-2.5 space-y-1">
+                    <div class="flex items-center justify-between">
+                      <label for="tbStdinInput" class="font-mono-code text-[10px] text-[#9aa7b8] font-bold">測試輸入（STDIN）</label>
+                      <button id="tbResetStdinBtn" type="button" class="text-[10px] text-[#38bdf8] hover:underline font-bold">恢復預設</button>
                     </div>
-                    <div class="md:col-span-7 flex flex-wrap gap-2 justify-end">
-                      <button id="tbRunBtn" class="hw-btn touch-target px-3.5 py-2 rounded-sm bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-bold flex items-center gap-1.5">
-                        <i data-lucide="play" class="w-3.5 h-3.5"></i> 運行
-                      </button>
-                      <button id="tbCheckBtn" class="hw-btn touch-target px-3.5 py-2 rounded-sm bg-[#10b981] hover:bg-[#059669] text-[#04140e] text-xs font-bold flex items-center gap-1.5">
-                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 核對輸出
-                      </button>
-                      <button id="tbTraceBtn" class="hw-btn touch-target px-3 py-2 rounded-sm bg-[#132035] hover:bg-[#1c2e4a] text-[#fbbf24] border border-[#f59e0b]/45 text-xs font-bold flex items-center gap-1.5">
-                        <i data-lucide="step-forward" class="w-3.5 h-3.5"></i> Dry-Run 追蹤
-                      </button>
-                    </div>
+                    <textarea id="tbStdinInput" rows="2" spellcheck="false" class="w-full rounded-sm bg-[#04070d] border border-[#1e2d44] p-2 font-mono-code text-xs text-[#e2e8f0] outline-none"></textarea>
                   </div>
 
-                  <div id="tbFeedbackBox" class="hidden rounded-sm px-3.5 py-2.5 text-xs font-bold"></div>
+                  <div id="tbFeedbackBox" class="hidden rounded-sm px-3 py-2 text-xs font-bold"></div>
 
                   <div class="rounded-sm bg-[#060a12] border border-[#1b283d] p-2.5">
                     <div class="font-mono-code text-[10px] text-[#34d399] font-bold mb-1">實際輸出</div>
-                    <pre id="tbOutputPre" class="font-mono-code text-xs text-[#e2e8f0] whitespace-pre-wrap min-h-[56px] overflow-x-auto">按「運行」或「核對輸出」測試...</pre>
+                    <pre id="tbOutputPre" class="font-mono-code text-xs text-[#e2e8f0] whitespace-pre-wrap min-h-[72px] max-h-[160px] overflow-y-auto">按「運行」或「核對輸出」測試...</pre>
+                  </div>
+                  <div class="rounded-sm bg-[#060a12] border border-[#1b283d] p-2.5">
+                    <div class="font-mono-code text-[10px] text-[#38bdf8] font-bold mb-1">預期輸出</div>
+                    <pre id="tbExpectedPre" class="font-mono-code text-xs text-[#94a3b8] whitespace-pre-wrap min-h-[56px] max-h-[140px] overflow-y-auto"></pre>
                   </div>
                 </div>
               </div>
@@ -1185,23 +1195,23 @@
 
             <!-- Active Question Card (Anti-AI Protected) -->
             <div class="chassis-surface rounded-sm p-4 sm:p-6 border-[#1e2d44] space-y-4">
-              <!-- Question Meta Header -->
-              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#182438] pb-3">
-                <div class="flex flex-wrap items-center gap-1.5">
+              <!-- Question Meta Header (Student view: ONLY Code Badge + Passed Tag; Teacher view: adds PR-xxxx) -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#182438] pb-2.5">
+                <div class="flex items-center gap-2">
                   <span id="prCodeBadge" class="font-mono-code text-xs font-bold px-2.5 py-0.5 rounded-sm bg-[#38bdf8] text-[#04141e]"></span>
-                  <span id="prBadgeDiff" class="font-mono-code text-[11px] px-2 py-0.5 rounded-sm bg-[#1c1608] text-[#fbbf24] border border-[#fbbf24]/30"></span>
-                  <span id="prBadgeMode" class="font-mono-code text-[10px] px-2 py-0.5 rounded-sm bg-[#0c221b] text-[#34d399] border border-[#10b981]/30"></span>
-                  <span id="prBadgeTopic" class="font-mono-code text-[10px] px-2 py-0.5 rounded-sm bg-[#111c2d] text-[#94a3b8] border border-[#1e2d44]"></span>
+                  <span id="prDoneTag" class="hidden font-mono-code text-[11px] px-2 py-0.5 rounded-sm bg-[#06281c] text-[#34d399] border border-[#10b981]/40 font-bold">✓ 已過關</span>
+                  <span id="prBadgeDiff" class="hidden"></span>
+                  <span id="prBadgeMode" class="hidden"></span>
+                  <span id="prBadgeTopic" class="hidden"></span>
                 </div>
                 <div class="flex items-center gap-2 font-mono-code text-[11px]">
-                  <span id="prDoneTag" class="hidden px-2 py-0.5 rounded-sm bg-[#06281c] text-[#34d399] border border-[#10b981]/40 font-bold">✓ 已過關</span>
-                  <span id="prQidLabel" class="text-[#475569]"></span>
+                  <span id="prQidLabel" class="hidden text-[#64748b] px-1.5 py-0.5 rounded bg-[#0c1422] border border-[#1e2d44]"></span>
                 </div>
               </div>
 
-              <!-- Protected Stem Area (Anti-AI no-copy) -->
+              <!-- Protected Stem Area (Anti-AI no-copy; prTitle hidden to prevent redundant truncated title) -->
               <div class="space-y-3 no-copy select-none" id="prProtectedArea">
-                <h4 id="prTitle" class="font-display text-base sm:text-lg font-bold text-white leading-snug"></h4>
+                <h4 id="prTitle" class="hidden"></h4>
                 <div id="prStem" class="text-sm sm:text-[15px] text-[#e2e8f0] leading-relaxed space-y-3 overflow-x-auto"></div>
               </div>
 
