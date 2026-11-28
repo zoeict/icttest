@@ -2377,8 +2377,6 @@ if _check_file and not _err:
         : 'px-1.5 py-0.5 rounded-[2px] bg-[#f5a623]/15 text-[#f5a623] border border-[#f5a623]/35 font-bold';
       document.getElementById('lvlXpTag').textContent = `+${lvl.xp} 分`;
       document.getElementById('lvlTopicProgressTag').textContent = `本課 ${stats.done}/${stats.total}`;
-      const lvlStatEl = document.getElementById('lvlStatusBadge');
-      if (lvlStatEl) lvlStatEl.classList.toggle('hidden', !state.completed[lvl.id]);
       const _cleanLvlTitle = String(lvl.title || '').replace(/^程度[一二三四五六1-6][：:]\s*/, '');
       document.getElementById('lvlTitle').textContent = `${lvl.id} ${_cleanLvlTitle}`;
       document.getElementById('lvlTextbookRef').textContent = `// ${les.textbookRef}`;
@@ -2660,8 +2658,13 @@ if _check_file and not _err:
       const btn = document.getElementById('mobileMenuBtn');
       if (!btn) return;
       const hasSidebar = state.mode === 'quest' || state.mode === 'textbook' || state.mode === 'extra';
-      btn.classList.toggle('hidden', !hasSidebar);
-      if (!hasSidebar) return;
+      if (!hasSidebar) {
+        btn.classList.add('hidden');
+        btn.classList.remove('inline-flex');
+        return;
+      }
+      btn.classList.remove('hidden');
+      btn.classList.add('inline-flex');
       const isExpandedDesktop = window.innerWidth >= 1280 && (
         (state.mode === 'quest' && !state.sidebarCollapsed) ||
         (state.mode === 'textbook' && !state.tbSidebarCollapsed) ||
@@ -2671,60 +2674,84 @@ if _check_file and not _err:
       btn.removeAttribute('title');
       btn.setAttribute('data-tooltip', isExpandedDesktop ? '收合側邊單元目錄' : '展開側邊單元目錄');
       btn.className = isExpandedDesktop
-        ? 'ux-btn ux-btn-sm ux-btn-blue'
-        : 'ux-btn ux-btn-sm ux-btn-ghost';
+        ? 'inline-flex hw-btn h-[32px] px-2.5 rounded-md bg-[#0c2236] border border-[#38bdf8]/60 text-[#38bdf8] hover:text-white hover:border-[#38bdf8] text-xs font-bold items-center gap-1.5 shrink-0 transition'
+        : 'inline-flex hw-btn h-[32px] px-2.5 rounded-md bg-[#101a2a] border border-[#243754] text-slate-300 hover:text-white hover:border-[#38bdf8]/60 text-xs font-bold items-center gap-1.5 shrink-0 transition';
     }
 
     function applyTbSidebarLayout(openMobileDrawer = false) {
-      const pane = document.getElementById('tbExamplesPane');
       const bd = document.getElementById('tbSidebarBackdrop');
-      if (!pane || !bd) return;
+      const panel = document.getElementById('tbSidebarPanel');
+      const rf = document.getElementById('tbRightFrame');
+      const hud = document.getElementById('tbCompactHudBar');
+      if (!bd || !rf) return;
       if (openMobileDrawer && window.innerWidth < 1280) {
-        bd.classList.add('is-mobile-open');
+        bd.className = 'fixed inset-0 z-40 bg-black/75 backdrop-blur-sm p-3 flex items-start';
+        if (panel) panel.className = 'w-80 max-w-[86vw] max-h-[94dvh] overflow-y-auto flex flex-col chassis-surface rounded-md border-[#243754] bg-[#0c1320] shadow-2xl';
         syncTopLeftToggleBtn();
         return;
       }
-      bd.classList.remove('is-mobile-open');
-      pane.classList.toggle('is-sidebar-collapsed', Boolean(state.tbSidebarCollapsed));
+      if (panel) panel.className = 'flex flex-col flex-1 min-h-0';
+      const pane = document.getElementById('tbExamplesPane');
+      if (!state.tbSidebarCollapsed) {
+        if (pane) pane.className = 'grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
+        bd.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
+        if (hud) hud.classList.add('xl:hidden');
+      } else {
+        if (pane) pane.className = 'grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
+        bd.className = 'hidden';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
+        if (hud) hud.classList.remove('xl:hidden');
+      }
       syncTopLeftToggleBtn();
     }
 
     function applyExtraSidebarLayout(openMobileDrawer = false) {
-      const pane = document.getElementById('tbPracticePane');
       const bd = document.getElementById('prSidebarBackdrop');
-      if (!pane || !bd) return;
+      const panel = document.getElementById('prSidebarPanel');
+      const rf = document.getElementById('prRightFrame');
+      const hud = document.getElementById('prCompactHudBar');
+      if (!bd || !rf) return;
       if (openMobileDrawer && window.innerWidth < 1280) {
-        bd.classList.add('is-mobile-open');
+        bd.className = 'fixed inset-0 z-40 bg-black/75 backdrop-blur-sm p-3 flex items-start';
+        if (panel) panel.className = 'w-80 max-w-[86vw] max-h-[94dvh] overflow-y-auto flex flex-col chassis-surface rounded-md border-[#243754] bg-[#0c1320] shadow-2xl';
         syncTopLeftToggleBtn();
         return;
       }
-      bd.classList.remove('is-mobile-open');
-      pane.classList.toggle('is-sidebar-collapsed', Boolean(state.extraSidebarCollapsed));
+      if (panel) panel.className = 'flex flex-col flex-1 min-h-0';
+      const pane = document.getElementById('tbPracticePane');
+      if (!state.extraSidebarCollapsed) {
+        if (pane) pane.className = 'grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
+        bd.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
+        if (hud) hud.classList.add('xl:hidden');
+      } else {
+        if (pane) pane.className = 'grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
+        bd.className = 'hidden';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
+        if (hud) hud.classList.remove('xl:hidden');
+      }
       syncTopLeftToggleBtn();
     }
 
     function applySidebarLayout() {
-      const pane = document.getElementById('questShellGrid');
       const sb = document.getElementById('sidebarPanel');
-      if (pane) {
-        pane.classList.toggle('is-sidebar-collapsed', state.mode !== 'quest' || Boolean(state.sidebarCollapsed));
+      const mw = document.getElementById('mainWorkbench');
+      const inQuest = state.mode === 'quest';
+      const hud = document.getElementById('compactHudBar');
+      const rootGrid = document.getElementById('mainGridRoot');
+      if (inQuest && !state.sidebarCollapsed) {
+        if (rootGrid) rootGrid.className = 'max-w-[1440px] mx-auto grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
+        sb.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        mw.className = 'min-w-0 flex flex-col';
+        if (hud) hud.classList.add('xl:hidden');
+      } else {
+        if (rootGrid) rootGrid.className = 'max-w-[1440px] mx-auto grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
+        sb.className = 'hidden';
+        mw.className = 'min-w-0 flex flex-col';
+        if (hud) hud.classList.remove('xl:hidden');
       }
-      if (sb) sb.classList.remove('is-mobile-open');
       syncTopLeftToggleBtn();
-    }
-
-    function syncSubHeaderBar(mode) {
-      const map = {
-        home: 'subBarHome',
-        profile: 'subBarProfile',
-        quest: 'subBarQuest',
-        textbook: 'subBarTextbook',
-        extra: 'subBarExtra'
-      };
-      Object.entries(map).forEach(([k, id]) => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('hidden', k !== mode);
-      });
     }
 
     function switchMode(mode) {
@@ -2738,20 +2765,18 @@ if _check_file and not _err:
       const exCont = document.getElementById('extraPracticeContainer');
       if (exCont) exCont.classList.toggle('hidden', mode !== 'extra');
       if (mode !== 'viz' && typeof stopVizTimer === 'function') stopVizTimer();
-      syncSubHeaderBar(mode);
       applySidebarLayout();
+      const activeTabCls = 'bg-[#38bdf8] text-[#04131e] font-bold shadow-[0_0_12px_rgba(56,189,248,0.22)]';
       const setBtn = (id, on) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.className = on
-          ? 'bg-[#38bdf8] text-[#04131e] shadow-[0_0_12px_rgba(56,189,248,0.22)]'
-          : 'text-[#9aa7b8] hover:text-white hover:bg-[#132035]';
+        document.getElementById(id).className = on
+          ? `px-3 py-1.5 rounded-[3px] transition whitespace-nowrap ${activeTabCls}`
+          : 'px-3 py-1.5 rounded-[3px] text-[#9aa7b8] hover:text-white hover:bg-[#132035] transition whitespace-nowrap';
       };
       setBtn('modeHomeBtn', mode === 'home');
-      setBtn('modeProfileBtn', mode === 'profile');
+      if (document.getElementById('modeProfileBtn')) setBtn('modeProfileBtn', mode === 'profile');
       setBtn('modeQuestBtn', mode === 'quest');
       setBtn('modeTextbookBtn', mode === 'textbook');
-      setBtn('modeExtraBtn', mode === 'extra');
+      if (document.getElementById('modeExtraBtn')) setBtn('modeExtraBtn', mode === 'extra');
       if (mode === 'home') { renderHomeRoadmap(); if (window.HomeLeaderboard) window.HomeLeaderboard.refresh(false); }
       if (mode === 'profile' && window.StudentProfileUI) { window.StudentProfileUI.load(false); }
       if (mode === 'textbook') { renderTextbookList(); loadTextbookExample(tbState.activeId); applyTbSidebarLayout(false); }
@@ -2760,6 +2785,7 @@ if _check_file and not _err:
     }
 
 
+    
     // =========================================================================
     // LIVE PYODIDE sys.settrace DRY-RUN ENGINE (WORKS FOR ANY PYTHON CODE!)
     // =========================================================================
@@ -2885,7 +2911,6 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const tr = liveTraces[slot];
       if (tr.timer) { clearInterval(tr.timer); tr.timer = null; }
       if (slot === 'quest') document.getElementById('questTraceWrap').classList.remove('hidden');
-      if (slot === 'tb') { const tw = document.getElementById('tbTraceWrap'); if (tw) tw.classList.remove('hidden'); }
       const res = await runLiveTrace(code, stdinStr);
       if (res.error && (!res.steps || !res.steps.length)) {
         const cEl = document.getElementById(slot === 'quest' ? 'qTraceCanvas' : 'tbTraceCanvas');
@@ -3011,7 +3036,9 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const pgBadge = document.getElementById('tbActivePageBadge');
       if (pgBadge) {
         pgBadge.textContent = ex.sourceTag || ex.page || '';
-        pgBadge.className = 'q-meta-badge';
+        pgBadge.className = ex.sourceKind === 'textbook'
+          ? 'px-2 py-0.5 rounded-[2px] bg-[#10b981]/15 text-[#6ee7b7] border border-[#10b981]/35 font-semibold'
+          : 'px-2 py-0.5 rounded-[2px] bg-[#131b26] text-[#94a3b8] border border-[#243042] font-normal';
       }
       document.getElementById('tbActiveStatusBadge').classList.toggle('hidden', !tbState.done[ex.id]);
       document.getElementById('tbActiveTitle').textContent = ex.title;
@@ -3030,18 +3057,11 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const dynExp = (useIn === (ex.stdin || '')) ? (ex.expected || '（無預期輸出）') : computeTbExpected(ex.id, useIn, ex.expected || '');
       document.getElementById('tbExpectedPre').textContent = dynExp;
       renderZhChipsBar('tbZhBar', 'tbCodeInput', ex.zhChips || []);
-      document.getElementById('tbOutputPre').textContent = '// 點擊「執行測試」或「提交批改」檢視輸出...';
+      document.getElementById('tbOutputPre').textContent = '按「運行」或「核對輸出」...';
       document.getElementById('tbFeedbackBox').classList.add('hidden');
       const tTbBox = document.getElementById('teacherTbAnsBox'); if (tTbBox) tTbBox.classList.add('hidden');
       syncTeacherUI();
-      document.getElementById('tbEditorModeTag').textContent = `${ex.id}.py`;
-      const tbTw = document.getElementById('tbTraceWrap'); if (tbTw) tbTw.classList.add('hidden');
-      const tbHb = document.getElementById('tbHintBox'); if (tbHb) tbHb.classList.add('hidden');
-      const tbIdx = TEXTBOOK_EXAMPLES.findIndex((x) => x.id === ex.id);
-      const tbNextBtns = [document.getElementById('tbNextBtn'), document.getElementById('tbNextSubBtn')];
-      tbNextBtns.forEach((b) => { if (b) b.disabled = tbIdx < 0 || tbIdx >= TEXTBOOK_EXAMPLES.length - 1; });
-      const tbPrevBtn = document.getElementById('tbPrevSubBtn');
-      if (tbPrevBtn) tbPrevBtn.disabled = tbIdx <= 0;
+      document.getElementById('tbEditorModeTag').textContent = '完成以下程式';
     }
 
     async function runTextbookCode(doCheck) {
@@ -3312,27 +3332,6 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       });
       document.getElementById('tbRunBtn').addEventListener('click', () => runTextbookCode(false));
       document.getElementById('tbCheckBtn').addEventListener('click', () => runTextbookCode(true));
-      const _tbHintBtn = document.getElementById('toggleTbHintBtn');
-      if (_tbHintBtn) {
-        _tbHintBtn.addEventListener('click', () => {
-          const hb = document.getElementById('tbHintBox');
-          if (hb) hb.classList.toggle('hidden');
-        });
-      }
-      const _goTbOffset = (delta) => {
-        const curIdx = TEXTBOOK_EXAMPLES.findIndex((x) => x.id === tbState.activeId);
-        const nextIdx = curIdx + delta;
-        if (nextIdx >= 0 && nextIdx < TEXTBOOK_EXAMPLES.length) {
-          loadTextbookExample(TEXTBOOK_EXAMPLES[nextIdx].id);
-          renderTextbookList();
-        }
-      };
-      const _tbNextBtn = document.getElementById('tbNextBtn');
-      if (_tbNextBtn) _tbNextBtn.addEventListener('click', () => _goTbOffset(1));
-      const _tbNextSubBtn = document.getElementById('tbNextSubBtn');
-      if (_tbNextSubBtn) _tbNextSubBtn.addEventListener('click', () => _goTbOffset(1));
-      const _tbPrevSubBtn = document.getElementById('tbPrevSubBtn');
-      if (_tbPrevSubBtn) _tbPrevSubBtn.addEventListener('click', () => _goTbOffset(-1));
       // Wire Live Per-Lesson & Textbook Dry-Run Trace Controls
       wireLiveTraceControls('quest', 'qTracePrevBtn', 'qTraceNextBtn', 'qTraceAutoBtn');
       wireLiveTraceControls('tb', 'tbTracePrevBtn', 'tbTraceNextBtn', 'tbTraceAutoBtn');
