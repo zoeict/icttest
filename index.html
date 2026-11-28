@@ -843,6 +843,87 @@
     .stencil-spark-3 { top: 44%; right: -2px; width: 9px; height: 9px; animation-delay: 2.3s; }
     .stencil-spark-4 { bottom: 6px; left: 48%; width: 11px; height: 11px; animation-delay: 0.7s; }
     .stencil-spark-5 { bottom: 14px; left: 32%; width: 8px; height: 8px; animation-delay: 1.9s; }
+
+    /* === Phase 1 Floating UI System (Modal / Popover / Toast / Tooltip) === */
+    #confirmActionModal { z-index: 70; }
+    #plPopoverHost {
+      position: fixed;
+      inset: 0;
+      z-index: 65;
+      pointer-events: none;
+    }
+    .pl-popover-card {
+      position: fixed;
+      pointer-events: auto;
+      width: min(320px, calc(100vw - 20px));
+      background: linear-gradient(180deg, rgba(13, 21, 34, 0.98) 0%, rgba(7, 11, 18, 0.99) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      border-radius: 6px;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65), 0 0 18px rgba(56, 189, 248, 0.14);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      animation: plPopIn 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes plPopIn {
+      from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    #plToastContainer {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 85;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: min(340px, calc(100vw - 24px));
+      pointer-events: none;
+    }
+    .pl-toast {
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #2c405e;
+      background: rgba(10, 17, 29, 0.96);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size: 12px;
+      line-height: 1.45;
+      color: #f1f5f9;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .pl-toast.is-leaving { opacity: 0; transform: translateX(16px); }
+    .pl-toast-success { border-color: rgba(16, 185, 129, 0.55); background: rgba(6, 28, 22, 0.96); color: #d1fae5; }
+    .pl-toast-info    { border-color: rgba(56, 189, 248, 0.55); background: rgba(8, 24, 42, 0.96); color: #e0f2fe; }
+    .pl-toast-warning { border-color: rgba(245, 158, 11, 0.60); background: rgba(34, 24, 6, 0.96); color: #fef3c7; }
+    .pl-toast-error   { border-color: rgba(244, 63, 94, 0.60);  background: rgba(38, 10, 18, 0.96); color: #ffe4e6; }
+    #plTooltip {
+      position: fixed;
+      z-index: 90;
+      pointer-events: none;
+      max-width: 240px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      background: rgba(5, 10, 20, 0.96);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6);
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.35;
+      opacity: 0;
+      transform: translateY(2px);
+      transition: opacity 0.12s ease, transform 0.12s ease;
+      white-space: normal;
+      word-break: break-word;
+    }
+    #plTooltip.is-visible { opacity: 1; transform: translateY(0); }
+    .pl-stat-trigger { cursor: pointer; transition: filter 0.15s ease; }
+    .pl-stat-trigger:hover { filter: brightness(1.18); text-decoration: underline dotted; text-underline-offset: 3px; }
   </style>
 </head>
 <body class="antialiased selection:bg-[#38bdf8] selection:text-[#04131e]">
@@ -851,7 +932,7 @@
   <header class="sticky top-0 z-30 border-b border-[#1d2b40] bg-[#070b12]/95 backdrop-blur-md">
     <div class="max-w-[1440px] mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
       <div class="flex items-center gap-2.5">
-        <button id="mobileMenuBtn" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#0c2236] border border-[#38bdf8]/60 text-[#38bdf8] hover:text-white hover:border-[#38bdf8] text-xs font-bold items-center gap-1.5 shrink-0 transition" aria-label="收合或展開目錄" aria-expanded="true" title="收合或展開目錄">
+        <button id="mobileMenuBtn" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#0c2236] border border-[#38bdf8]/60 text-[#38bdf8] hover:text-white hover:border-[#38bdf8] text-xs font-bold items-center gap-1.5 shrink-0 transition" aria-label="收合或展開目錄" aria-expanded="true" data-tooltip="收合或展開側邊單元目錄">
           <i data-lucide="panel-left" class="w-4 h-4 shrink-0"></i>
           <span>目錄</span>
         </button>
@@ -880,14 +961,14 @@
 
       <div class="flex items-center gap-2 order-2 sm:order-3">
         <span id="headerTeacherBadge" class="hidden items-center gap-1 h-[32px] px-2.5 rounded-md bg-[#f59e0b]/15 border border-[#f59e0b]/45 text-[#fbbf24] font-mono-code text-[11px] font-bold whitespace-nowrap">老師模式</span>
-        <button id="switchToStudentViewBtn" type="button" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#38bdf8]/15 hover:bg-[#38bdf8]/25 border border-[#38bdf8]/45 text-[#bae6fd] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" title="以周同學身分體驗 100% 真實學生模式">🎓 學生視角</button>
-        <button id="returnTeacherViewBtn" type="button" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#f59e0b]/20 hover:bg-[#f59e0b]/30 border border-[#f59e0b]/55 text-[#fde68a] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" title="返回老師模式">↩ 返回老師模式</button>
-        <button id="headerPreviewLvUpBtn" type="button" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#10b981]/15 hover:bg-[#10b981]/25 border border-[#10b981]/45 text-[#6ee7b7] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" title="預覽課堂升級動畫">✨ 預覽升級</button>
+        <button id="switchToStudentViewBtn" type="button" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#38bdf8]/15 hover:bg-[#38bdf8]/25 border border-[#38bdf8]/45 text-[#bae6fd] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" data-tooltip="以周同學身分體驗 100% 真實學生模式">🎓 學生視角</button>
+        <button id="returnTeacherViewBtn" type="button" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#f59e0b]/20 hover:bg-[#f59e0b]/30 border border-[#f59e0b]/55 text-[#fde68a] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" data-tooltip="返回老師模式">↩ 返回老師模式</button>
+        <button id="headerPreviewLvUpBtn" type="button" class="hidden hw-btn h-[32px] px-2.5 rounded-md bg-[#10b981]/15 hover:bg-[#10b981]/25 border border-[#10b981]/45 text-[#6ee7b7] font-mono-code text-[11px] font-bold items-center gap-1 whitespace-nowrap" data-tooltip="預覽課堂 3D 升級動畫">✨ 預覽升級</button>
         <button id="studentProfileBtn" class="hw-btn h-[34px] px-3 rounded bg-[#0f1d30] hover:bg-[#162943] text-[#bae6fd] border border-[#2c405e] hover:border-[#38bdf8]/70 text-xs font-bold flex items-center gap-1.5 whitespace-nowrap">
           <i data-lucide="user-check" class="w-3.5 h-3.5 text-[#38bdf8]"></i>
           <span id="headerStudentLabel" class="max-w-[110px] truncate">登入</span>
         </button>
-        <button id="soundToggleBtn" class="hw-btn h-[34px] w-[34px] rounded bg-[#0f1d30] hover:bg-[#162943] text-[#34d399] border border-[#2c405e] flex items-center justify-center" title="開關音效">
+        <button id="soundToggleBtn" class="hw-btn h-[34px] w-[34px] rounded bg-[#0f1d30] hover:bg-[#162943] text-[#34d399] border border-[#2c405e] flex items-center justify-center" data-tooltip="開關互動音效">
           <i data-lucide="volume-2" class="w-4 h-4"></i>
         </button>
       </div>
@@ -915,9 +996,9 @@
                 <span id="levelBadge" class="font-mono-code text-[10px] px-1.5 py-0.5 rounded bg-[#00f5ff]/15 text-[#00f5ff] border border-[#00f5ff]/40 font-bold shrink-0">LV.1</span>
               </div>
               <div class="flex items-baseline gap-1.5">
-                <span id="xpReadout" class="font-mono-code text-xl font-bold text-[#f5a623] leading-none">0</span>
+                <span id="xpReadout" class="pl-stat-trigger font-mono-code text-xl font-bold text-[#f5a623] leading-none" role="button" tabindex="0">0</span>
                 <span class="font-mono-code text-[10px] text-[#64748b]">XP</span>
-                <span id="penaltyReadout" class="font-mono-code text-[10px] text-[#fda4af] font-bold ml-auto">扣分: 0</span>
+                <span id="penaltyReadout" class="pl-stat-trigger font-mono-code text-[10px] text-[#fda4af] font-bold ml-auto" role="button" tabindex="0">扣分: 0</span>
               </div>
               <div class="flex flex-wrap items-center gap-1.5 font-mono-code text-[10px]">
                 <span id="tabSwitchReadout" class="hidden"></span>
@@ -1052,7 +1133,7 @@
                     <div class="cyber-hud-slashes hidden sm:flex items-center gap-1" aria-hidden="true">
                       <span class="cyber-slash"></span><span class="cyber-slash opacity-80"></span><span class="cyber-slash opacity-60"></span>
                     </div>
-                    <button id="lbRefreshBtn" type="button" class="w-5 h-5 rounded bg-[#0c1a30] hover:bg-[#142c4f] border border-[#22d3ee]/35 text-[#38bdf8] flex items-center justify-center transition" title="重新整理排行榜" aria-label="重新整理排行榜">
+                    <button id="lbRefreshBtn" type="button" class="w-5 h-5 rounded bg-[#0c1a30] hover:bg-[#142c4f] border border-[#22d3ee]/35 text-[#38bdf8] flex items-center justify-center transition" data-tooltip="重新整理即時排行榜" aria-label="重新整理排行榜">
                       <svg id="lbRefreshIcon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
                     </button>
                   </div>
@@ -1371,8 +1452,8 @@
         <div id="compactHudBar" class="lg:hidden px-3 sm:px-6 py-2.5 bg-[#0a1220] border-b border-[#1e2d44] flex flex-wrap items-center justify-between gap-2 font-mono-code text-[11px]">
           <div class="flex flex-wrap items-center gap-2 sm:gap-3">
             <span id="mobLevelBadge" class="px-2 py-0.5 rounded bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/40 font-bold">LV.0</span>
-            <span class="text-[#94a3b8]">分數: <b id="mobXpReadout" class="text-[#f5a623]">0</b></span>
-            <span id="mobPenaltyReadout" class="text-[#fda4af] font-bold">扣分: 0</span>
+            <span class="text-[#94a3b8]">分數: <b id="mobXpReadout" class="pl-stat-trigger text-[#f5a623]" role="button" tabindex="0">0</b></span>
+            <span id="mobPenaltyReadout" class="pl-stat-trigger text-[#fda4af] font-bold" role="button" tabindex="0">扣分: 0</span>
           </div>
           <div class="flex items-center gap-2">
             <span id="mobCompletedCount" class="text-[#94a3b8] text-[10px]">0 / 138</span>
@@ -1943,7 +2024,7 @@
               <div class="rounded-sm bg-[#09111f] border border-[#1a2740] px-2.5 py-2 space-y-1.5">
                 <div class="flex items-center justify-between gap-2">
                   <span class="font-mono-code text-[10px] text-[#9aa7b8]">自學腦力等級</span>
-                  <button id="prSlLevelBadgeBtn" type="button" class="font-mono-code text-[10px] font-bold px-2 py-0.5 rounded bg-[#0c2236] border border-[#38bdf8]/45 text-[#38bdf8] hover:border-[#38bdf8] hover:text-white transition" title="點擊重溫已解鎖 3D 卡牌">Lv.0 (0/6 課題達80%)</button>
+                  <button id="prSlLevelBadgeBtn" type="button" class="font-mono-code text-[10px] font-bold px-2 py-0.5 rounded bg-[#0c2236] border border-[#38bdf8]/45 text-[#38bdf8] hover:border-[#38bdf8] hover:text-white transition" data-tooltip="點擊重溫已解鎖 3D 卡牌">Lv.0 (0/6 課題達80%)</button>
                 </div>
                 <div id="prTeacherSlPreviewBar" class="hidden pt-1.5 border-t border-[#182438] space-y-1">
                   <div class="font-mono-code text-[10px] text-[#fbbf24] font-bold">✨ 老師預覽 3D 橫向卡（Lv.1–6）</div>
@@ -2177,6 +2258,30 @@
       </div>
     </div>
   </div>
+
+  <!-- Reusable Confirm Modal (z-index: 70) -->
+  <div id="confirmActionModal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+    <div class="w-full max-w-sm chassis-surface rounded-md p-5 shadow-2xl space-y-4 border-[#2c405e]">
+      <div class="flex items-start justify-between gap-3 border-b border-[#1d2b40] pb-3">
+        <h3 id="confirmModalTitle" class="font-display text-base font-bold text-white">確認操作</h3>
+        <button id="confirmModalCloseBtn" type="button" class="p-1 rounded bg-[#132035] hover:bg-[#1e2d44] text-slate-300 border border-[#243754] leading-none" aria-label="關閉">✕</button>
+      </div>
+      <p id="confirmModalMessage" class="text-xs sm:text-sm text-[#cbd5e1] leading-relaxed whitespace-pre-line"></p>
+      <div class="flex items-center justify-end gap-2 pt-1">
+        <button id="confirmModalCancelBtn" type="button" class="hw-btn px-3.5 py-1.5 rounded-sm bg-[#141b25] hover:bg-[#1e2837] border border-[#2a3647] text-xs font-bold text-[#cbd5e1]">取消</button>
+        <button id="confirmModalOkBtn" type="button" class="hw-btn px-4 py-1.5 rounded-sm text-xs font-bold text-white bg-[#2563eb] hover:bg-[#1d4ed8] border border-[#3b82f6]">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popover Host (z-index: 65) -->
+  <div id="plPopoverHost" aria-live="polite"></div>
+
+  <!-- Toast Container (z-index: 85) -->
+  <div id="plToastContainer" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Tooltip HUD (z-index: 90) -->
+  <div id="plTooltip" role="tooltip" aria-hidden="true"></div>
 
   <script>
     // =========================================================================
@@ -3630,9 +3735,11 @@
         const b = document.getElementById(id);
         if (!b) return;
         b.classList.add('lvlup-badge-clickable');
-        b.title = isTeacherUser()
+        const _lvTip = isTeacherUser()
           ? '點擊預覽全部 Lv.01–Lv.12 3D 等級卡牌'
           : (clearedLv > 0 ? `點擊欣賞已解鎖 3D 卡牌（LV.1–LV.${Math.min(12, clearedLv)}）` : '完成第 1 課全部 6 題即可解鎖首張 3D 等級卡牌');
+        b.removeAttribute('title');
+        b.setAttribute('data-tooltip', _lvTip);
         if (theme) {
           b.style.color = theme.hex;
           b.style.borderColor = `${theme.hex}66`;
@@ -4460,9 +4567,12 @@ if _check_file and not _err:
         document.getElementById('pyOutputArea').textContent = '// 點擊「執行測試」或「提交批改」檢視輸出...';
 
         const hBtn = document.getElementById('toggleHintBtn');
-        hBtn.disabled = isHard;
-        hBtn.classList.toggle('opacity-40', isHard);
-        hBtn.textContent = isHard ? '🔒 提示已鎖' : '睇提示';
+        if (hBtn) {
+          hBtn.disabled = false;
+          hBtn.classList.toggle('opacity-60', isHard);
+          hBtn.textContent = isHard ? '🔒 提示已鎖' : '睇提示';
+          if (typeof window.closePopover === 'function') window.closePopover();
+        }
 
         // Keyword chips
         const kws = ['int(input())', 'float(input())', 'if :', 'elif :', 'else:', 'while :', 'for i in range(0, len()):', 'print()'];
@@ -4568,6 +4678,9 @@ if _check_file and not _err:
       fbEl.innerHTML = `PASS // ${msg}${first ? `（+${earned} 分）` : '（已完成）'}${unlockMsg}`;
       fbEl.classList.remove('hidden');
       playSuccess();
+      if (typeof window.showToast === 'function') {
+        window.showToast(first ? `過關成功！獲得 +${earned} XP` : `已再次通過 ${lvl.id}！`, 'success', 3000);
+      }
       if (typeof confetti === 'function') {
         const _lvTh = typeof getLevelTheme === 'function' ? getLevelTheme(lvl.ch) : { hex: '#38bdf8' };
         confetti({ particleCount: 52, spread: 66, origin: { y: 0.72 }, colors: [_lvTh.hex, '#ffffff', '#fde047', '#34d399'] });
@@ -4710,7 +4823,8 @@ if _check_file and not _err:
         (state.mode === 'extra' && !state.extraSidebarCollapsed)
       );
       btn.setAttribute('aria-expanded', isExpandedDesktop ? 'true' : 'false');
-      btn.title = isExpandedDesktop ? '收合目錄' : '展開目錄';
+      btn.removeAttribute('title');
+      btn.setAttribute('data-tooltip', isExpandedDesktop ? '收合側邊單元目錄' : '展開側邊單元目錄');
       btn.className = isExpandedDesktop
         ? 'inline-flex hw-btn h-[32px] px-2.5 rounded-md bg-[#0c2236] border border-[#38bdf8]/60 text-[#38bdf8] hover:text-white hover:border-[#38bdf8] text-xs font-bold items-center gap-1.5 shrink-0 transition'
         : 'inline-flex hw-btn h-[32px] px-2.5 rounded-md bg-[#101a2a] border border-[#243754] text-slate-300 hover:text-white hover:border-[#38bdf8]/60 text-xs font-bold items-center gap-1.5 shrink-0 transition';
@@ -5160,6 +5274,9 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         document.getElementById('tbActiveStatusBadge').classList.remove('hidden');
         renderTextbookList();
         playSuccess();
+        if (typeof window.showToast === 'function') {
+          window.showToast(`課本例題 ${ex.id} 核對通過！`, 'success', 2800);
+        }
         if (state.student) {
           syncToGoogleSheet({
             cls: state.student.cls, no: state.student.no, name: state.student.name,
@@ -5179,7 +5296,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
           });
         }
       } else {
-        fbEl.className = 'rounded-sm px-3.5 py-2.5 text-xs font-bold bg-[#10b981]/15 border border-[#10b981]/45 text-[#fde68a]';
+        fbEl.className = 'rounded-sm px-3.5 py-2.5 text-xs font-bold bg-[#f59e0b]/15 border border-[#f59e0b]/45 text-[#fde68a]';
         fbEl.textContent = '✗ 實際輸出與課本預期輸出不符，請對照下方左右兩欄再試。';
         fbEl.classList.remove('hidden');
         playError();
@@ -5343,7 +5460,20 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         });
       });
       document.getElementById('tbSearchInput').addEventListener('input', (e) => { tbState.query = e.target.value; renderTextbookList(); });
-      document.getElementById('tbResetCodeBtn').addEventListener('click', () => { clearDraft('tb', tbState.activeId); clearDraft('tb_in', tbState.activeId); loadTextbookExample(tbState.activeId); });
+      document.getElementById('tbResetCodeBtn').addEventListener('click', async () => {
+        const ok = await window.showConfirmModal({
+          title: '重設課本例題程式碼',
+          message: '確定要清除目前編輯內容並恢復本例題的初始程式碼嗎？',
+          confirmText: '確定重設',
+          cancelText: '取消',
+          danger: true
+        });
+        if (!ok) return;
+        clearDraft('tb', tbState.activeId);
+        clearDraft('tb_in', tbState.activeId);
+        loadTextbookExample(tbState.activeId);
+        if (typeof window.showToast === 'function') window.showToast('已重設課本例題程式碼', 'info', 2200);
+      });
       document.getElementById('tbRunBtn').addEventListener('click', () => runTextbookCode(false));
       document.getElementById('tbCheckBtn').addEventListener('click', () => runTextbookCode(true));
       // Wire Live Per-Lesson & Textbook Dry-Run Trace Controls
@@ -5469,12 +5599,61 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       document.getElementById('toggleNotesBtn').addEventListener('click', () => document.getElementById('lessonNotesDrawer').classList.toggle('hidden'));
       document.getElementById('runPyBtn').addEventListener('click', () => handleRunOrCheck(false));
       document.getElementById('checkPyBtn').addEventListener('click', () => handleRunOrCheck(true));
-      document.getElementById('toggleHintBtn').addEventListener('click', () => { if (LEVELS[state.currentLevelIdx].diff !== 'hard') document.getElementById('hintBox').classList.toggle('hidden'); });
-      document.getElementById('resetStarterBtn').addEventListener('click', () => {
+      document.getElementById('toggleHintBtn').addEventListener('click', (e) => {
+        const cur = LEVELS[state.currentLevelIdx];
+        if (!cur) return;
+        if (cur.diff === 'hard' || !cur.hint) {
+          if (typeof window.closePopover === 'function') window.closePopover();
+          if (typeof window.showToast === 'function') {
+            window.showToast('進階題不設提示，請嘗試自行拆解算法或查閱課堂筆記。', 'warning', 2800);
+          }
+          return;
+        }
+        const safeHint = String(cur.hint).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        window.openPopover({
+          anchorEl: e.currentTarget,
+          key: `hint_${cur.id}`,
+          html: `
+            <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-[#1d2b40]">
+              <span class="font-mono-code text-[11px] font-bold text-[#fbbf24]">💡 解題提示 · ${cur.id}</span>
+              <button type="button" data-pop-close class="text-xs text-[#94a3b8] hover:text-white px-1" aria-label="關閉">✕</button>
+            </div>
+            <p class="text-xs text-[#e2e8f0] leading-relaxed">${safeHint}</p>
+            <div class="flex items-center justify-end gap-2 pt-1">
+              <button type="button" data-pop-notes class="hw-btn px-2.5 py-1 rounded-sm bg-[#0c2236] hover:bg-[#12314d] border border-[#38bdf8]/45 text-[11px] font-bold text-[#38bdf8]">展開課堂筆記</button>
+              <button type="button" data-pop-close class="hw-btn px-2.5 py-1 rounded-sm bg-[#10b981] hover:bg-[#34d399] text-[#03150e] text-[11px] font-bold">知道了</button>
+            </div>
+          `,
+          onBind: (cardEl, close) => {
+            cardEl.querySelectorAll('[data-pop-close]').forEach((b) => b.addEventListener('click', close));
+            const notesBtn = cardEl.querySelector('[data-pop-notes]');
+            if (notesBtn) {
+              notesBtn.addEventListener('click', () => {
+                const drawer = document.getElementById('lessonNotesDrawer');
+                if (drawer) {
+                  drawer.classList.remove('hidden');
+                  drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                close();
+              });
+            }
+          }
+        });
+      });
+      document.getElementById('resetStarterBtn').addEventListener('click', async () => {
+        const ok = await window.showConfirmModal({
+          title: '重設程式碼骨架',
+          message: '確定要清除目前輸入的程式碼並恢復題目初始骨架嗎？',
+          confirmText: '確定重設',
+          cancelText: '取消',
+          danger: true
+        });
+        if (!ok) return;
         const cur = LEVELS[state.currentLevelIdx];
         if (cur) clearDraft('quest', cur.id);
         pyInput.value = (cur && cur.starter) || '';
         updateLineGutter(pyInput, pyGutter);
+        if (typeof window.showToast === 'function') window.showToast('已重設為題目初始骨架', 'info', 2200);
       });
 
       // Teacher Mode: On-demand Cloud Answer Reveal (Zero plaintext answers in HTML)
@@ -5798,9 +5977,24 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       drawerEl.addEventListener('click', (e) => {
         if (e.target === drawerEl) drawerEl.classList.add('hidden');
       });
-      document.getElementById('soundToggleBtn').addEventListener('click', (e) => { state.soundOn = !state.soundOn; e.currentTarget.classList.toggle('text-[#10d981]', state.soundOn); });
+      function renderSoundToggleIcon(btn, on) {
+        if (!btn) return;
+        btn.classList.toggle('text-[#34d399]', on);
+        btn.classList.toggle('text-[#64748b]', !on);
+        btn.innerHTML = on
+          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>';
+      }
+      renderSoundToggleIcon(document.getElementById('soundToggleBtn'), state.soundOn);
+      document.getElementById('soundToggleBtn').addEventListener('click', (e) => {
+        state.soundOn = !state.soundOn;
+        renderSoundToggleIcon(e.currentTarget, state.soundOn);
+        if (typeof window.showToast === 'function') {
+          window.showToast(state.soundOn ? '已開啟互動音效' : '已靜音互動音效', 'info', 2000);
+        }
+      });
 
-      document.getElementById('studentProfileBtn').addEventListener('click', () => {
+      function openLoginModalFlow() {
         document.getElementById('loginErrorMsg').classList.add('hidden');
         const stEl = document.getElementById('loginCloudStatus');
         const hasUser = Boolean(state.student && state.student.email);
@@ -5817,6 +6011,90 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         }
         updateGmailModalUI(isExpired);
         document.getElementById('loginModal').classList.remove('hidden');
+      }
+
+      function performUserSignOut() {
+        pendingGoogleUser = null;
+        try { localStorage.removeItem(ACTIVE_USER_KEY); } catch (e) {}
+        state.student = null;
+        document.getElementById('headerStudentLabel').textContent = 'Gmail 登入';
+        updateGmailModalUI();
+        if (typeof syncTeacherUI === 'function') syncTeacherUI();
+        if (typeof window.showToast === 'function') window.showToast('已安全登出帳戶', 'info', 2400);
+      }
+
+      document.getElementById('studentProfileBtn').addEventListener('click', (e) => {
+        const stu = state.student;
+        if (!stu || !stu.email) {
+          openLoginModalFlow();
+          return;
+        }
+        const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const dispName = esc(stu.name || stu.email.split('@')[0]);
+        const dispEmail = esc(stu.email);
+        const initial = esc((stu.name || stu.email || 'U').trim().charAt(0).toUpperCase());
+        const clearedLv = typeof getClearedLessonCount === 'function' ? getClearedLessonCount() : 0;
+        const avatarHtml = stu.picture
+          ? `<img src="${esc(stu.picture)}" alt="" class="w-10 h-10 rounded-full border border-[#38bdf8]/55 object-cover shrink-0" />`
+          : `<div class="w-10 h-10 rounded-full bg-[#0c2236] border border-[#38bdf8]/55 text-[#38bdf8] font-display font-bold text-sm flex items-center justify-center shrink-0">${initial}</div>`;
+        const isTeacher = typeof isTeacherUser === 'function' && isTeacherUser();
+        const syncBtnHtml = isTeacher
+          ? `<button type="button" data-acct-sync class="w-full text-left px-3 py-2 rounded-sm bg-[#0c1a2e] hover:bg-[#142a48] border border-[#243754] text-xs font-bold text-[#34d399] transition">⚙ 同步設定（老師限定）</button>`
+          : '';
+
+        window.openPopover({
+          anchorEl: e.currentTarget,
+          key: 'account_menu',
+          html: `
+            <div class="flex items-center gap-3 pb-2.5 border-b border-[#1d2b40]">
+              ${avatarHtml}
+              <div class="min-w-0 flex-1">
+                <div class="text-xs font-bold text-white truncate">${dispName}</div>
+                <div class="font-mono-code text-[10px] text-[#94a3b8] truncate">${dispEmail}</div>
+                <div class="flex items-center gap-1.5 mt-1 font-mono-code text-[10px]">
+                  <span class="px-1.5 py-0.5 rounded bg-[#00f5ff]/15 text-[#00f5ff] border border-[#00f5ff]/35 font-bold">LV.${clearedLv}</span>
+                  <span class="px-1.5 py-0.5 rounded bg-[#f59e0b]/15 text-[#fbbf24] border border-[#f59e0b]/35 font-bold">${state.xp} XP</span>
+                </div>
+              </div>
+            </div>
+            <div class="space-y-1.5">
+              <button type="button" data-acct-profile class="w-full text-left px-3 py-2 rounded-sm bg-[#0c1a2e] hover:bg-[#142a48] border border-[#243754] text-xs font-bold text-[#e2e8f0] transition">👤 個人檔案</button>
+              ${syncBtnHtml}
+              <button type="button" data-acct-switch class="w-full text-left px-3 py-2 rounded-sm bg-[#0c1a2e] hover:bg-[#142a48] border border-[#243754] text-xs font-bold text-[#38bdf8] transition">🔄 切換帳戶</button>
+              <button type="button" data-acct-logout class="w-full text-left px-3 py-2 rounded-sm bg-[#1f0d16] hover:bg-[#2d1220] border border-[#f43f5e]/40 text-xs font-bold text-[#fda4af] transition">🚪 登出</button>
+            </div>
+          `,
+          onBind: (cardEl, close) => {
+            cardEl.querySelector('[data-acct-profile]')?.addEventListener('click', () => {
+              close();
+              if (typeof switchMode === 'function') switchMode('profile');
+            });
+            cardEl.querySelector('[data-acct-sync]')?.addEventListener('click', () => {
+              close();
+              document.getElementById('gasUrlInput').value = getGasUrl();
+              document.getElementById('googleClientIdInput').value = getGoogleClientId();
+              document.getElementById('allowedDomainInput').value = getAllowedDomain();
+              document.getElementById('gasSaveMsg').classList.add('hidden');
+              document.getElementById('teacherSyncModal').classList.remove('hidden');
+            });
+            cardEl.querySelector('[data-acct-switch]')?.addEventListener('click', () => {
+              close();
+              openLoginModalFlow();
+            });
+            cardEl.querySelector('[data-acct-logout]')?.addEventListener('click', async () => {
+              close();
+              const ok = await window.showConfirmModal({
+                title: '確認登出',
+                message: '確定要登出目前的學校 Google 帳戶嗎？',
+                confirmText: '確定登出',
+                cancelText: '取消',
+                danger: true
+              });
+              if (!ok) return;
+              performUserSignOut();
+            });
+          }
+        });
       });
       document.getElementById('closeLoginModalBtn').addEventListener('click', () => document.getElementById('loginModal').classList.add('hidden'));
       const swStuBtn = document.getElementById('switchToStudentViewBtn');
@@ -5847,6 +6125,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
           if (typeof renderDseList === 'function') renderDseList();
           if (typeof loadLevel === 'function' && typeof LEVELS !== 'undefined' && LEVELS.length) loadLevel(0);
           syncTeacherUI();
+          if (typeof window.showToast === 'function') window.showToast('已切換至學生視角（周同學）', 'info', 2600);
         });
       }
       const retTBtn = document.getElementById('returnTeacherViewBtn');
@@ -5867,17 +6146,22 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
           if (typeof renderDseList === 'function') renderDseList();
           if (typeof loadLevel === 'function' && typeof LEVELS !== 'undefined' && LEVELS.length) loadLevel(state.currentLevelIdx);
           syncTeacherUI();
+          if (typeof window.showToast === 'function') window.showToast('已返回老師模式', 'success', 2600);
         });
       }
 
       
 
-      document.getElementById('gmailSignOutBtn').addEventListener('click', () => {
-        pendingGoogleUser = null;
-        try { localStorage.removeItem(ACTIVE_USER_KEY); } catch (e) {}
-        state.student = null;
-        document.getElementById('headerStudentLabel').textContent = 'Gmail 登入';
-        updateGmailModalUI();
+      document.getElementById('gmailSignOutBtn').addEventListener('click', async () => {
+        const ok = await window.showConfirmModal({
+          title: '確認登出',
+          message: '確定要登出目前的學校 Google 帳戶嗎？',
+          confirmText: '確定登出',
+          cancelText: '取消',
+          danger: true
+        });
+        if (!ok) return;
+        performUserSignOut();
       });
 
       document.getElementById('closeSyncModalBtn').addEventListener('click', () => document.getElementById('teacherSyncModal').classList.add('hidden'));
@@ -5895,6 +6179,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
         msg.textContent = '✓ 已儲存雲端同步與 Gmail 登入設定！';
         msg.classList.remove('hidden');
         playSuccess();
+        if (typeof window.showToast === 'function') window.showToast('已儲存雲端同步與登入設定', 'success', 2600);
       });
 
       // Boot profile + Cloud Progress Restore + UI + Pyodide
@@ -7841,7 +8126,10 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const refBtn = document.getElementById('lbRefreshBtn');
       if (refBtn && !refBtn.dataset.lbBound) {
         refBtn.dataset.lbBound = '1';
-        refBtn.addEventListener('click', () => fetchLeaderboard(true));
+        refBtn.addEventListener('click', async () => {
+          await fetchLeaderboard(true);
+          if (typeof window.showToast === 'function') window.showToast('排行榜已更新', 'info', 2200);
+        });
       }
       fetchLeaderboard(true);
     }
@@ -8427,7 +8715,10 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       const refBtn = document.getElementById('profRefreshBtn');
       if (refBtn && !refBtn.dataset.profBound) {
         refBtn.dataset.profBound = '1';
-        refBtn.addEventListener('click', () => loadProfile(true));
+        refBtn.addEventListener('click', async () => {
+          await loadProfile(true);
+          if (typeof window.showToast === 'function') window.showToast('個人成績已重新整理', 'info', 2200);
+        });
       }
       const reloginBtn = document.getElementById('profReloginBtn');
       if (reloginBtn && !reloginBtn.dataset.profBound) {
@@ -8469,5 +8760,394 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
   })();
   </script>
 
+
+  <script>
+  // =========================================================================
+  // Phase 1 Floating UI System: Modal / Popover / Tooltip / Toast + Telemetry Cards
+  // =========================================================================
+  (function initPlFloatingUiSystem() {
+    if (window.__plFloatingUiInitialized) return;
+    window.__plFloatingUiInitialized = true;
+
+    // ---------- 1. Modal: Reusable Promise Confirm Modal ----------
+    let confirmResolver = null;
+    const confirmModal = document.getElementById('confirmActionModal');
+    const confirmTitle = document.getElementById('confirmModalTitle');
+    const confirmMsg = document.getElementById('confirmModalMessage');
+    const confirmOkBtn = document.getElementById('confirmModalOkBtn');
+    const confirmCancelBtn = document.getElementById('confirmModalCancelBtn');
+    const confirmCloseBtn = document.getElementById('confirmModalCloseBtn');
+
+    function finishConfirm(result) {
+      if (confirmModal) confirmModal.classList.add('hidden');
+      const resolve = confirmResolver;
+      confirmResolver = null;
+      if (typeof resolve === 'function') resolve(Boolean(result));
+    }
+
+    window.showConfirmModal = function showConfirmModal({
+      title = '確認操作',
+      message = '',
+      confirmText = '確定',
+      cancelText = '取消',
+      danger = false
+    } = {}) {
+      if (confirmResolver) finishConfirm(false);
+      if (!confirmModal) return Promise.resolve(false);
+      if (typeof window.closePopover === 'function') window.closePopover();
+
+      if (confirmTitle) confirmTitle.textContent = title;
+      if (confirmMsg) confirmMsg.textContent = message;
+      if (confirmOkBtn) {
+        confirmOkBtn.textContent = confirmText;
+        confirmOkBtn.className = danger
+          ? 'hw-btn px-4 py-1.5 rounded-sm text-xs font-bold text-white bg-[#e11d48] hover:bg-[#be123c] border border-[#fb7185]'
+          : 'hw-btn px-4 py-1.5 rounded-sm text-xs font-bold text-white bg-[#2563eb] hover:bg-[#1d4ed8] border border-[#3b82f6]';
+      }
+      if (confirmCancelBtn) confirmCancelBtn.textContent = cancelText;
+
+      confirmModal.classList.remove('hidden');
+      setTimeout(() => confirmOkBtn && confirmOkBtn.focus(), 0);
+      return new Promise((resolve) => { confirmResolver = resolve; });
+    };
+
+    if (confirmOkBtn) confirmOkBtn.addEventListener('click', () => finishConfirm(true));
+    if (confirmCancelBtn) confirmCancelBtn.addEventListener('click', () => finishConfirm(false));
+    if (confirmCloseBtn) confirmCloseBtn.addEventListener('click', () => finishConfirm(false));
+    if (confirmModal) {
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) finishConfirm(false);
+      });
+    }
+
+    // Unified backdrop click close for #loginModal & #teacherSyncModal
+    const loginModalEl = document.getElementById('loginModal');
+    const syncModalEl = document.getElementById('teacherSyncModal');
+    if (loginModalEl) {
+      loginModalEl.addEventListener('click', (e) => {
+        if (e.target === loginModalEl) loginModalEl.classList.add('hidden');
+      });
+    }
+    if (syncModalEl) {
+      syncModalEl.addEventListener('click', (e) => {
+        if (e.target === syncModalEl) syncModalEl.classList.add('hidden');
+      });
+    }
+
+    // ---------- 2. Popover: Anchored Interactive Bubble ----------
+    const popoverHost = document.getElementById('plPopoverHost');
+    let activePopover = null; // { anchorEl, cardEl, key }
+
+    function positionPopover() {
+      if (!activePopover) return;
+      const { anchorEl, cardEl } = activePopover;
+      if (!anchorEl || !document.body.contains(anchorEl)) {
+        window.closePopover();
+        return;
+      }
+      const rect = anchorEl.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) {
+        window.closePopover();
+        return;
+      }
+      if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) {
+        window.closePopover();
+        return;
+      }
+      const pad = 10;
+      const cw = cardEl.offsetWidth || 300;
+      const ch = cardEl.offsetHeight || 160;
+      let left = rect.left + rect.width / 2 - cw / 2;
+      left = Math.max(pad, Math.min(left, window.innerWidth - cw - pad));
+
+      let top = rect.bottom + 8;
+      if (top + ch > window.innerHeight - pad && rect.top - ch - 8 >= pad) {
+        top = rect.top - ch - 8;
+      } else {
+        top = Math.max(pad, Math.min(top, window.innerHeight - ch - pad));
+      }
+      cardEl.style.left = `${Math.round(left)}px`;
+      cardEl.style.top = `${Math.round(top)}px`;
+    }
+
+    window.closePopover = function closePopover() {
+      if (!activePopover) return;
+      activePopover.cardEl.remove();
+      activePopover = null;
+    };
+
+    window.openPopover = function openPopover({ anchorEl, key, html, onBind }) {
+      if (!popoverHost || !anchorEl) return;
+      if (activePopover && activePopover.key === key && activePopover.anchorEl === anchorEl) {
+        window.closePopover();
+        return;
+      }
+      window.closePopover();
+      const cardEl = document.createElement('div');
+      cardEl.className = 'pl-popover-card p-3.5 space-y-2.5';
+      cardEl.innerHTML = html;
+      popoverHost.appendChild(cardEl);
+      activePopover = { anchorEl, cardEl, key };
+      positionPopover();
+      if (typeof onBind === 'function') onBind(cardEl, window.closePopover);
+    };
+
+    document.addEventListener('pointerdown', (e) => {
+      if (!activePopover) return;
+      if (activePopover.cardEl.contains(e.target) || activePopover.anchorEl.contains(e.target)) return;
+      window.closePopover();
+    });
+    window.addEventListener('scroll', positionPopover, true);
+    window.addEventListener('resize', positionPopover);
+
+    // Global layered Escape key handler
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (confirmModal && !confirmModal.classList.contains('hidden')) {
+        finishConfirm(false);
+      } else if (syncModalEl && !syncModalEl.classList.contains('hidden')) {
+        syncModalEl.classList.add('hidden');
+      } else if (loginModalEl && !loginModalEl.classList.contains('hidden')) {
+        loginModalEl.classList.add('hidden');
+      } else if (activePopover) {
+        window.closePopover();
+      }
+    });
+
+    // Live Telemetry Popover Cards (#xpReadout, #mobXpReadout, #penaltyReadout, #mobPenaltyReadout)
+    // Strictly do NOT bind to #levelBadge / #questLvBadge / #mobLevelBadge (reserved for openLevelCardGallery)
+    function openXpDetailPopover(anchorEl) {
+      const done = (typeof state !== 'undefined' && state && state.completed) ? Object.keys(state.completed).length : 0;
+      const total = (typeof LEVELS !== 'undefined' && Array.isArray(LEVELS)) ? LEVELS.length : 138;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      const xpVal = (typeof state !== 'undefined' && state) ? (state.xp || 0) : 0;
+      const clearedLv = typeof getClearedLessonCount === 'function' ? getClearedLessonCount() : 0;
+
+      window.openPopover({
+        anchorEl,
+        key: 'xp_detail',
+        html: `
+          <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-[#1d2b40]">
+            <span class="font-mono-code text-[11px] font-bold text-[#fbbf24]">⚡ XP 與完成進度</span>
+            <span class="font-mono-code text-[10px] px-1.5 py-0.5 rounded bg-[#00f5ff]/15 text-[#00f5ff] border border-[#00f5ff]/35 font-bold">LV.${clearedLv}</span>
+          </div>
+          <div class="space-y-1.5 font-mono-code text-xs">
+            <div class="flex items-center justify-between text-[#cbd5e1]"><span>目前總分</span><span class="text-[#fbbf24] font-bold">${xpVal} XP</span></div>
+            <div class="flex items-center justify-between text-[#cbd5e1]"><span>計分練習完成</span><span class="text-white font-bold">${done} / ${total} (${pct}%)</span></div>
+            <div class="h-1.5 w-full rounded-full bg-[#060d1a] border border-[#1d3554] overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-[#00f5ff] to-[#10b981]" style="width:${pct}%"></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5 pt-1">
+            <button type="button" data-xp-cards class="hw-btn px-2.5 py-1.5 rounded-sm bg-[#0c2236] hover:bg-[#12314d] border border-[#38bdf8]/45 text-[11px] font-bold text-[#38bdf8]">🃏 3D 等級卡</button>
+            <button type="button" data-xp-profile class="hw-btn px-2.5 py-1.5 rounded-sm bg-[#0c221b] hover:bg-[#103026] border border-[#10b981]/45 text-[11px] font-bold text-[#34d399]">👤 個人檔案</button>
+          </div>
+        `,
+        onBind: (cardEl, close) => {
+          cardEl.querySelector('[data-xp-cards]')?.addEventListener('click', () => {
+            close();
+            if (typeof window.openLevelCardGallery === 'function') window.openLevelCardGallery();
+          });
+          cardEl.querySelector('[data-xp-profile]')?.addEventListener('click', () => {
+            close();
+            if (typeof switchMode === 'function') switchMode('profile');
+          });
+        }
+      });
+    }
+
+    function openPenaltyDetailPopover(anchorEl) {
+      const penVal = (typeof state !== 'undefined' && state) ? (state.penalty || 0) : 0;
+      const switches = (typeof state !== 'undefined' && state) ? (state.tabSwitches || 0) : 0;
+      const awaySec = (typeof state !== 'undefined' && state) ? Math.round(state.awaySeconds || 0) : 0;
+
+      window.openPopover({
+        anchorEl,
+        key: 'penalty_detail',
+        html: `
+          <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-[#1d2b40]">
+            <span class="font-mono-code text-[11px] font-bold text-[#fda4af]">🛡 專注與扣分詳情</span>
+            <button type="button" data-pop-close class="text-xs text-[#94a3b8] hover:text-white px-1" aria-label="關閉">✕</button>
+          </div>
+          <div class="space-y-1.5 font-mono-code text-xs">
+            <div class="flex items-center justify-between text-[#cbd5e1]"><span>目前扣分</span><span class="text-[#fda4af] font-bold">${penVal > 0 ? '-' + penVal : '0'} 分</span></div>
+            <div class="flex items-center justify-between text-[#cbd5e1]"><span>本節切頁次數</span><span class="text-white font-bold">${switches} 次</span></div>
+            <div class="flex items-center justify-between text-[#cbd5e1]"><span>離開視窗秒數</span><span class="text-white font-bold">${awaySec} 秒</span></div>
+          </div>
+          <p class="text-[11px] text-[#94a3b8] leading-relaxed pt-0.5">保持在課堂分頁專注作答，可避免異常切頁紀錄。</p>
+        `,
+        onBind: (cardEl, close) => {
+          cardEl.querySelector('[data-pop-close]')?.addEventListener('click', close);
+        }
+      });
+    }
+
+    ['xpReadout', 'mobXpReadout'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el && !el.dataset.popBound) {
+        el.dataset.popBound = '1';
+        el.addEventListener('click', (e) => { e.stopPropagation(); openXpDetailPopover(el); });
+        el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openXpDetailPopover(el); } });
+      }
+    });
+    ['penaltyReadout', 'mobPenaltyReadout'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el && !el.dataset.popBound) {
+        el.dataset.popBound = '1';
+        el.addEventListener('click', (e) => { e.stopPropagation(); openPenaltyDetailPopover(el); });
+        el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPenaltyDetailPopover(el); } });
+      }
+    });
+
+    // ---------- 3. Tooltip: Non-Interactive HUD + Touch Guard ----------
+    const tooltipEl = document.getElementById('plTooltip');
+    let isTouchDevice = false;
+    let activeTipTarget = null;
+
+    function hideTooltip() {
+      activeTipTarget = null;
+      if (!tooltipEl) return;
+      tooltipEl.classList.remove('is-visible');
+      tooltipEl.setAttribute('aria-hidden', 'true');
+    }
+
+    window.addEventListener('touchstart', () => {
+      isTouchDevice = true;
+      hideTooltip();
+    }, { passive: true });
+
+    window.setPlTooltip = function setPlTooltip(el, text) {
+      if (!el) return;
+      el.removeAttribute('title');
+      if (text) el.setAttribute('data-tooltip', text);
+      else el.removeAttribute('data-tooltip');
+    };
+
+    function showTooltip(target) {
+      if (isTouchDevice || !tooltipEl || !target) return;
+      const text = target.getAttribute('data-tooltip');
+      if (!text) return;
+      activeTipTarget = target;
+      tooltipEl.textContent = text;
+      tooltipEl.setAttribute('aria-hidden', 'false');
+      tooltipEl.classList.add('is-visible');
+
+      const rect = target.getBoundingClientRect();
+      const tw = tooltipEl.offsetWidth || 120;
+      const th = tooltipEl.offsetHeight || 28;
+      const pad = 8;
+      let left = rect.left + rect.width / 2 - tw / 2;
+      left = Math.max(pad, Math.min(left, window.innerWidth - tw - pad));
+      let top = rect.top - th - 8;
+      if (top < pad) top = rect.bottom + 8;
+      top = Math.max(pad, Math.min(top, window.innerHeight - th - pad));
+      tooltipEl.style.left = `${Math.round(left)}px`;
+      tooltipEl.style.top = `${Math.round(top)}px`;
+    }
+
+    document.addEventListener('mouseover', (e) => {
+      if (isTouchDevice) return;
+      const t = e.target && e.target.closest ? e.target.closest('[data-tooltip]') : null;
+      if (t) showTooltip(t);
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (!activeTipTarget) return;
+      const rel = e.relatedTarget;
+      if (!rel || !activeTipTarget.contains(rel)) hideTooltip();
+    });
+    document.addEventListener('focusin', (e) => {
+      if (isTouchDevice) return;
+      const t = e.target && e.target.closest ? e.target.closest('[data-tooltip]') : null;
+      if (t) showTooltip(t);
+    });
+    document.addEventListener('focusout', hideTooltip);
+    window.addEventListener('scroll', hideTooltip, true);
+    window.addEventListener('resize', hideTooltip);
+
+    // 21+ Core Controls unified HUD Tooltip registration
+    const CORE_TOOLTIPS = {
+      mobileMenuBtn: '收合或展開側邊單元目錄',
+      soundToggleBtn: '開關互動音效',
+      switchToStudentViewBtn: '以周同學身分體驗 100% 真實學生模式',
+      returnTeacherViewBtn: '返回老師模式',
+      headerPreviewLvUpBtn: '預覽課堂 3D 升級動畫',
+      studentProfileBtn: '帳戶快捷選單與登入設定',
+      runPyBtn: '執行測試（不計分，使用下方 STDIN）',
+      checkPyBtn: '提交批改並同步雲端進度',
+      questTraceBtn: '逐步空運行追蹤變量變化',
+      resetStarterBtn: '重設為題目初始程式碼骨架',
+      tbRunBtn: '運行課本例題程式碼',
+      tbCheckBtn: '核對課本例題預期輸出',
+      tbTraceBtn: '逐步空運行追蹤例題變量',
+      tbResetCodeBtn: '重設課本例題初始程式碼',
+      lbRefreshBtn: '重新整理即時排行榜',
+      profRefreshBtn: '重新整理雲端個人成績',
+      levelBadge: '點擊欣賞 3D 等級卡牌庫',
+      questLvBadge: '點擊欣賞 3D 等級卡牌庫',
+      mobLevelBadge: '點擊欣賞 3D 等級卡牌庫',
+      xpReadout: '點擊檢視 XP 與完成進度詳情',
+      mobXpReadout: '點擊檢視 XP 與完成進度詳情',
+      penaltyReadout: '點擊檢視扣分與切頁紀錄',
+      mobPenaltyReadout: '點擊檢視扣分與切頁紀錄'
+    };
+    Object.entries(CORE_TOOLTIPS).forEach(([id, tip]) => {
+      const el = document.getElementById(id);
+      if (el && !el.getAttribute('data-tooltip')) {
+        window.setPlTooltip(el, tip);
+      } else if (el) {
+        el.removeAttribute('title');
+      }
+    });
+
+    // ---------- 4. Toast: Non-Blocking Notification Stack (Max 3) ----------
+    const toastContainer = document.getElementById('plToastContainer');
+    const TOAST_ICONS = { success: '✓', info: 'ℹ', warning: '⚠', error: '✕' };
+
+    window.showToast = function showToast(message, type = 'info', duration = 2600) {
+      if (!toastContainer || !message) return;
+      while (toastContainer.children.length >= 3) {
+        if (toastContainer.firstElementChild) toastContainer.firstElementChild.remove();
+      }
+      const safeMsg = String(message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const toast = document.createElement('div');
+      toast.className = `pl-toast pl-toast-${type}`;
+      toast.innerHTML = `
+        <span class="font-mono-code font-bold shrink-0">${TOAST_ICONS[type] || 'ℹ'}</span>
+        <span class="flex-1 break-words">${safeMsg}</span>
+        <button type="button" class="text-xs opacity-70 hover:opacity-100 shrink-0 pl-1 leading-none" aria-label="關閉">✕</button>
+      `;
+
+      let remaining = Math.max(1200, Number(duration) || 2600);
+      let startAt = Date.now();
+      let timer = null;
+      let closed = false;
+
+      const dismiss = () => {
+        if (closed) return;
+        closed = true;
+        clearTimeout(timer);
+        toast.classList.add('is-leaving');
+        setTimeout(() => toast.remove(), 220);
+      };
+      const startTimer = () => {
+        if (closed) return;
+        startAt = Date.now();
+        timer = setTimeout(dismiss, remaining);
+      };
+      const pauseTimer = () => {
+        clearTimeout(timer);
+        remaining = Math.max(300, remaining - (Date.now() - startAt));
+      };
+
+      toast.addEventListener('mouseenter', pauseTimer);
+      toast.addEventListener('mouseleave', startTimer);
+      const closeBtn = toast.querySelector('button');
+      if (closeBtn) closeBtn.addEventListener('click', dismiss);
+
+      toastContainer.appendChild(toast);
+      startTimer();
+    };
+  })();
+  </script>
 </body>
 </html>
