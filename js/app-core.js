@@ -2695,12 +2695,12 @@ if _check_file and not _err:
       if (!state.tbSidebarCollapsed) {
         if (pane) pane.className = 'grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
         bd.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
-        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
         if (hud) hud.classList.add('xl:hidden');
       } else {
         if (pane) pane.className = 'grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
         bd.className = 'hidden';
-        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
         if (hud) hud.classList.remove('xl:hidden');
       }
       syncTopLeftToggleBtn();
@@ -2723,12 +2723,12 @@ if _check_file and not _err:
       if (!state.extraSidebarCollapsed) {
         if (pane) pane.className = 'grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
         bd.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
-        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
         if (hud) hud.classList.add('xl:hidden');
       } else {
         if (pane) pane.className = 'grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
         bd.className = 'hidden';
-        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
+        rf.className = 'min-w-0 divide-y divide-[#212a36] bg-[#0e1726]/85';
         if (hud) hud.classList.remove('xl:hidden');
       }
       syncTopLeftToggleBtn();
@@ -2743,12 +2743,12 @@ if _check_file and not _err:
       if (inQuest && !state.sidebarCollapsed) {
         if (rootGrid) rootGrid.className = 'max-w-[1440px] mx-auto grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
         sb.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
-        mw.className = 'min-w-0';
+        mw.className = 'min-w-0 flex flex-col';
         if (hud) hud.classList.add('xl:hidden');
       } else {
         if (rootGrid) rootGrid.className = 'max-w-[1440px] mx-auto grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
         sb.className = 'hidden';
-        mw.className = 'min-w-0';
+        mw.className = 'min-w-0 flex flex-col';
         if (hud) hud.classList.remove('xl:hidden');
       }
       syncTopLeftToggleBtn();
@@ -3231,7 +3231,9 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    function _bootPythonLabCore() {
+      if (window.__pyLabCoreBooted) return;
+      window.__pyLabCoreBooted = true;
       if (typeof lucide !== 'undefined') lucide.createIcons();
       updateSyncTag();
 
@@ -4128,7 +4130,8 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       
       window.addEventListener('load', () => { if (!state.student) updateGmailModalUI(); });
       initPyodideEngine();
-    });
+    }
+
   
     // =========================================================================
     // SUB-TAB: INTERACTIVE PRACTICE BANK (2-Level Accordion + In-Page Navigator)
@@ -4834,3 +4837,4 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
     }
     initPracticeTab();
 
+    if (document.readyState === 'loading') { window.addEventListener('DOMContentLoaded', _bootPythonLabCore); } else { _bootPythonLabCore(); }
