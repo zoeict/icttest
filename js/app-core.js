@@ -33,6 +33,7 @@
       sprintBest: 0,
       soundOn: true,
       openChapters: { 1: true },
+      term2OpenByTeacher: false,
       sidebarCollapsed: (() => { try { return localStorage.getItem('pl_sidebar_collapsed_v1') === '1'; } catch (e) { return false; } })(),
       tbSidebarCollapsed: (() => { try { return localStorage.getItem('pl_sidebar_collapsed_v1') === '1'; } catch (e) { return false; } })(),
       extraSidebarCollapsed: (() => { try { return localStorage.getItem('pl_sidebar_collapsed_v1') === '1'; } catch (e) { return false; } })(),
@@ -147,6 +148,76 @@
       return synced;
     }
 
+
+    // === Silent Anomaly Audit Telemetry (Invisible to Students) ===
+    const _silentAudit = {
+      itemId: '',
+      loadedAt: Date.now(),
+      baselineLen: 0,
+      lastLen: 0,
+      keystrokes: 0,
+      pasteAttempts: 0,
+      programmaticInject: false,
+      _ignoreInputUntil: 0
+    };
+    function resetSilentAudit(itemId, baselineText) {
+      const len = String(baselineText || '').length;
+      _silentAudit.itemId = String(itemId || '');
+      _silentAudit.loadedAt = Date.now();
+      _silentAudit.baselineLen = len;
+      _silentAudit.lastLen = len;
+      _silentAudit.keystrokes = 0;
+      _silentAudit.pasteAttempts = 0;
+      _silentAudit.programmaticInject = false;
+      _silentAudit._ignoreInputUntil = Date.now() + 250;
+    }
+    function markAuditSystemFill(newText) {
+      const len = String(newText || '').length;
+      _silentAudit.lastLen = len;
+      _silentAudit._ignoreInputUntil = Date.now() + 250;
+    }
+    function captureSilentAuditSnapshot(submittedText) {
+      const now = Date.now();
+      const solveSec = Math.max(0, Math.round(((now - _silentAudit.loadedAt) / 1000) * 10) / 10);
+      const subStr = String(submittedText || '');
+      const charDelta = Math.max(0, subStr.length - _silentAudit.baselineLen);
+      const isInject = _silentAudit.programmaticInject || (charDelta >= 20 && _silentAudit.keystrokes === 0);
+      return {
+        solveSec,
+        keystrokes: _silentAudit.keystrokes,
+        pasteAttempts: _silentAudit.pasteAttempts,
+        programmaticInject: Boolean(isInject),
+        charDelta
+      };
+    }
+    (function attachSilentAuditListeners() {
+      const attach = () => {
+        ['pyInput', 'tbCodeInput', 'prShortInput', 'dryrunAnsInput'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el || el.dataset.auditBound) return;
+          el.dataset.auditBound = '1';
+          el.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (e.key && (e.key.length === 1 || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'Tab')) {
+              _silentAudit.keystrokes += 1;
+            }
+          });
+          el.addEventListener('paste', () => { _silentAudit.pasteAttempts += 1; });
+          el.addEventListener('drop', () => { _silentAudit.pasteAttempts += 1; });
+          el.addEventListener('input', () => {
+            const curLen = (el.value || '').length;
+            const jump = curLen - _silentAudit.lastLen;
+            if (Date.now() > _silentAudit._ignoreInputUntil && jump >= 25) {
+              _silentAudit.programmaticInject = true;
+            }
+            _silentAudit.lastLen = curLen;
+          });
+        });
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attach);
+      else attach();
+    })();
+
     async function syncToGoogleSheet(payload) {
       if (payload && payload.passed && payload.levelId && payload.code) {
         if (!state.passedCode) state.passedCode = {};
@@ -168,6 +239,7 @@
         ...payload,
         idToken: currentToken,
         email: hasLoggedInStudent ? state.student.email : (payload.email || ''),
+        silentAudit: (typeof captureSilentAuditSnapshot === 'function') ? captureSilentAuditSnapshot(payload.code || '') : null,
         progressSnapshot: {
           xp: state.xp,
           penalty: state.penalty,
@@ -227,12 +299,17 @@
           message: '尚未設定雲端核對伺服器（Google Apps Script 網址）。請老師按左上角標誌 5 下（或 Ctrl+Shift+T）貼上已更新的 GAS 網址。'
         };
       }
+      const graderPayload = {
+        ...payload,
+        email: payload.email || (state.student && state.student.email ? state.student.email : ''),
+        idToken: payload.idToken || getTeacherIdToken()
+      };
       try {
         const resp = await fetch(url, {
           method: 'POST',
           redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(graderPayload)
         });
         if (!resp.ok) {
           return { status: 'error', message: `雲端核對連線失敗（HTTP ${resp.status}），請稍後再試。` };
@@ -674,7 +751,7 @@
       if (retT) { retT.classList.toggle('hidden', !isActingStu); retT.classList.toggle('inline-flex', isActingStu); }
       const hp = document.getElementById('headerPreviewLvUpBtn');
       if (hp) { hp.classList.toggle('hidden', !isT); hp.classList.toggle('inline-flex', isT); }
-      ['teacherRevealPyBtn', 'teacherRevealDqBtn', 'teacherRevealDrBtn', 'teacherRevealTbBtn', 'teacherPreviewLvUpBtn', 'prTeacherSlPreviewBar', 'prQidLabel'].forEach((id) => {
+      ['teacherRevealPyBtn', 'teacherRevealDqBtn', 'teacherRevealDrBtn', 'teacherRevealTbBtn', 'teacherPreviewLvUpBtn', 'prTeacherSlPreviewBar', 'prQidLabel', 'teacherToggleTerm2Btn'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', !isT);
       });
@@ -682,6 +759,7 @@
         const pyBox = document.getElementById('teacherPyAnsBox'); if (pyBox) pyBox.classList.add('hidden');
         const tbBox = document.getElementById('teacherTbAnsBox'); if (tbBox) tbBox.classList.add('hidden');
       }
+      if (typeof updateTerm2ToggleBtnUI === 'function') updateTerm2ToggleBtnUI();
     }
     async function fetchTeacherAnswer(kind, id) {
       const idToken = getTeacherIdToken();
@@ -690,10 +768,40 @@
       }
       return await callCloudGrader({ action: 'teacher_answer', kind, id, idToken });
     }
+    function isTerm1AllCleared() {
+      const t1Chs = LESSONS.filter((l) => l.term === 1).map((l) => l.ch);
+      return t1Chs.length > 0 && t1Chs.every((c) => getChapterStats(c).cleared);
+    }
+    function isTerm2UnlockedForStudent() {
+      if (isTeacherUser()) return true;
+      return Boolean(state.term2OpenByTeacher) && isTerm1AllCleared();
+    }
     function isChapterUnlocked(ch) {
       if (ch <= 1) return true;
       if (isTeacherUser()) return true;
+      const les = LESSONS.find((l) => l.ch === ch);
+      if (les && les.term === 2 && !isTerm2UnlockedForStudent()) return false;
       return getChapterStats(ch - 1).cleared;
+    }
+    function updateTerm2ToggleBtnUI() {
+      const btn = document.getElementById('teacherToggleTerm2Btn');
+      if (!btn) return;
+      const open = Boolean(state.term2OpenByTeacher);
+      btn.textContent = open ? '🔓 下學期：已開放（按此鎖定）' : '🔒 下學期：已鎖定（按此開放）';
+      btn.className = open
+        ? 'inline-flex w-full justify-start hw-btn px-2.5 py-2 rounded bg-[#10b981]/15 hover:bg-[#10b981]/25 border border-[#10b981]/45 text-[#6ee7b7] font-mono-code text-xs font-bold items-center gap-2 whitespace-nowrap'
+        : 'inline-flex w-full justify-start hw-btn px-2.5 py-2 rounded bg-[#f59e0b]/12 hover:bg-[#f59e0b]/22 border border-[#f59e0b]/45 text-[#fde68a] font-mono-code text-xs font-bold items-center gap-2 whitespace-nowrap';
+    }
+    async function fetchAppConfig() {
+      try {
+        const res = await callCloudGrader({ action: 'getAppConfig' });
+        if (res && res.status === 'ok') {
+          state.term2OpenByTeacher = Boolean(res.term2Unlocked);
+          updateTerm2ToggleBtnUI();
+          renderSidebars();
+          renderHomeRoadmap();
+        }
+      } catch (e) {}
     }
 
     // Sound Synth
@@ -2084,11 +2192,29 @@ if _check_file and not _err:
 
     function buildSidebar(targetEl, closeMobile) {
       targetEl.innerHTML = '';
+      let _shownTerm2LockCard = false;
       LESSONS.forEach((les, idx) => {
+        if (les.term === 2 && !isTerm2UnlockedForStudent()) {
+          if (!_shownTerm2LockCard) {
+            _shownTerm2LockCard = true;
+            const lockBox = document.createElement('div');
+            lockBox.className = 'mt-2.5 p-2.5 rounded-sm border border-[#243754] bg-[#080e1a] space-y-1';
+            const t1Cleared = isTerm1AllCleared();
+            lockBox.innerHTML = `<div class="font-mono-code text-[10px] font-bold text-[#fbbf24]">🔒 下學期 // 選修單元 C（尚未開放）</div>
+              <div class="text-[11px] text-[#94a3b8] leading-snug">${t1Cleared ? '你已完成上學期全部關卡，待老師開放下學期後即自動解鎖。' : '須完成上學期全部 66 題並待老師開放後，才可檢視及作答下學期課題。'}</div>`;
+            targetEl.appendChild(lockBox);
+          }
+          return;
+        }
         if (idx === 0 || (idx > 0 && LESSONS[idx - 1].term !== les.term)) {
           const hdr = document.createElement('div');
-          hdr.className = 'font-mono-code text-[10px] font-bold tracking-wider uppercase px-1.5 pt-2 pb-1 text-[#38bdf8] border-b border-[#1b2430]';
-          hdr.textContent = les.term === 1 ? '上學期 // 必修單元 D (L01–L33)' : '下學期 // 選修單元 C (L36–L71)';
+          hdr.className = 'font-mono-code text-[10px] font-bold tracking-wider uppercase px-1.5 pt-2 pb-1 text-[#38bdf8] border-b border-[#1b2430] flex items-center justify-between gap-1';
+          if (les.term === 1) {
+            hdr.textContent = '上學期 // 必修單元 D (L01–L33)';
+          } else {
+            const tag = isTeacherUser() ? (state.term2OpenByTeacher ? '<span class="text-[#34d399]">學生已開放</span>' : '<span class="text-[#fbbf24]">學生端已鎖定</span>') : '';
+            hdr.innerHTML = `<span>下學期 // 選修單元 C</span>${tag}`;
+          }
           targetEl.appendChild(hdr);
         }
         const stats = getChapterStats(les.ch);
@@ -2178,6 +2304,7 @@ if _check_file and not _err:
       const nextTb = TEXTBOOK_EXAMPLES.find((e) => !(tbState.done || {})[e.id]) || TEXTBOOK_EXAMPLES[0];
 
       LESSONS.forEach((les) => {
+        if (les.term === 2 && !isTerm2UnlockedForStudent()) return;
         if (homeTermFilter !== 'ALL' && String(les.term) !== homeTermFilter) return;
         const st = getChapterStats(les.ch);
         const unlocked = isChapterUnlocked(les.ch);
@@ -2240,6 +2367,7 @@ if _check_file and not _err:
       const isHard = lvl.diff === 'hard';
       state.openChapters[lvl.ch] = true;
 
+      if (typeof resetSilentAudit === 'function') resetSilentAudit(lvl.id, lvl.starter || '');
       document.getElementById('lvlLessonTag').textContent = `${les.lcode} ${les.title}`;
       document.getElementById('lvlTypeTag').textContent = lvl.typeLabel;
       const diffEl = document.getElementById('lvlDiffTag');
@@ -2264,6 +2392,8 @@ if _check_file and not _err:
 
       document.getElementById('pyWorkspace').classList.toggle('hidden', lvl.type !== 'py');
       document.getElementById('debugQuizWorkspace').classList.toggle('hidden', lvl.type !== 'debug_quiz');
+      const _pCard = document.getElementById('lvlPromptCard');
+      if (_pCard) _pCard.classList.toggle('hidden', lvl.type === 'debug_quiz');
       document.getElementById('dryrunWorkspace').classList.toggle('hidden', lvl.type !== 'dryrun');
 
       if (lvl.type === 'py') {
@@ -2298,7 +2428,7 @@ if _check_file and not _err:
         bar.innerHTML = '';
         kws.forEach((kw) => {
           const b = document.createElement('button');
-          b.className = 'hw-btn px-2 py-0.5 rounded-[2px] bg-[#141b25] hover:bg-[#1e2a3a] border border-[#263242] text-[11px] font-mono-code text-[#38bdf8]';
+          b.className = 'hw-btn shrink-0 whitespace-nowrap px-2.5 py-0.5 rounded bg-[#141b25] hover:bg-[#1e2a3a] border border-[#263242] text-[11px] font-mono-code text-[#38bdf8]';
           b.textContent = kw;
           b.addEventListener('click', () => {
             const s = ed.selectionStart, e = ed.selectionEnd;
@@ -2561,13 +2691,16 @@ if _check_file and not _err:
         return;
       }
       if (panel) panel.className = 'flex flex-col flex-1 min-h-0';
+      const pane = document.getElementById('tbExamplesPane');
       if (!state.tbSidebarCollapsed) {
-        bd.className = 'hidden xl:flex xl:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
-        rf.className = 'xl:col-span-9 min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-4';
+        if (pane) pane.className = 'grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
+        bd.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
         if (hud) hud.classList.add('xl:hidden');
       } else {
+        if (pane) pane.className = 'grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
         bd.className = 'hidden';
-        rf.className = 'xl:col-span-12 min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-4';
+        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
         if (hud) hud.classList.remove('xl:hidden');
       }
       syncTopLeftToggleBtn();
@@ -2586,13 +2719,16 @@ if _check_file and not _err:
         return;
       }
       if (panel) panel.className = 'flex flex-col flex-1 min-h-0';
+      const pane = document.getElementById('tbPracticePane');
       if (!state.extraSidebarCollapsed) {
-        bd.className = 'hidden xl:flex xl:col-span-3 flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
-        rf.className = 'xl:col-span-9 min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
+        if (pane) pane.className = 'grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
+        bd.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
         if (hud) hud.classList.add('xl:hidden');
       } else {
+        if (pane) pane.className = 'grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
         bd.className = 'hidden';
-        rf.className = 'xl:col-span-12 min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
+        rf.className = 'min-w-0 p-4 sm:p-5 pb-16 lg:pb-8 bg-[#0e1726]/85 space-y-3.5';
         if (hud) hud.classList.remove('xl:hidden');
       }
       syncTopLeftToggleBtn();
@@ -2603,17 +2739,16 @@ if _check_file and not _err:
       const mw = document.getElementById('mainWorkbench');
       const inQuest = state.mode === 'quest';
       const hud = document.getElementById('compactHudBar');
+      const rootGrid = document.getElementById('mainGridRoot');
       if (inQuest && !state.sidebarCollapsed) {
-        sb.classList.add('hidden');
-        sb.classList.add('xl:flex');
-        mw.classList.remove('xl:col-span-12', 'lg:col-span-12', 'lg:col-span-9');
-        mw.classList.add('xl:col-span-9');
+        if (rootGrid) rootGrid.className = 'max-w-[1440px] mx-auto grid grid-cols-1 xl:grid-cols-[296px_minmax(0,1fr)] min-h-[calc(100dvh-3.5rem)]';
+        sb.className = 'hidden xl:flex flex-col border-r border-[#1e2d44] bg-[#0c1320]/95';
+        mw.className = 'min-w-0';
         if (hud) hud.classList.add('xl:hidden');
       } else {
-        sb.classList.add('hidden');
-        sb.classList.remove('xl:flex', 'lg:flex');
-        mw.classList.remove('xl:col-span-9', 'lg:col-span-9');
-        mw.classList.add('xl:col-span-12');
+        if (rootGrid) rootGrid.className = 'max-w-[1440px] mx-auto grid grid-cols-1 min-h-[calc(100dvh-3.5rem)]';
+        sb.className = 'hidden';
+        mw.className = 'min-w-0';
         if (hud) hud.classList.remove('xl:hidden');
       }
       syncTopLeftToggleBtn();
@@ -2895,6 +3030,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
     function loadTextbookExample(id) {
       const ex = TEXTBOOK_EXAMPLES.find((e) => e.id === id) || TEXTBOOK_EXAMPLES[0];
       tbState.activeId = ex.id;
+      if (typeof resetSilentAudit === 'function') resetSilentAudit(ex.id, ex.starter || '');
       document.getElementById('tbActiveBookBadge').textContent = ex.chapter;
       document.getElementById('tbActiveIdBadge').textContent = ex.id;
       const pgBadge = document.getElementById('tbActivePageBadge');
@@ -3694,6 +3830,32 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       _bindAssistToggle('togglePyAssistBtn', 'pyAssistDrawer');
       _bindAssistToggle('toggleTbAssistBtn', 'tbAssistDrawer');
 
+      // Teacher Term 2 Unlock Toggle (persists via GAS ScriptProperties)
+      const _t2Btn = document.getElementById('teacherToggleTerm2Btn');
+      if (_t2Btn) {
+        _t2Btn.addEventListener('click', async () => {
+          if (!isTeacherUser()) return;
+          const nextState = !state.term2OpenByTeacher;
+          const res = await callCloudGrader({
+            action: 'setTerm2Access',
+            unlocked: nextState,
+            idToken: getTeacherIdToken()
+          });
+          if (res && res.status === 'ok') {
+            state.term2OpenByTeacher = Boolean(res.term2Unlocked);
+            updateTerm2ToggleBtnUI();
+            renderSidebars();
+            renderHomeRoadmap();
+            if (typeof window.showPlToast === 'function') {
+              window.showPlToast(state.term2OpenByTeacher ? '已開放下學期（學生完成上學期即可解鎖）' : '已鎖定下學期課程', state.term2OpenByTeacher ? 'success' : 'info');
+            }
+          } else {
+            alert((res && res.message) || '未能更新下學期設定，請確認已部署最新版 Apps Script。');
+          }
+        });
+      }
+      fetchAppConfig();
+
       // Teacher Tools Dropdown toggle & outside-click close
       const _ttBtn = document.getElementById('teacherToolsBtn');
       const _ttMenu = document.getElementById('teacherToolsMenu');
@@ -4323,6 +4485,7 @@ json.dumps({"steps": _steps, "error": _err, "finalOut": _buf.getvalue().strip()}
       practiceState.expandedCat = q.cat;
       practiceState.activeSubCode = q.subCode;
       practiceState.selectedOpt = '';
+      if (typeof resetSilentAudit === 'function') resetSilentAudit(q.id, '');
 
       document.getElementById('prCodeBadge').textContent = q.code;
       document.getElementById('prBadgeDiff').textContent = q.diff || '★';

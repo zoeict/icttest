@@ -929,3 +929,41 @@
   background: #243754;
   border-radius: 9999px;
 }
+
+/* === Phase 7: Slim Single-Line Assist Chips & Unified Frame Polish === */
+#pyKeywordBar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+#pyKeywordBar button {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 9px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  border-radius: 4px !important;
+}
+.ipad-key-bar {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 5px !important;
+  overflow-x: auto !important;
+}
+.ipad-key-bar button {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 0 8px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
